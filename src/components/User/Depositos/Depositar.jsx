@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import "./Style.css"
+import "./Style.css";
 import Saldo from "../Saldo/Saldo";
 import Swal from "sweetalert2";
- 
-const Depositar = () => {
 
+const Depositar = () => {
   const [payment_method, setpayment_method] = useState("transferencia");
   const [amount, setAmount] = useState("");
 
@@ -13,56 +12,92 @@ const Depositar = () => {
   };
 
   const handleMontoChange = (e) => {
-    setAmount(e.target.value);
+    let value = e.target.value;
+
+    // Reemplazar cualquier caracter que no sea número o punto decimal con una cadena vacía
+    value = value.replace(/[^0-9.]/g, "");
+
+    // Formatear con separadores de miles
+    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    // Solo permitir un punto decimal
+    const decimalIndex = value.indexOf(".");
+    if (decimalIndex !== -1) {
+      value =
+        value.slice(0, decimalIndex + 1) +
+        value.slice(decimalIndex + 1).replace(/\./g, "");
+    }
+
+    // Establecer el valor en el estado
+    setAmount(value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-
-      const csrfToken = document.querySelector(
-        'meta[name="csrf-token"]'
-      ).content;
-
-      const response = await fetch("http://127.0.0.1:8000/depositar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-           "X-CSRF-TOKEN": csrfToken,
-        },
-        body: JSON.stringify({ payment_method, amount }),
-      });
-
-      if (response.ok) {
-        // La solicitud fue exitosa, mostrar una alerta de éxito
-        Swal.fire({
-          icon: "success",
-          title: "¡Solicitud enviada!",
-          text:"Tu solicitud de depósito se envió con éxito.",
-        });
-      } else {
-        // La solicitud falló, mostrar una alerta de error
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text:"Hubo un problema al enviar la solicitud de depósito.",
-        });
-      }
-    } catch (error) {
-      console.error("Error al enviar la solicitud de depósito", error);
-      // Mostrar una alerta de error en caso de un error inesperado
-
+    // Validar que el monto sea mayor o igual a 1 dólar
+    if (parseFloat(amount) < 1) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text:"Hubo un error inesperado al enviar la solicitud de depósito.",
+        text: "El monto debe ser de al menos 1 dólar",
+      });
+      return;
+    }
+
+    function refreshPage() {
+      window.location.reload(false);
+    }
+
+    // Enviar la solicitud al backend
+    try {
+      const response = await fetch(
+        "http://localhost/nuovo/backend/api/depositRequest.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            payment_method,
+            amount,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Procesar la respuesta exitosa
+        Swal.fire({
+          icon: "success",
+          title: "Éxito",
+          text: data.message,
+          didClose: () => {
+            refreshPage();
+          },
+        });
+      } else {
+        // Procesar la respuesta de error
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text:
+            data.error || "Hubo un error al procesar la solicitud de depósito",
+        });
+      }
+    } catch (error) {
+      console.error("Error al enviar la solicitud de depósito:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error inesperado al enviar la solicitud de depósito",
       });
     }
   };
 
-return (
+  return (
     <div className="depositar">
       <Saldo />
 
@@ -72,8 +107,15 @@ return (
         <div className="form">
           <form onSubmit={handleSubmit}>
             <div className="grupo-input">
-              <label htmlFor="payment_method">Seleccione el medio de pago</label>
-              <select name="payment_method" id="payment_method" value={payment_method} onChange={handleMedioChange}>
+              <label htmlFor="payment_method">
+                Seleccione el medio de pago
+              </label>
+              <select
+                name="payment_method"
+                id="payment_method"
+                value={payment_method}
+                onChange={handleMedioChange}
+              >
                 <option value="transferencia">Transferencia</option>
               </select>
             </div>
@@ -82,7 +124,13 @@ return (
               <label htmlFor="amount">Ingrese el monto a depositar</label>
               <div className="input">
                 <span>$</span>
-                <input type="text" id="amount" name="amount" value={amount} onChange={handleMontoChange} />
+                <input
+                  type="text"
+                  id="amount"
+                  name="amount"
+                  value={amount}
+                  onChange={handleMontoChange}
+                />
                 <label htmlFor="">Min. 1 dólar</label>
               </div>
             </div>
