@@ -1,0 +1,29 @@
+.saldo{
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.saldo .content{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.saldo .content strong{
+    font-size: 1.2em;
+    color: var(--green);
+}
+
+.saldo .content p{
+    font-size: 1.1em;
+}
+
+.saldo .content button{
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--green);
+    cursor: pointer;
+}

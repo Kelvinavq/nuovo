@@ -1,0 +1,116 @@
+.calltoaction{
+    width: 100%;
+    background:var(--blue);
+    margin-top: 100px;
+    height: 450px;
+}
+
+.calltoaction .content{
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.calltoaction .content img{
+    max-width: 250px;
+}
+
+.calltoaction .content p{
+    font-size: 1.2em;
+}
+.calltoaction .content strong{
+  font-family: 'VenusRisingRG', sans-serif;
+  color: var(--white) !important;
+  font-size: .9em;
+  letter-spacing: 1.2px;
+  font-weight: 400;
+}
+
+.calltoaction .content button {
+    position: relative;
+    max-width: 220px;
+    cursor: pointer;
+    padding: 15px 20px;
+    border-radius: 7px;
+    border: 1px solid var(--green);
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 2px;
+    background: transparent;
+    color: var(--white);
+    overflow: hidden;
+    box-shadow: 0 0 0 0 transparent;
+    -webkit-transition: all 0.2s ease-in;
+    -moz-transition: all 0.2s ease-in;
+    transition: all 0.2s ease-in;
+  }
+  
+  .calltoaction .content button:hover {
+    background: var(--green);
+    box-shadow: 0 0 30px 5px rgba(20, 236, 0, 0.219);
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+  }
+  
+  .calltoaction .content button:hover::before {
+    -webkit-animation: sh02 0.5s 0s linear;
+    -moz-animation: sh02 0.5s 0s linear;
+    animation: sh02 0.5s 0s linear;
+  }
+  
+  .calltoaction .content button::before {
+    content: "";
+    display: block;
+    width: 0px;
+    height: 86%;
+    position: absolute;
+    top: 7%;
+    left: 0%;
+    opacity: 0;
+    background: var(--white);
+    box-shadow: 0 0 50px 30px var(--white);
+    -webkit-transform: skewX(-20deg);
+    -moz-transform: skewX(-20deg);
+    -ms-transform: skewX(-20deg);
+    -o-transform: skewX(-20deg);
+    transform: skewX(-20deg);
+  }
+  
+  @keyframes sh02 {
+    from {
+      opacity: 0;
+      left: 0%;
+    }
+  
+    50% {
+      opacity: 1;
+    }
+  
+    to {
+      opacity: 0;
+      left: 100%;
+    }
+  }
+  
+  .calltoaction .content button:active {
+    box-shadow: 0 0 0 0 transparent;
+    -webkit-transition: box-shadow 0.2s ease-in;
+    -moz-transition: box-shadow 0.2s ease-in;
+    transition: box-shadow 0.2s ease-in;
+  }
+  
+
+@media (max-width: 620px) {
+    .calltoaction{
+        height: 650px;
+    }
+
+.calltoaction .content{
+    width: 95%;
+}
+}

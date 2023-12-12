@@ -1,0 +1,156 @@
+.head {
+  background: var(--bg-2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 40px;
+}
+
+.head .logo {
+  display: grid;
+  place-items: center;
+}
+
+.head .logo img {
+  max-width: 180px;
+  cursor: pointer;
+}
+
+.head .buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.head .buttons button {
+  padding: 10px 15px;
+  border-radius: 7px;
+  border: none;
+  color: var(--white);
+  outline: none;
+  cursor: pointer;
+  font-size: 1.1em;
+  transition: all 0.4s ease;
+}
+
+.head .buttons button:first-child {
+  background: none;
+}
+
+.head .buttons button:first-child:hover {
+  transition: all 0.4s ease;
+  border: 2px solid var(--green);
+}
+
+.head .buttons button:last-child {
+  background: var(--green);
+  text-shadow: 1px 2px #0000006b;
+}
+
+.head .buttons button:last-child {
+  position: relative;
+  max-width: 220px;
+  cursor: pointer;
+  padding: 15px 20px;
+  border-radius: 7px;
+  border: 1px solid var(--green);
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 2px;
+  background: transparent;
+  color: var(--white);
+  overflow: hidden;
+  box-shadow: 0 0 0 0 transparent;
+  -webkit-transition: all 0.2s ease-in;
+  -moz-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+}
+
+.head .buttons button:last-child:hover {
+  background: var(--green);
+  box-shadow: 0 0 30px 5px rgba(20, 236, 0, 0.219);
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+
+.head .buttons button:last-child:hover::before {
+  -webkit-animation: sh02 0.5s 0s linear;
+  -moz-animation: sh02 0.5s 0s linear;
+  animation: sh02 0.5s 0s linear;
+}
+
+.head .buttons button:last-child::before {
+  content: "";
+  display: block;
+  width: 0px;
+  height: 86%;
+  position: absolute;
+  top: 7%;
+  left: 0%;
+  opacity: 0;
+  background: var(--white);
+  box-shadow: 0 0 50px 30px var(--white);
+  -webkit-transform: skewX(-20deg);
+  -moz-transform: skewX(-20deg);
+  -ms-transform: skewX(-20deg);
+  -o-transform: skewX(-20deg);
+  transform: skewX(-20deg);
+}
+
+@keyframes sh02 {
+  from {
+    opacity: 0;
+    left: 0%;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    left: 100%;
+  }
+}
+
+.head .buttons button:last-child:active {
+  box-shadow: 0 0 0 0 transparent;
+  -webkit-transition: box-shadow 0.2s ease-in;
+  -moz-transition: box-shadow 0.2s ease-in;
+  transition: box-shadow 0.2s ease-in;
+}
+
+@media (max-width: 620px) {
+  .head {
+    padding: 15px 10px;
+  }
+  .head .logo img {
+    max-width: 100px;
+    cursor: pointer;
+  }
+  .head .buttons button {
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 400px) {
+  .head .logo img {
+    max-width: 100px;
+    cursor: pointer;
+  }
+  .head .buttons button {
+    font-size: 0.9em;
+    padding: 8px 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .head .logo img {
+    max-width: 100px;
+    cursor: pointer;
+  }
+  .head .buttons button:first-child {
+    display: none;
+  }
+}

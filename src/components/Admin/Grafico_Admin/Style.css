@@ -1,0 +1,21 @@
+.grafico{
+    margin-top: 100px;
+    background: var(--blue);
+    border-radius: 30px;
+    display: grid;
+    place-items: center;
+    padding: 20px 0;
+}
+
+.grafico #chart{
+    width: 90%;
+    height: 90%;
+}
+
+.grafico .apexcharts-legend-text{
+    color: var(--white) !important;
+}
+
+.grafico .apexcharts-menu{
+    background: var(--bg);
+}

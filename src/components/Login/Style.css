@@ -1,0 +1,180 @@
+.login {
+  width: 100%;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+.login form {
+  min-width: 500px;
+  box-shadow: var(--shadow);
+  border-radius: 30px;
+  padding: 20px 40px;
+}
+
+.login form .content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.login form .content img {
+  max-width: 140px;
+}
+
+.login form .content p {
+  font-weight: 600;
+}
+
+.login form .inputs {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.login form .inputs .grupo-input {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 8px;
+}
+
+.login form .inputs .grupo-input label {
+  cursor: pointer;
+}
+
+.login form .inputs .grupo-input input {
+  width: calc(100% - 10px);
+  padding-left: 10px;
+  height: 45px;
+  border-radius: 30px;
+  border: 1px solid var(--blue);
+  background: transparent;
+  color: var(--white);
+  outline: none;
+}
+
+.login form .inputs .grupo-input input::placeholder {
+  color: var(--blue);
+}
+
+.login form .inputs .grupo-input input:focus {
+  border: 1px solid var(--green);
+}
+
+.login form .inputs .submit {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  text-align: center;
+}
+
+.login form .inputs .submit a {
+  color: var(--green);
+  cursor: pointer;
+}
+
+
+
+.login form .inputs .submit input {
+  position: relative;
+  max-width: 220px;
+  cursor: pointer;
+  padding: 15px 20px;
+  border-radius: 7px;
+  border: 1px solid var(--green);
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 2px;
+  background: transparent;
+  color: var(--white);
+  overflow: hidden;
+  box-shadow: 0 0 0 0 transparent;
+  -webkit-transition: all 0.2s ease-in;
+  -moz-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+}
+
+.login form .inputs .submit input:hover {
+  background: var(--green);
+  box-shadow: 0 0 30px 5px rgba(20, 236, 0, 0.219);
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+
+.login form .inputs .submit input:hover::before {
+  -webkit-animation: sh02 0.5s 0s linear;
+  -moz-animation: sh02 0.5s 0s linear;
+  animation: sh02 0.5s 0s linear;
+}
+
+.login form .inputs .submit input::before {
+  content: "";
+  display: block;
+  width: 0px;
+  height: 86%;
+  position: absolute;
+  top: 7%;
+  left: 0%;
+  opacity: 0;
+  background: var(--white);
+  box-shadow: 0 0 50px 30px var(--white);
+  -webkit-transform: skewX(-20deg);
+  -moz-transform: skewX(-20deg);
+  -ms-transform: skewX(-20deg);
+  -o-transform: skewX(-20deg);
+  transform: skewX(-20deg);
+}
+
+@keyframes sh02 {
+  from {
+    opacity: 0;
+    left: 0%;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    left: 100%;
+  }
+}
+
+.login form .inputs .submit input:active {
+  box-shadow: 0 0 0 0 transparent;
+  -webkit-transition: box-shadow 0.2s ease-in;
+  -moz-transition: box-shadow 0.2s ease-in;
+  transition: box-shadow 0.2s ease-in;
+}
+
+.login form .enlace a {
+  color: var(--green);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media (max-width: 620px) {
+  .login form {
+    min-width: 300px !important;
+    width: calc(95% - 20px);
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: column;
+  }
+}

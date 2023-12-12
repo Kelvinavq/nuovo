@@ -1,0 +1,68 @@
+.enlaces_a {
+  margin-top: 50px;
+}
+
+.enlaces_a .content {
+  display: flex;
+  border-bottom: 2px solid var(--gray);
+  padding-bottom: 10px;
+  max-width: 200px;
+  gap: 50px;
+}
+
+.enlaces_a .content .item.active a {
+  color: var(--green);
+  font-weight: 600;
+}
+
+.ajustes_a {
+  width: 100%;
+  max-width: 350px;
+}
+
+.ajustes_a .content h2 {
+  font-weight: 500;
+}
+
+.ajustes_a .imgPerfil {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  margin-top: 20px;
+}
+
+.ajustes_a .imgPerfil .foto {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.ajustes_a .imgPerfil .foto img {
+  max-width: 80px;
+  border-radius: 50%;
+  position: relative;
+  z-index: 9;
+}
+
+.ajustes_a .imgPerfil .foto .input input {
+  display: none;
+}
+
+.ajustes_a .imgPerfil .foto .input {
+  position: absolute;
+  left: 50px;
+  top: 40px;
+  z-index: 10;
+}
+
+.ajustes_a .imgPerfil .foto .input label {
+  width: 40px;
+  height: 40px;
+  background: var(--blue);
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  color: var(--green);
+  cursor: pointer;
+}

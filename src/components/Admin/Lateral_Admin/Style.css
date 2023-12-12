@@ -1,0 +1,213 @@
+.lateral_a{
+    position: fixed;
+    right: 10px;
+    top: 0;
+    width: 420px;
+    height: 100vh;
+}
+
+.lateral_a .profile{
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.lateral_a .profile .img{
+    display: flex;
+    align-items: center;
+}
+
+.lateral_a .profile .img img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid var(--green);
+}
+
+.lateral_a .profile .dropdown button{
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: var(--green);
+}
+
+.lateral_a .profile .dropdown .dropdown-content{
+    width: 200px;
+    position: absolute;
+    background: var(--blue);
+    padding: 10px;
+    border-radius: 15px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.lateral_a .profile .dropdown .dropdown-content a{
+    padding: 10px 2px;
+}
+
+.lateral_a .profile .dropdown .dropdown-content a:hover{
+    background: var(--green);
+    color: var(--blue);
+    font-weight: 600;
+    border-radius: 12px;
+}
+
+.lateral_a .profile .notification {
+    position: relative;
+}
+.lateral_a .profile .notification button{
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: var(--green);
+}
+
+.lateral_a .profile .notification .dropdown-content{
+    position: absolute;
+    right: 10px;
+    width: 300px;
+    position: absolute;
+    background: var(--bg);
+    box-shadow: var(--shadow);
+    padding: 10px;
+    border-radius: 15px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+@media (max-width: 920px) {
+    .lateral_a{
+        display: none;
+    }
+}
+
+/* transacciones */
+
+.lateral_a .recents .title h2{
+    font-weight: 500;
+}
+
+.lateral_a .recents .transacciones{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.lateral_a .recents .transaccion{
+    width: 98%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px ;
+    cursor: pointer;
+}
+
+
+.lateral_a .recents .transaccion .left{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    gap: 20px;
+}
+
+.lateral_a .recents .transaccion .left .icono{
+    width: 60px;
+    height: 60px;
+    background: var(--blue);
+    display: grid;
+    place-items: center;
+    border-radius: 20px;
+}
+
+.lateral_a .recents .transaccion .left .icono svg{
+    font-size: 2em;
+}
+
+.lateral_a .recents .transaccion .left .icono.depositar svg{
+    color: var(--green);
+}
+.lateral_a .recents .transaccion .left .icono.retirar svg{
+    color: var(--red);
+}
+
+.lateral_a .recents .transaccion .left .detalle{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.lateral_a .recents .transaccion .left .detalle span{
+    font-weight: 500;
+}
+
+.lateral_a .recents .transaccion .left .detalle small{
+    color: var(--blue);
+    font-size: 1em;
+    font-weight: 600;
+}
+
+
+.lateral_a .recents .transaccion .monto{
+    text-align: right;
+}
+
+.lateral_a .recents .transaccion .monto span{
+    color: var(--green);
+    font-weight: 500;
+}
+
+.lateral_a .recents .transaccion .monto p.completed{
+    color: var(--green);
+}
+
+.lateral_a .recents .transaccion .monto p.pending{
+    color: var(--yellow);
+}
+
+.lateral_a .recents .transaccion .monto p.denied{
+    color: var(--red);
+}
+
+.lateral_a .recents  .enlace{
+    width: 100%;
+    text-align: center;
+}
+
+.lateral_a .recents  .enlace a{
+    font-size: .9em;
+    cursor: pointer;
+    color: var(--green);
+}
+
+@media (max-width: 1170px) {
+
+    .transaccion{
+        width: 98% !important;
+    }
+    
+}
+
+@media (max-width: 1270px) {
+    .lateral_a{
+        width: 360px;
+        overflow-y: auto;
+    }
+}
+
+@media (max-width: 960px) {
+    .lateral_a{
+        display: none;
+    }
+}

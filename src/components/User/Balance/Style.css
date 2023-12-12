@@ -1,0 +1,92 @@
+main{
+    width: calc(100% - 420px);
+    position: absolute;
+    left: 100px;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.balance{
+    width: 100%;
+    height: 220px;
+}
+
+.balance .title h2{
+    font-weight: 500;
+}
+
+.balance .card{
+    width: 100%;
+    height: 160px;
+    background: var(--blue);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 30px;
+}
+
+.balance .card .content{
+    width: 95%;
+    height: 95%;
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.balance .card .content .text{
+    display: flex;
+    gap: 30px;
+    margin-top: -20px;
+}
+
+.balance .card .content .text button{
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: var(--green);
+    font-size: 2em;
+}
+
+.balance .card .content .saldo span{
+    font-size: 2em;
+}
+
+.balance .card .content .saldo strong{
+    color: var(--green);
+}
+
+.balance .card .content .saldo small{
+    font-size: .5em ;
+}
+
+
+
+.balance .card .content .enlace{
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+}
+
+.balance .card .content .enlace a{
+    color: var(--green);
+}
+
+@media (max-width: 920px) {
+    main{
+        width: calc(100% - 100px);
+    }
+}
+
+
+@media (max-width: 620px) {
+    main{
+        width: calc(100% - 20px);
+        left: 10px;
+        padding-right: 10px;
+    }
+
+}

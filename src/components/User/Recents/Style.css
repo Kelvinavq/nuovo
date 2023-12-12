@@ -1,0 +1,96 @@
+.recents .title h2{
+    font-weight: 500;
+}
+
+.recents .transacciones{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.recents .transaccion{
+    width: 80%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px ;
+    cursor: pointer;
+}
+
+
+.recents .transaccion .left{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    gap: 20px;
+}
+
+.recents .transaccion .left .icono{
+    width: 60px;
+    height: 60px;
+    background: var(--blue);
+    display: grid;
+    place-items: center;
+    border-radius: 20px;
+}
+
+.recents .transaccion .left .icono svg{
+    font-size: 2em;
+}
+
+.recents .transaccion .left .icono.depositar svg{
+    color: var(--green);
+}
+.recents .transaccion .left .icono.retirar svg{
+    color: var(--red);
+}
+
+.recents .transaccion .left .detalle{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.recents .transaccion .left .detalle span{
+    font-weight: 500;
+}
+
+.recents .transaccion .left .detalle small{
+    color: var(--blue);
+    font-size: 1em;
+    font-weight: 600;
+}
+
+
+.recents .transaccion .monto{
+    text-align: right;
+}
+
+.recents .transaccion .monto span{
+    color: var(--green);
+    font-weight: 500;
+}
+
+.recents .transaccion .monto p.completed{
+    color: var(--green);
+}
+
+.recents .transaccion .monto p.pending{
+    color: var(--yellow);
+}
+
+.recents .transaccion .monto p.denied{
+    color: var(--red);
+}
+
+@media (max-width: 1170px) {
+
+    .transaccion{
+        width: 98% !important;
+    }
+    
+}
+

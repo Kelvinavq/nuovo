@@ -1,0 +1,220 @@
+.verificaciones_a main, 
+.verificacion_a main {
+    width: calc(100% - 120px);
+    padding: 10px;
+  }
+  
+  .verificaciones_a .title h2 {
+    font-weight: 500;
+  }
+  
+  .verificaciones_a .lista_verificaciones {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .verificaciones_a ul {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    padding: 0;
+    margin: 10px 0;
+    border-radius: 15px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s;
+  }
+  .verificaciones_a ul:nth-child(odd) {
+    background: var(--blue);
+  }
+  
+  .verificaciones_a ul:nth-child(even) {
+    background: var(--blue2);
+  }
+  
+  .verificaciones_a ul:hover {
+    background: #181c1f;
+    box-shadow: var(--shadow);
+    transition: all 0.3s;
+  }
+  
+  .verificaciones_a ul li {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .verificaciones_a ul li.estatus {
+    margin-right: 20px;
+  }
+  
+  .verificaciones_a ul li.estatus.pending span {
+    color: var(--yellow);
+  }
+  .verificaciones_a ul li.estatus.denied span {
+    color: var(--red);
+  }
+  .verificaciones_a ul li.estatus.approved span {
+    color: var(--green);
+  }
+  .verificaciones_a ul li .icono {
+    width: 60px;
+    height: 60px;
+    display: grid;
+    place-items: center;
+    background: var(--bg);
+    border-radius: 20px;
+    margin-left: 20px;
+    color: var(--green);
+  }
+  
+  .verificaciones_a ul li .icono {
+    font-size: 2em;
+  }
+  
+  .verificaciones_a ul li h2 {
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: 500;
+  }
+  
+  .verificaciones_a ul li span {
+    color: var(--gray);
+    font-size: 0.9em;
+  }
+  
+  @media (max-width: 750px) {
+    .verificaciones_a ul li h2 {
+      font-size: 1em;
+    }
+  
+    .verificaciones_a ul li span {
+      font-size: 0.8em;
+    }
+    .verificaciones_a ul li .icono {
+      margin-left: 5px;
+    }
+    .verificaciones_a ul li.estatus {
+      margin-right: 5px;
+    }
+  }
+  
+  @media (max-width: 620px) {
+    .verificaciones_a main {
+      width: calc(100% - 20px);
+      padding: 0;
+    }
+  }
+  
+  @media (max-width: 550px) {
+    .verificaciones_a ul {
+      height: 60px;
+    }
+    .verificaciones_a ul li .icono {
+      display: none;
+    }
+    .verificaciones_a ul li h2 {
+      font-size: 0.7em;
+    }
+  
+    .verificaciones_a ul li span {
+      font-size: 0.6em;
+    }
+  }
+  
+
+
+
+  /* ********** Verificacion ********** */
+
+
+.verificacion_a .title h2{
+  font-weight: 500;
+}
+
+.verificacion_a .title h4{
+  font-weight: 500;
+}
+
+.verificacion_a .info_usuario{
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.verificacion_a .info_usuario .left{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+
+
+.verificacion_a .info_usuario .left h2{
+  font-weight: 600;
+  color: var(--green);
+  font-size: 1.4em;
+}
+
+.verificacion_a .info_usuario .left span{
+  font-weight: 600;
+}
+
+
+
+.verificacion_a .info_usuario .right h2{
+  font-weight: 600;
+  color: var(--green);
+  font-size: 1.4em;
+}
+.verificacion_a .info_usuario .right img{
+  max-width: 320px;
+}
+
+.verificacion_a .info_usuario .right .buttons{
+  margin-top: 30px;
+  display: flex;
+  gap: 15px;
+}
+.verificacion_a .info_usuario .right .buttons button{
+  padding: 10px 30px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  color: var(--white);
+  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.589);
+  font-weight: 600;
+}
+
+.verificacion_a .info_usuario .right .buttons button:first-child{
+  background: var(--green);
+}
+
+.verificacion_a .info_usuario .right .buttons button:last-child{
+  background: var(--red);
+}
+
+
+@media (max-width: 750px) {
+
+  .verificacion_a .info_usuario {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+  
+}
+
+@media (max-width: 620px) {
+  .verificacion_a main{
+    width: calc(100% - 10px);
+    padding: 0;  }
+
+    .verificacion_a .info_usuario .right .buttons{
+      margin-bottom: 30px;
+    }
+}
+  /* ********** Verificacion ********** */

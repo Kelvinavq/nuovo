@@ -1,0 +1,72 @@
+.lateral{
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 320px;
+    height: 100vh;
+}
+
+.lateral .profile{
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.lateral .profile .img{
+    display: flex;
+    align-items: center;
+}
+
+.lateral .profile .img img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid var(--green);
+}
+
+.lateral .profile .dropdown button{
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: var(--green);
+}
+
+.lateral .profile .dropdown .dropdown-content{
+    width: 200px;
+    position: absolute;
+    background: var(--blue);
+    padding: 10px;
+    border-radius: 15px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.lateral .profile .dropdown .dropdown-content a{
+    padding: 10px 2px;
+}
+
+.lateral .profile .dropdown .dropdown-content a:hover{
+    background: var(--green);
+    color: var(--blue);
+    font-weight: 600;
+    border-radius: 12px;
+}
+
+.lateral .profile .notification button{
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: var(--green);
+}
+
+@media (max-width: 920px) {
+    .lateral{
+        display: none;
+    }
+}

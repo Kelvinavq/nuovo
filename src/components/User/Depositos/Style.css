@@ -1,0 +1,91 @@
+.depositar .content{
+    width: 100%;
+}
+
+.depositar .content h2{
+    font-weight: 500;
+}
+
+.depositar .form{
+    margin-top: 50px;
+}
+
+.depositar .content .grupo-input {
+    width: 100%;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.depositar .content .grupo-input label{
+    cursor: pointer;
+}
+
+.depositar .content .grupo-input input{
+    width: calc(100% - 15px);
+    padding-left: 10px;
+    height: 45px;
+    border-radius: 30px;
+    border: 2px solid var(--blue);
+    background: none;
+    color: var(--white);
+    outline: none;
+}
+
+.depositar .content .grupo-input select{
+    width: 100%;
+    padding-left: 10px;
+    height: 45px;
+    border-radius: 30px;
+    background: none;
+    border: 2px solid var(--blue);
+    color: var(--white);
+    outline: none;
+}
+
+.depositar .content .grupo-input option{
+    background: var(--bg);
+    color: var(--white);
+}
+
+.depositar .content .grupo-input .input{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.depositar .content .grupo-input .input span{
+    position: absolute;
+    left: 10px;
+    top: 18px;
+    color: var(--green);
+}
+
+.depositar .content .grupo-input .input input{
+    width: calc(100% - 30px);
+    padding-left: 25px;
+}
+
+.depositar .content .grupo-input .input label{
+    font-size: .8em;
+}
+
+.depositar .content .grupo-submit{
+    width: 100%;
+    margin-top: 20px;
+}
+
+.depositar .content .grupo-submit input{
+    padding: 10px 20px;
+    border-radius: 30px;
+    border: none;
+    outline: none;
+    background: var(--green);
+    color: var(--white);
+    font-weight: 600;
+    text-shadow: 2px 1px #00000054;
+    cursor: pointer;
+}

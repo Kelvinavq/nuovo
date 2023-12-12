@@ -1,0 +1,189 @@
+.dashboard_a main{
+    width: calc(100% - 640px);
+    position: absolute;
+    left: 100px;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.balance_a{
+    width: 100%;
+    height: 220px;
+    margin-top: 30px;
+}
+
+.balance_a .title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.balance_a .title h2{
+    font-weight: 500;
+}
+
+.balance_a .title button{
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.balance_a .title button a{
+    color: var(--green);
+}
+
+.balance_a .title button a svg{
+    font-size: 2em;
+}
+
+
+.balance_a .card{
+    width: 100%;
+    height: 160px;
+    background: var(--blue);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 30px;
+}
+
+.balance_a .card .content{
+    width: 95%;
+    height: 95%;
+    position: relative;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+
+}
+
+.balance_a .card .content .item{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+
+.balance_a .card .content .text{
+    display: flex;
+    gap: 30px;
+    margin-top: -20px;
+}
+
+.balance_a .card .content .text button{
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: var(--green);
+    font-size: 2em;
+}
+
+.balance_a .card .content .saldo span{
+    font-size: 2em;
+}
+
+.balance_a .card .content .saldo strong{
+    color: var(--green);
+}
+
+.balance_a .card .content .saldo small{
+    font-size: .5em ;
+}
+
+
+
+.balance_a .card .content .enlace{
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+}
+
+.balance_a .card .content .enlace a{
+    color: var(--green);
+}
+
+@media (max-width: 920px) {
+    main{
+        width: calc(100% - 100px);
+    }
+}
+
+@media (max-width: 1080px) {
+
+    .balance_a .card .content .saldo span{
+        font-size: 1.6em;
+    }
+    
+    .balance_a .card .content  p{
+        font-size: .8em;
+    }
+    
+    .balance_a .card .content .saldo small{
+        font-size: .4em ;
+    }
+    
+}
+
+@media (max-width: 690px) {
+    .balance_a .card{
+        width: 99%;
+    }
+
+    .balance_a .card .content .saldo span{
+        font-size: 1.8em;
+    }
+    
+    .balance_a .card .content  p{
+        font-size: .9em;
+    }
+    
+    .balance_a .card .content .saldo small{
+        font-size: .4em ;
+    }
+    
+}
+
+@media (max-width: 1270px) {
+    .dashboard_a main{
+        width: calc(100% - 500px);
+    }
+}
+
+
+@media (max-width: 960px) {
+    .dashboard_a  main{
+        width: calc(100% - 110px);
+    }
+    
+}
+
+
+
+@media (max-width: 620px) {
+    .dashboard_a  main{
+        width: calc(100% - 20px);
+        left: 10px;
+        padding-right: 10px;
+    }
+
+    .balance_a{
+        margin-top: 50px;
+    }
+}
+
+@media (max-width: 540px) {
+
+    .balance_a .card {
+        padding: 10px 0;
+    }
+    .balance_a .card .content{
+        grid-template-columns: 1fr 1fr;
+    }
+}

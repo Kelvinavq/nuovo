@@ -1,0 +1,72 @@
+.steps {
+  width: 92%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 25px;
+  margin-top: 150px;
+  place-items: center;
+}
+
+.steps .card{
+  width: 100%;
+  max-width: 420px;
+  min-height: 450px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  border-radius: 30px;
+}
+
+
+.steps .card .container{
+  width: 100%;
+  height: 200px;
+  background: var(--blue);
+  border-top-right-radius: 30px;
+  border-top-left-radius: 30px;
+  border-bottom: 2px solid var(--green);
+  position: relative;
+}
+
+
+.steps .card .container img{
+  position: absolute;
+  max-width: 200px;
+  max-height: 200px;
+  bottom: -30px;
+}
+
+.steps .card .content {
+  padding: 10px;
+}
+
+.steps .card .content  strong{
+  font-family: 'VenusRisingRG', sans-serif;
+  color: var(--white) !important;
+  font-size: .9em;
+  letter-spacing: 1.2px;
+  font-weight: 400;
+}
+
+.steps .card .content  a{
+  color: var(--green);
+  cursor: pointer;
+}
+
+.steps .card .content  a svg{
+  font-size: 3em;
+}
+
+@media (max-width: 920px) {
+  .steps {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 140px;
+  }
+}
+
+@media (max-width: 660px) {
+  .steps {
+    grid-template-columns: 1fr;
+    place-items: center;
+    row-gap: 140px;
+  }
+}
