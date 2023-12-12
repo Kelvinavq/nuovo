@@ -69,6 +69,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             if ($stmt->execute()) {
                 // Éxito en el registro
+
+                // Obtener el ID del usuario recién registrado
+                $user_id = $conexion->lastInsertId();
+
+                 // Insertar un registro en la tabla user_balances con balance 0
+                 $insertarBalanceCero = "
+                 INSERT INTO user_balances (user_id, balance)
+                 VALUES (:user_id, 0)
+                 ";
+
+                 $stmtBalance = $conexion->prepare($insertarBalanceCero);
+                 $stmtBalance->bindParam(':user_id', $user_id);
+                 $stmtBalance->execute();
+
                 http_response_code(201);
                 echo json_encode(array("message" => "Usuario registrado con éxito."));
             } else {

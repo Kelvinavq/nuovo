@@ -26,6 +26,12 @@
     border: 1px solid var(--green);
 }
 
+.lateral .profile .verified svg{
+    position: absolute;
+    left: 35px;
+    color: var(--green);
+}
+
 .lateral .profile .dropdown button{
     background: none;
     border: none;

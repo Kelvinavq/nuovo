@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Style.css";
 import Saldo from "../Saldo/Saldo";
 import Swal from "sweetalert2";
@@ -6,6 +6,28 @@ import Swal from "sweetalert2";
 const Depositar = () => {
   const [payment_method, setpayment_method] = useState("transferencia");
   const [amount, setAmount] = useState("");
+
+  const [isUserVerified, setIsUserVerified] = useState(false);
+
+  useEffect(() => {
+    const checkVerification = async () => {
+      const response = await fetch(
+        "http://localhost/nuovo/backend/api/checkVerification.php",
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        setIsUserVerified(data.status);
+      }
+    };
+    
+    checkVerification();
+  }, []);
+
 
   const handleMedioChange = (e) => {
     setpayment_method(e.target.value);
@@ -104,42 +126,51 @@ const Depositar = () => {
       <div className="content">
         <h2>Depositar</h2>
 
-        <div className="form">
-          <form onSubmit={handleSubmit}>
-            <div className="grupo-input">
-              <label htmlFor="payment_method">
-                Seleccione el medio de pago
-              </label>
-              <select
-                name="payment_method"
-                id="payment_method"
-                value={payment_method}
-                onChange={handleMedioChange}
-              >
-                <option value="transferencia">Transferencia</option>
-              </select>
-            </div>
-
-            <div className="grupo-input monto">
-              <label htmlFor="amount">Ingrese el monto a depositar</label>
-              <div className="input">
-                <span>$</span>
-                <input
-                  type="text"
-                  id="amount"
-                  name="amount"
-                  value={amount}
-                  onChange={handleMontoChange}
-                />
-                <label htmlFor="">Min. 1 dólar</label>
+        {isUserVerified === "approved" ? (
+          
+          <div className="form">
+            <form onSubmit={handleSubmit}>
+              <div className="grupo-input">
+                <label htmlFor="payment_method">
+                  Seleccione el medio de pago 
+                </label>
+                <select
+                  name="payment_method"
+                  id="payment_method"
+                  value={payment_method}
+                  onChange={handleMedioChange}
+                >
+                  <option value="transferencia">Transferencia</option>
+                </select>
               </div>
-            </div>
 
-            <div className="grupo-submit">
-              <input type="submit" value="Enviar Solicitud" />
-            </div>
-          </form>
-        </div>
+              <div className="grupo-input monto">
+                <label htmlFor="amount">Ingrese el monto a depositar</label>
+                <div className="input">
+                  <span>$</span>
+                  <input
+                    type="text"
+                    id="amount"
+                    name="amount"
+                    value={amount}
+                    onChange={handleMontoChange}
+                  />
+                  <label htmlFor="">Min. 1 dólar</label>
+                </div>
+              </div>
+
+              <div className="grupo-submit">
+                <input type="submit" value="Enviar Solicitud" />
+              </div>
+            </form>
+          </div>
+        ) : (
+          <p>
+            {isUserVerified}
+            Debe verificar su cuenta antes de realizar un depósito. Puede
+            encontrar información sobre cómo hacerlo en su perfil.
+          </p>
+        )}
       </div>
     </div>
   );

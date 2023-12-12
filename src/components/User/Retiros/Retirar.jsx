@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Style.css";
 import Saldo from "../Saldo/Saldo";
 import Swal from "sweetalert2";
@@ -7,6 +7,30 @@ const Retirar = () => {
   const [payment_method, setpayment_method] = useState("transferencia");
   const [amount, setAmount] = useState("");
   const [cbu, setCbu] = useState("");
+
+  const [isUserVerified, setIsUserVerified] = useState(false);
+
+  useEffect(() => {
+    // Ejemplo ficticio:
+    const checkVerification = async () => {
+      const response = await fetch(
+        "http://localhost/nuovo/backend/api/checkVerification.php",
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setIsUserVerified(data.status);
+      }
+    };
+
+    checkVerification();
+  }, []);
+
 
   const handleMontoChange = (e) => {
     let value = e.target.value;
@@ -90,11 +114,10 @@ const Retirar = () => {
           icon: "success",
           title: "Éxito",
           text: data.message,
-          didClose: () =>{
-            refreshPage() 
-          }
-        }); 
-
+          didClose: () => {
+            refreshPage();
+          },
+        });
       } else {
         // Procesar la respuesta de error
         Swal.fire({
@@ -121,52 +144,59 @@ const Retirar = () => {
       <div className="content">
         <h2>Retirar</h2>
 
-        <div className="form">
-          <form action=" " onSubmit={handleWithdrawalRequest}>
-            <div className="grupo-input">
-              <label htmlFor="medio">Seleccione el medio de pago</label>
-              <select
-                name="medio"
-                id="medio"
-                value={payment_method}
-                onChange={(e) => setpayment_method(e.target.value)}
-              >
-                <option value="transferencia">Transferencia</option>
-                <option value="efectivo">Efectivo</option>
-              </select>
-            </div>
+        {isUserVerified === "approved" ? (
+          <div className="form">
+            <form action=" " onSubmit={handleWithdrawalRequest}>
+              <div className="grupo-input">
+                <label htmlFor="medio">Seleccione el medio de pago</label>
+                <select
+                  name="medio"
+                  id="medio"
+                  value={payment_method}
+                  onChange={(e) => setpayment_method(e.target.value)}
+                >
+                  <option value="transferencia">Transferencia</option>
+                  <option value="efectivo">Efectivo</option>
+                </select>
+              </div>
 
-            <div className="grupo-input">
-              <label htmlFor="cbu">CBU</label>
-              <input
-                type="text"
-                name="cbu"
-                id="cbu"
-                value={cbu}
-                onChange={handleCbuChange}
-              />
-            </div>
-
-            <div className="grupo-input monto">
-              <label htmlFor="monto">Ingrese el monto a retirar</label>
-              <div className="input">
-                <span>$</span>
+              <div className="grupo-input">
+                <label htmlFor="cbu">CBU</label>
                 <input
                   type="text"
-                  id="monto"
-                  name="monto"
-                  value={amount}
-                  onChange={handleMontoChange}
+                  name="cbu"
+                  id="cbu"
+                  value={cbu}
+                  onChange={handleCbuChange}
                 />
-                <label htmlFor="">Min. 1 dólar</label>
               </div>
-            </div>
 
-            <div className="grupo-submit">
-              <input type="submit" value="Enviar Solicitud"  />
-            </div>
-          </form>
-        </div>
+              <div className="grupo-input monto">
+                <label htmlFor="monto">Ingrese el monto a retirar</label>
+                <div className="input">
+                  <span>$</span>
+                  <input
+                    type="text"
+                    id="monto"
+                    name="monto"
+                    value={amount}
+                    onChange={handleMontoChange}
+                  />
+                  <label htmlFor="">Min. 1 dólar</label>
+                </div>
+              </div>
+
+              <div className="grupo-submit">
+                <input type="submit" value="Enviar Solicitud" />
+              </div>
+            </form>
+          </div>
+        ) : (
+          <p>
+            Debe verificar su cuenta antes de realizar un retiro. Puede
+            encontrar información sobre cómo hacerlo en su perfil.
+          </p>
+        )}
       </div>
     </div>
   );
