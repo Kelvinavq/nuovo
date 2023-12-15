@@ -10,78 +10,90 @@ const Seguridad_a = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openPasswordModal = () => {
-    MySwal.fire({
-      title: "Actualizar Contraseña",
-      html: (
-        <div>
-          <div className="message">
-            <div className="icon">
-              <ErrorOutlineIcon />
-              <span>Proteja su cuenta</span>
-            </div>
+    setIsModalOpen(true);
+  };
 
-            <div className="text">
-              <p>
-                Nunca utilice una contraseña utilizada anteriormente o una
-                contraseña que utiliza en otro servicio
-              </p>
-            </div>
-          </div>
-          <div className="grupo-input">
-            <label htmlFor="currentPassword">Contraseña Actual:</label>
-            <input
-              type="password"
-              id="currentPassword"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-            />
-          </div>
-          <div className="grupo-input">
-            <label htmlFor="newPassword">Nueva Contraseña:</label>
-            <input
-              type="password"
-              id="newPassword"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          </div>
-          <div className="grupo-input">
-            <label htmlFor="confirmPassword">Confirmar Contraseña:</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-          </div>
-        </div>
-      ),
-      showCancelButton: true,
-      confirmButtonText: "Actualizar",
-      cancelButtonText: "Cancelar",
-      preConfirm: () => {
-        // Aquí puedes realizar la lógica para manejar el submit del formulario
-        // Puedes enviar los datos al servidor, validar, etc.
-        // Devuelve una promesa resuelta o rechazada según el resultado
-        return new Promise((resolve, reject) => {
-          // Puedes agregar la lógica de validación aquí
-          if (newPassword !== confirmPassword) {
-            reject(new Error("Las contraseñas no coinciden"));
-          } else {
-            // Resuelve la promesa con los datos del formulario
-            resolve({ currentPassword, newPassword, confirmPassword });
-          }
+  const closePasswordModal = ()  => {
+    setIsModalOpen(false);
+    // Limpiar los estados al cerrar el modal si es necesario
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+  };
+
+  const handleUpdatePassword = async (e)  => {
+    e.preventDefault();
+  
+    // Validar la longitud mínima de las contraseñas
+    if (
+      currentPassword.length < 8 ||
+      newPassword.length < 8 ||
+      confirmPassword.length < 8
+    ) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Las contraseñas deben tener al menos 8 caracteres",
+      });
+      return;
+    }
+  
+    // Validar que la nueva contraseña y la confirmación coincidan
+    if (newPassword !== confirmPassword) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Las contraseñas nuevas no coinciden",
+      });
+      return;
+    }
+  
+    // Enviar la solicitud al backend
+    try {
+      const response = await fetch(
+        "http://localhost/nuovo/backend/api/admin/updatePassword.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            currentPassword,
+            newPassword,
+          }),
+          credentials: "include",
+        }
+      );
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        // Procesar la respuesta exitosa
+        Swal.fire({
+          icon: "success",
+          title: "Éxito",
+          text: data.message,
         });
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Aquí puedes realizar acciones después de que el usuario hace clic en "Actualizar"
-        // result.value contendrá los datos del formulario
-        console.log("Contraseña actualizada:", result.value);
+        closePasswordModal();
+      } else {
+        // Procesar la respuesta de error
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: data.error || "Hubo un error al actualizar la contraseña",
+        });
       }
-    });
+    } catch (error) {
+      console.error("Error al actualizar la contraseña:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error inesperado al actualizar la contraseña",
+      });
+    }
   };
 
   return (
@@ -95,6 +107,57 @@ const Seguridad_a = () => {
           <button onClick={openPasswordModal}>Actualizar contraseña</button>
         </div>
       </div>
+      {isModalOpen && (
+        <div className="modal" >
+          <div className="overlay" onClick={closePasswordModal}></div>
+          <div className="modal-content">
+            <div className="message">
+              <div className="icon">
+                <ErrorOutlineIcon />
+                <span>Proteja su cuenta</span>
+              </div>
+
+              <div className="text">
+                <p>
+                  Nunca utilice una contraseña utilizada anteriormente o una
+                  contraseña que utiliza en otro servicio
+                </p>
+              </div>
+            </div>
+            <div className="grupo-input">
+              <label htmlFor="currentPassword">Contraseña Actual:</label>
+              <input
+                type="password"
+                id="currentPassword"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+              />
+            </div>
+            <div className="grupo-input">
+              <label htmlFor="newPassword">Nueva Contraseña:</label>
+              <input
+                type="password"
+                id="newPassword"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </div>
+            <div className="grupo-input">
+              <label htmlFor="confirmPassword">Confirmar Contraseña:</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </div>
+            <div className="button-group">
+              <button onClick={handleUpdatePassword}>Actualizar</button>
+              <button onClick={closePasswordModal}>Cancelar</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
