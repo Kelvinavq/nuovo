@@ -13,6 +13,8 @@ const Depositos = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const userRole = localStorage.getItem("user_role");
+  const [showAlert, setShowAlert] = useState(false); 
+
 
   useEffect(() => {
     // Verificar si el usuario está autenticado
@@ -31,7 +33,23 @@ const Depositos = () => {
 
         if (response.ok) {
           setIsLoggedIn(true);
+
+          // Verificar el rol del usuario después de la autenticación
+          if (userRole !== "user") {
+            setShowAlert(true);
+            // Si el rol no es user, redirigir al usuario al inicio de sesión
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "Acceso no permitido para el rol actual.",
+              timer: 3000,
+              didClose: () => {
+                history.back()
+              },
+            });
+          }
         } else {
+          setShowAlert(true);
           // Si la sesión no es válida, redirige al usuario al inicio de sesión
           Swal.fire({
             icon: "error",
@@ -52,8 +70,8 @@ const Depositos = () => {
     checkAuthStatus();
   }, [history]);
 
-  // Si el usuario no ha iniciado sesión, no renderizar el componente
-  if (!isLoggedIn) {
+  // Si el usuario no ha iniciado sesión o no tiene el rol adecuado, no renderizar el componente
+  if (!isLoggedIn || showAlert) {
     return null;
   }
 

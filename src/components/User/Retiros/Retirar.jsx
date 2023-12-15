@@ -31,27 +31,23 @@ const Retirar = () => {
     checkVerification();
   }, []);
 
-
   const handleMontoChange = (e) => {
     let value = e.target.value;
-
-    // Reemplazar cualquier caracter que no sea número o punto decimal con una cadena vacía
-    value = value.replace(/[^0-9.]/g, "");
-
-    // Formatear con separadores de miles
-    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-    // Solo permitir un punto decimal
-    const decimalIndex = value.indexOf(".");
-    if (decimalIndex !== -1) {
-      value =
-        value.slice(0, decimalIndex + 1) +
-        value.slice(decimalIndex + 1).replace(/\./g, "");
-    }
-
-    // Establecer el valor en el estado
+  
+    // Permitir solo números
+    value = value.replace(/[^0-9]/g, "");
+  
+    // Insertar un punto cada dos dígitos
+    value = value
+    .replace(/\D/g, "") // Reemplaza los caracteres que no sean números con una cadena vacía
+    .replace(/([0-9])([0-9]{2})$/, "$1,$2") // Reemplaza los dos últimos dígitos con una coma
+    .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");// Reemplaza los caracteres de punto y coma que estén entre tres dígitos
     setAmount(value);
   };
+  
+  
+  
+  
 
   const handleCbuChange = (e) => {
     let value = e.target.value;

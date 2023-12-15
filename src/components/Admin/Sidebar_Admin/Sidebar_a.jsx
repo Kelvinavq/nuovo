@@ -15,6 +15,30 @@ const Sidebar_a = () => {
     return location.pathname === pathname ? "active" : "";
   };
 
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("http://localhost/nuovo/backend/api/logout.php", {
+        method: "POST",
+        mode: "cors",
+        credentials: "include",
+      });
+  
+      if (response.ok) {
+        // Elimina la información de la sesión del almacenamiento local
+        sessionStorage.removeItem('user_role');
+        sessionStorage.removeItem('user_id');
+  
+        // Redirige al usuario a la página de inicio de sesión
+        window.location.href = '/login';
+      } else {
+        // Maneja errores si es necesario
+        console.error("Error al cerrar sesión");
+      }
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
+  };
+
   return (
     <div className="sidebar">
       <div className="items">
@@ -56,10 +80,10 @@ const Sidebar_a = () => {
           </div>
         </div>
         <div className="item">
-          <div className="icon">
-            <Link>
+        <div className="icon">
+            <button onClick={handleLogout}>
               <img src={LogoutIcon} alt="" />
-            </Link>
+            </button>
           </div>
         </div>
       </div>
