@@ -51,8 +51,8 @@ if (
     $insertImages = "INSERT INTO user_verification (user_id, dni_image, selfie_with_dni_image) VALUES (:userId, :dniFront, :dniSelfie)";
     $stmtInsert = $conexion->prepare($insertImages);
     $stmtInsert->bindParam(':userId', $userId);
-    $stmtInsert->bindParam(':dniFront', $dniFrontFilename);
-    $stmtInsert->bindParam(':dniSelfie', $dniSelfieFilename);
+    $stmtInsert->bindParam(':dniFront', $dniSelfieFilename);
+    $stmtInsert->bindParam(':dniSelfie', $dniFrontFilename);
 
     if ($stmtInsert->execute()) {
         // Inserción en la base de datos exitosa

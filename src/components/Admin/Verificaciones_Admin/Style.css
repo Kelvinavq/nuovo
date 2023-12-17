@@ -217,4 +217,28 @@
       margin-bottom: 30px;
     }
 }
+
+.mi-swalert-verificacion{
+  width: 750px !important;
+  max-width: 95%;
+}
+
+.mi-swalert-verificacion #swal2-html-container{
+  width: 100%;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+div:where(.swal2-container) .swal2-html-container p {
+  text-align: left;
+}
+
+div:where(.swal2-container) .swal2-html-container p:last-child{
+  color: var(--gray);
+}
+
+div:where(.swal2-container) .swal2-html-container img{
+  max-width: 85%;
+}
+
   /* ********** Verificacion ********** */
