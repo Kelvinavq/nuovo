@@ -21,6 +21,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $updateStmt->execute();
 
+                // Obtener información del usuario asociado a la solicitud
+                $getUserQuery = "SELECT user_id FROM user_verification WHERE id = :id";
+                $getUserStmt = $conexion->prepare($getUserQuery);
+                $getUserStmt->bindParam(':id', $verificationId, PDO::PARAM_INT);
+                $getUserStmt->execute();
+                $userId = $getUserStmt->fetchColumn();
+        
+                // Agregar notificación al usuario
+                $notificationMessage = "El estado de tu solicitud de verificación ha sido actualizado a $status.";
+                $addNotification = "INSERT INTO notifications (user_id, content, is_read) VALUES (:userId, :message, 0)";
+                $stmtNotification = $conexion->prepare($addNotification);
+                $stmtNotification->bindParam(':userId', $userId);
+                $stmtNotification->bindParam(':message', $notificationMessage);
+                $stmtNotification->execute();
+
         // Puedes realizar otras acciones aquí, como notificar al usuario, etc.
 
         http_response_code(200);

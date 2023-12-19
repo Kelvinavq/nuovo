@@ -56,6 +56,16 @@ if (
 
     if ($stmtInsert->execute()) {
         // Inserción en la base de datos exitosa
+
+        
+        // Agregar notificación
+        $notificationMessage = "Tu solicitud de verificación ha sido recibida. Está pendiente de revisión.";
+        $addNotification = "INSERT INTO notifications (user_id, content, is_read) VALUES (:userId, :message, 0)";
+        $stmtNotification = $conexion->prepare($addNotification);
+        $stmtNotification->bindParam(':userId', $userId);
+        $stmtNotification->bindParam(':message', $notificationMessage);
+        $stmtNotification->execute();
+
         http_response_code(200);
         echo json_encode(array("message" => "Imágenes subidas y registradas correctamente."));
     } else {

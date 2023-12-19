@@ -6,22 +6,52 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import VerifiedIcon from "@mui/icons-material/Verified";
 
 const Lateral = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const profileDropdownRef = useRef(null);
+
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const notificationsDropdownRef = useRef(null);
+
   const [userData, setUserData] = useState({});
   const [isUserVerified, setIsUserVerified] = useState(false);
+  const [notifications, setNotifications] = useState([]);
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+  const toggleProfileDropdown = () => {
+    setIsProfileOpen(!isProfileOpen);
   };
 
-  const closeDropdownOutsideClick = (event) => {
+  const toggleNotificationsDropdown = () => {
+    setIsNotificationsOpen(!isNotificationsOpen);
+  };
+
+  const closeDropdownOutsideClick = (event, dropdownRef, setIsOpen) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsOpen(false);
     }
   };
 
+  const getNotifications = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost/nuovo/backend/api/getNotifications.php",
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        setNotifications(data);
+      }
+    } catch (error) {
+      console.error("Error al obtener notificaciones", error);
+    }
+  };
+
   useEffect(() => {
+    getNotifications();
+
     document.addEventListener("mousedown", closeDropdownOutsideClick);
 
     // Obtener información del usuario al cargar el componente
@@ -35,44 +65,75 @@ const Lateral = () => {
         console.error("Error al obtener información del usuario", error)
       );
 
-      const checkVerification = async () => {
-        const response = await fetch(
-          "http://localhost/nuovo/backend/api/checkVerification.php",
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
-  
-        const data = await response.json();
-        if (response.ok) {
-          setIsUserVerified(data.status);
+    const checkVerification = async () => {
+      const response = await fetch(
+        "http://localhost/nuovo/backend/api/checkVerification.php",
+        {
+          method: "GET",
+          credentials: "include",
         }
-      };
-  
-      checkVerification();
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        setIsUserVerified(data.status);
+      }
+    };
+
+    checkVerification();
+
+    const closeProfileDropdownOutsideClick = (event) => {
+      closeDropdownOutsideClick(event, profileDropdownRef, setIsProfileOpen);
+    };
+
+    const closeNotificationsDropdownOutsideClick = (event) => {
+      closeDropdownOutsideClick(
+        event,
+        notificationsDropdownRef,
+        setIsNotificationsOpen
+      );
+    };
+
+    document.addEventListener("mousedown", closeProfileDropdownOutsideClick);
+    document.addEventListener(
+      "mousedown",
+      closeNotificationsDropdownOutsideClick
+    );
 
     return () => {
-      document.removeEventListener("mousedown", closeDropdownOutsideClick);
+      document.removeEventListener(
+        "mousedown",
+        closeProfileDropdownOutsideClick
+      );
+      document.removeEventListener(
+        "mousedown",
+        closeNotificationsDropdownOutsideClick
+      );
     };
-  }, []);
 
+  }, []);
 
   return (
     <div className="lateral">
       <div className="profile">
         <div className="img">
-          {isUserVerified === "approved" ? <p className="verified"><VerifiedIcon/></p> : ""}
+          {isUserVerified === "approved" ? (
+            <p className="verified">
+              <VerifiedIcon />
+            </p>
+          ) : (
+            ""
+          )}
 
           <img
             src={`http://localhost/nuovo/src/assets/users/${userData.profile_picture}`}
             alt=""
           />
-          <div className="dropdown" ref={dropdownRef}>
-            <button onClick={toggleDropdown}>
+          <div className="dropdown" ref={profileDropdownRef}>
+            <button onClick={toggleProfileDropdown}>
               <KeyboardArrowDownIcon />
             </button>
-            {isOpen && (
+            {isProfileOpen && (
               <div className="dropdown-content">
                 <Link to={"/user/ajustes/perfil"}>Perfil</Link>
                 <Link to={"/user/ajustes/verificacion"}>Verificación</Link>
@@ -84,9 +145,16 @@ const Lateral = () => {
         </div>
 
         <div className="notification">
-          <button>
+          <button onClick={toggleNotificationsDropdown}>
             <NotificationsNoneOutlinedIcon />
           </button>
+          {isNotificationsOpen && (
+            <div className="dropdown-content" ref={notificationsDropdownRef}>
+              {notifications.map((notification) => (
+                <p key={notification.id}>{notification.content}</p>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

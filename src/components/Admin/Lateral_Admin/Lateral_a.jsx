@@ -7,12 +7,14 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import HorizontalRuleOutlinedIcon from "@mui/icons-material/HorizontalRuleOutlined";
 
-
 const Lateral_a = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const profileDropdownRef = useRef(null);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const notificationsDropdownRef = useRef(null);
+
+  const [userData, setUserData] = useState({});
+  const [notifications, setNotifications] = useState([]);
 
   const toggleProfileDropdown = () => {
     setIsProfileOpen(!isProfileOpen);
@@ -28,28 +30,74 @@ const Lateral_a = () => {
     }
   };
 
+  const getNotifications = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost/nuovo/backend/api/getNotifications.php",
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        setNotifications(data);
+      }
+    } catch (error) {
+      console.error("Error al obtener notificaciones", error);
+    }
+  };
+
   useEffect(() => {
+    // Obtener información del usuario al cargar el componente
+    fetch("http://localhost/nuovo/backend/api/admin/getUserInfo.php", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => setUserData(data))
+      .catch((error) =>
+        console.error("Error al obtener información del usuario", error)
+      );
+
     const closeProfileDropdownOutsideClick = (event) => {
       closeDropdownOutsideClick(event, profileDropdownRef, setIsProfileOpen);
     };
 
     const closeNotificationsDropdownOutsideClick = (event) => {
-      closeDropdownOutsideClick(event, notificationsDropdownRef, setIsNotificationsOpen);
+      closeDropdownOutsideClick(
+        event,
+        notificationsDropdownRef,
+        setIsNotificationsOpen
+      );
     };
 
     document.addEventListener("mousedown", closeProfileDropdownOutsideClick);
-    document.addEventListener("mousedown", closeNotificationsDropdownOutsideClick);
+    document.addEventListener(
+      "mousedown",
+      closeNotificationsDropdownOutsideClick
+    );
 
     return () => {
-      document.removeEventListener("mousedown", closeProfileDropdownOutsideClick);
-      document.removeEventListener("mousedown", closeNotificationsDropdownOutsideClick);
+      document.removeEventListener(
+        "mousedown",
+        closeProfileDropdownOutsideClick
+      );
+      document.removeEventListener(
+        "mousedown",
+        closeNotificationsDropdownOutsideClick
+      );
     };
+    getNotifications();
   }, []);
+
+  // manejo de notificaciones
 
   return (
     <div className="lateral_a">
       <div className="profile">
-      <div className="img">
+        <div className="img">
           <img src={usuarioIcon} alt="" />
           <div className="dropdown" ref={profileDropdownRef}>
             <button onClick={toggleProfileDropdown}>
@@ -64,17 +112,18 @@ const Lateral_a = () => {
               </div>
             )}
           </div>
-          <p>Nombre Apellido</p>
+          <p>{userData.name}</p>
         </div>
 
-         <div className="notification">
-         <button onClick={toggleNotificationsDropdown}>
+        <div className="notification">
+          <button onClick={toggleNotificationsDropdown}>
             <NotificationsNoneOutlinedIcon />
           </button>
           {isNotificationsOpen && (
             <div className="dropdown-content" ref={notificationsDropdownRef}>
-              {/* Contenido del dropdown de notificaciones */}
-              <p>Contenido de notificaciones...</p>
+              {notifications.map((notification) => (
+                <p key={notification.id}>{notification.content}</p>
+              ))}
             </div>
           )}
         </div>
