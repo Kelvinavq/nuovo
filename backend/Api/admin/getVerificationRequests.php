@@ -5,6 +5,14 @@ include '../../cors.php';
 // Obtener conexión a la base de datos
 $conexion = obtenerConexion();
 
+// Verificar si hay una sesión activa
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    http_response_code(401); // Unauthorized
+    echo json_encode(array("error" => "No hay una sesión activa."));
+    exit();
+}
+
 // Verificar si la solicitud es de tipo GET
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     http_response_code(405); // Method Not Allowed
@@ -13,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 }
 
 // Obtener la lista de solicitudes de verificación
-$obtenerVerificacionesQuery = "SELECT uv.id, u.registrationTime, u.name, u.phoneNumber, u.email, u.address, DATE_FORMAT(uv.created_at, '%d-%m-%Y %H:%i:%s') AS fecha_solicitud, DATE_FORMAT(uv.updated_at, '%d-%m-%Y') AS fecha_registro, uv.status, uv.dni_image, uv.selfie_with_dni_image FROM user_verification uv JOIN users u ON uv.user_id = u.id ORDER BY uv.created_at DESC";
+$obtenerVerificacionesQuery = "SELECT uv.id, u.registrationTime, u.name, u.phoneNumber, u.email, u.address, DATE_FORMAT(uv.created_at, '%d-%m-%Y %H:%i:%s') AS fecha_solicitud, DATE_FORMAT(uv.updated_at, '%d-%m-%Y') AS fecha_registro, uv.status, uv.user_id, uv.dni_image, uv.selfie_with_dni_image, uv.dni_back FROM user_verification uv JOIN users u ON uv.user_id = u.id ORDER BY uv.created_at DESC";
 
 
 

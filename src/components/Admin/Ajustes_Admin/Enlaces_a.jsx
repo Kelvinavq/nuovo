@@ -21,6 +21,13 @@ const Enlaces_a = () => {
         <div className={`item ${isActive("/admin/ajustes/seguridad")}`}>
           <Link to="/admin/ajustes/seguridad">Seguridad</Link>
         </div>
+
+        <div className={`item ${isActive("/admin/ajustes/bancos")}`}>
+          <Link to="/admin/ajustes/bancos">Bancos</Link>
+        </div>
+        <div className={`item ${isActive("/admin/ajustes/plataformas")}`}>
+          <Link to="/admin/ajustes/plataformas">Plataformas</Link>
+        </div>
       </div>
     </div>
   )

@@ -16,15 +16,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"));
 
     $verificationId = intval($data->verificationId);
-    $action = $data->action; // 'approve' o 'deny'
+    $reasons = $data->reasons;
+    $otraText = isset($data->otraText) ? $data->otraText : null;
 
     try {
-        // Actualizar el estado de la solicitud de verificación
-        $updateVerificationStatusQuery = "UPDATE user_verification SET status = :status WHERE id = :id";
-        $updateStmt = $conexion->prepare($updateVerificationStatusQuery);
+        // Unir las razones en una cadena para almacenar en la base de datos
+        $formattedReasons = implode(", ", $reasons);
 
-        $status = ($action === 'approve') ? 'approved' : 'denied';
-        $updateStmt->bindParam(':status', $status);
+        // Agregar el motivo personalizado, si está presente
+        if (!empty($otraText)) {
+            $formattedReasons .= ", " . $otraText;
+        }
+
+        // Actualizar el estado de la solicitud de verificación a 'denied'
+        $updateVerificationStatusQuery = "UPDATE user_verification SET status = 'denied', content = :reasons WHERE id = :id";
+        $updateStmt = $conexion->prepare($updateVerificationStatusQuery);
+        $updateStmt->bindParam(':reasons', $formattedReasons);
         $updateStmt->bindParam(':id', $verificationId, PDO::PARAM_INT);
 
         $updateStmt->execute();
@@ -37,27 +44,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $userId = $getUserStmt->fetchColumn();
 
         // Agregar notificación al usuario
-        $notificationMessage = "El estado de tu solicitud de verificación ha sido actualizado a $status.";
+        $notificationMessage = "El estado de tu solicitud de verificación ha sido actualizado a denegado. Motivo: $formattedReasons";
         $addNotification = "INSERT INTO notifications (user_id, content, is_read) VALUES (:userId, :message, 0)";
         $stmtNotification = $conexion->prepare($addNotification);
         $stmtNotification->bindParam(':userId', $userId);
         $stmtNotification->bindParam(':message', $notificationMessage);
         $stmtNotification->execute();
 
-        // Verificar si la acción es 'approve' para manejar la actualización del número de cuenta
-        if ($action === 'approve') {
-            // Lógica para actualizar el número de cuenta bancaria
-            // Enviar el número de cuenta al frontend para que el usuario lo ingrese
-
-            // A continuación, puedes agregar el código para enviar el número de cuenta al frontend
-            // y procesar la entrada del usuario en JavaScript, como se hizo anteriormente.
-        }
-
         http_response_code(200);
-        echo json_encode(array("message" => "Solicitud de verificación actualizada con éxito."));
+        echo json_encode(array("message" => "Solicitud de verificación denegada con éxito."));
     } catch (PDOException $e) {
         http_response_code(500);
-        echo json_encode(array("error" => "Error al actualizar el estado de la solicitud.", "details" => $e->getMessage()));
+        echo json_encode(array("error" => "Error al denegar la solicitud.", "details" => $e->getMessage()));
     }
 }
 

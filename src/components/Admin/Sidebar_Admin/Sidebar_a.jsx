@@ -72,7 +72,7 @@ const Sidebar_a = () => {
             </Link>
           </div>
         </div>
-        <div className={`item i-ajustes ${isActive("/admin/ajustes")} ${isActive("/admin/ajustes/seguridad")} `}>
+        <div className={`item i-ajustes ${isActive("/admin/ajustes")} ${isActive("/admin/ajustes/seguridad")} ${isActive("/admin/ajustes/bancos")} ${isActive("/admin/ajustes/plataformas")}`}>
           <div className="icon">
             <Link to="/admin/ajustes">
               <img src={AjustesIcon} alt="" />

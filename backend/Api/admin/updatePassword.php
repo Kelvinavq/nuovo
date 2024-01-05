@@ -2,10 +2,18 @@
 include '../../Config/config.php';
 include '../../cors.php';
 
-session_start();
+
 
 // Obtener conexión a la base de datos
 $conexion = obtenerConexion();
+
+// Verificar si hay una sesión activa
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    http_response_code(401); // Unauthorized
+    echo json_encode(array("error" => "No hay una sesión activa."));
+    exit();
+}
 
 // Verificar si la solicitud es de tipo POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

@@ -27,6 +27,8 @@ import Verificaciones_admin from "./pages/Admin/Verificaciones_admin";
 import Ajustes_admin from "./pages/Admin/Ajustes_admin";
 import Verificacion from "./pages/Admin/Verificacion";
 import Ajustes_a_Seguridad from "./pages/Admin/Ajustes_a_Seguridad";
+import Bancos from "./pages/Admin/Bancos";
+import Plataformas from "./pages/Admin/Plataformas";
 
 
 // paths
@@ -96,6 +98,14 @@ const router = createBrowserRouter([
   {
     path: "/admin/ajustes/seguridad",
     element: <Ajustes_a_Seguridad />,
+  },
+  {
+    path: "/admin/ajustes/bancos",
+    element: <Bancos />,
+  },
+  {
+    path: "/admin/ajustes/plataformas",
+    element: <Plataformas />,
   },
 ]);
 

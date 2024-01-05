@@ -239,6 +239,7 @@ div:where(.swal2-container) .swal2-html-container p:last-child{
 
 div:where(.swal2-container) .swal2-html-container img{
   max-width: 85%;
+  float: left;
 }
 
   /* ********** Verificacion ********** */

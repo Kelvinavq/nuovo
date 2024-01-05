@@ -6,8 +6,20 @@
   display: flex;
   border-bottom: 2px solid var(--gray);
   padding-bottom: 10px;
-  max-width: 200px;
+  width: 450px;
+  max-width: 100%;
   gap: 50px;
+}
+
+@media (max-width: 480px) {
+  .enlaces_a .content {
+    overflow-x: auto;
+  }
+}
+
+.enlaces_a .content::-webkit-scrollbar {
+  width: 5px;
+  height: 2px;
 }
 
 .enlaces_a .content .item.active a {
@@ -17,7 +29,6 @@
 
 .ajustes_a {
   width: 100%;
-  max-width: 350px;
 }
 
 .ajustes_a .content h2 {
@@ -68,3 +79,189 @@
   color: var(--green);
   cursor: pointer;
 }
+
+/* bancos */
+
+.bancos_a .title {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bancos_a .banks {
+  width: 100%;
+  margin-top: 50px;
+}
+
+.bancos_a .banks .grupo-input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.bancos_a .banks .grupo-input select {
+  max-width: 300px;
+  height: 45px;
+  border-radius: 30px;
+  background: none;
+  color: var(--white);
+  cursor: pointer;
+  padding: 0 10px;
+}
+
+.bancos_a .banks .grupo-input select option {
+  background: var(--bg);
+  color: var(--white);
+}
+
+.bancos_a .banks .account_detail {
+  margin-top: 20px;
+}
+
+.bancos_a .banks .account_detail div {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.bancos_a .banks .account_detail div h2 {
+  font-size: 1.1em;
+  font-weight: 400;
+}
+
+.bancos_a .banks .account_detail div strong {
+  font-size: 1em;
+  font-weight: 600;
+}
+
+.bancos_a .modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.bancos_a .modal .overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.bancos_a .modal .modal-content {
+  width: 460px;
+  max-width: 90%;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  border-radius: 30px;
+  z-index: 1000;
+  animation: slideIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.bancos_a .modal .modal-content .message {
+  background: var(--blue);
+  width: calc(100% - 30px);
+  height: 80px;
+  border-radius: 30px;
+  padding: 15px;
+}
+
+.bancos_a .modal .modal-content .message .icon {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: var(--green);
+  font-weight: 600;
+}
+
+.bancos_a .modal .modal-content .message .text {
+  font-size: 0.8em;
+  text-align: left;
+  margin-top: -5px;
+}
+
+.bancos_a .modal .modal-content .grupo-input {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.bancos_a .modal .modal-content .grupo-input label {
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.bancos_a .modal .modal-content .grupo-input input {
+  height: 45px;
+  border: none;
+  outline: none;
+  border-radius: 30px;
+  background: none;
+  border: 2px solid var(--blue);
+  color: var(--white);
+  padding-left: 10px;
+}
+
+.bancos_a .modal .modal-content .button-group {
+  margin-top: 15px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.bancos_a .modal .modal-content .button-group button {
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.bancos_a .modal .modal-content .button-group button:first-child {
+  background: var(--green);
+  color: var(--white);
+  font-weight: 600;
+  text-shadow: 0px 0px 2px #000000be;
+}
+
+.bancos_a .modal .modal-content .button-group button:last-child {
+  background: none;
+  border: 2px solid var(--green);
+  color: var(--green);
+}
+
+/* bancos */

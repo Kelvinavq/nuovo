@@ -25,7 +25,8 @@ const Verificacion = () => {
     });
   };
 
-  const [verificationStatus, setVerificationStatus] = useState("pending");
+  const [verificationStatus, setVerificationStatus] = useState(null);
+  const [content, setContent] = useState(null);
 
   function refreshPage() {
     window.location.reload(false);
@@ -33,6 +34,8 @@ const Verificacion = () => {
 
   const [dniFront, setDniFront] = useState(null);
   const [dniSelfie, setDniSelfie] = useState(null);
+  const [dniBack, setDniBack] = useState(null);
+
   const [isDniFrontUploaded, setIsDniFrontUploaded] = useState(false);
 
   const handleDniFrontChange = (e) => {
@@ -46,19 +49,25 @@ const Verificacion = () => {
     setDniSelfie(file);
   };
 
+  const handleDniBackChange = (e) => {
+    const file = e.target.files[0];
+    setDniBack(file);
+  };
+
   const handleUpload = async () => {
     // Validar que ambos archivos estén seleccionados
-    if (!dniFront || !dniSelfie) {
+    if (!dniFront || !dniSelfie || !dniBack) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Debes seleccionar ambas imágenes",
+        text: "Debes seleccionar las tres imágenes",
       });
       return;
     }
 
     const formData = new FormData();
     formData.append("dniFront", dniFront);
+    formData.append("dniBack", dniBack);
     formData.append("dniSelfie", dniSelfie);
 
     try {
@@ -107,8 +116,16 @@ const Verificacion = () => {
       method: "GET",
       credentials: "include",
     })
-      .then((response) => response.json())
-      .then((data) => setVerificationStatus(data.status))
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Error de red: ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setVerificationStatus(data.status);
+        setContent(data.content); // Almacena el contenido en la variable
+      })
       .catch((error) =>
         console.error("Error al obtener el estado de verificación:", error)
       );
@@ -158,56 +175,16 @@ const Verificacion = () => {
                 Lamentablemente, su solicitud de verificación ha sido denegada.
                 Si tiene alguna pregunta, no dude en contactarnos.
               </p>
-            </div>
-          </div>
-        )}
-
-        {!verificationStatus && (
-          <div className="estatus active">
-            <div className="danger">
-              <DangerousOutlinedIcon />
-              <span>Su cuenta no se encuentra verificada</span>
-            </div>
-
-            <div className="text">
+              <p>El motivo por el cual su solicitud ha sido denegada es:</p>
+              <p>{content}</p>
               <p>
-                Para verificar su cuenta debe subir una foto de su documento de
-                identidad legible y una foto selfie con el mismo.
-                <ErrorOutlineOutlinedIcon />
+                Por favor, verifique y suba ambas fotografias nuevamente
+                siguiendo las instrucciones correspondientes
               </p>
             </div>
-
             <div className="fotosVerificacion">
-              {isDniFrontUploaded && !dniSelfie && (
-                <div className="fotoVerificacion">
-                  <label
-                    htmlFor="dni"
-                    onClick={() =>
-                      openModal({
-                        text: "Por favor, asegúrate de que la foto del DNI sea clara y legible. Todos los detalles, incluyendo el nombre, la fecha de nacimiento y la fotografía, deben ser fácilmente distinguibles. Evita sombras, desenfoques o reflejos que puedan afectar la calidad de la imagen.",
-                        imageUrl: imgDni,
-                      })
-                    }
-                  >
-                    Subir Foto DNI
-                  </label>
-                  <input
-                    type="file"
-                    name="dni"
-                    id="dni"
-                    accept=".jpg, .jpeg, .png"
-                    onChange={handleDniSelfieChange}
-                  />
-                </div>
-              )}
-
-              {dniFront && dniSelfie && (
-                <button className="btnVerificacion" onClick={handleUpload}>
-                  Enviar Verificación
-                </button>
-              )}
-
-              {!isDniFrontUploaded && (
+              {/* selfie dni */}
+              {!dniFront && !dniBack && !dniSelfie && (
                 <div className="fotoVerificacion">
                   <label
                     htmlFor="selfie"
@@ -230,7 +207,61 @@ const Verificacion = () => {
                 </div>
               )}
 
-              {(dniFront || dniSelfie) && (
+              {/* dni */}
+              {dniFront && !dniBack && !dniSelfie && (
+                <div className="fotoVerificacion">
+                  <label
+                    htmlFor="dni"
+                    onClick={() =>
+                      openModal({
+                        text: "Por favor, asegúrate de que la foto del DNI sea clara y legible. Todos los detalles, incluyendo el nombre, la fecha de nacimiento y la fotografía, deben ser fácilmente distinguibles. Evita sombras, desenfoques o reflejos que puedan afectar la calidad de la imagen.",
+                        imageUrl: imgDni,
+                      })
+                    }
+                  >
+                    Subir Foto DNI
+                  </label>
+                  <input
+                    type="file"
+                    name="dni"
+                    id="dni"
+                    accept=".jpg, .jpeg, .png"
+                    onChange={handleDniSelfieChange}
+                  />
+                </div>
+              )}
+
+              {/* dni back */}
+              {!dniBack && dniSelfie && (
+                <div className="fotoVerificacion">
+                  <label
+                    htmlFor="dniBack"
+                    onClick={() =>
+                      openModal({
+                        text: "Por favor, asegúrate de que la foto del dorso del DNI sea clara y legible. Todos los detalles deben ser fácilmente distinguibles. Evita sombras, desenfoques o reflejos que puedan afectar la calidad de la imagen.",
+                        imageUrl: imgDni,
+                      })
+                    }
+                  >
+                    Subir Foto Dorso DNI
+                  </label>
+                  <input
+                    type="file"
+                    name="dniBack"
+                    id="dniBack"
+                    accept=".jpg, .jpeg, .png"
+                    onChange={handleDniBackChange}
+                  />
+                </div>
+              )}
+
+              {dniFront && dniBack && dniSelfie && (
+                <button className="btnVerificacion" onClick={handleUpload}>
+                  Enviar Verificación
+                </button>
+              )}
+
+              {(dniFront || dniBack || dniSelfie) && (
                 <div className="previews">
                   {dniFront && (
                     <div className="preview">
@@ -241,12 +272,152 @@ const Verificacion = () => {
                       />
                     </div>
                   )}
+              
                   {dniSelfie && (
                     <div className="preview">
                       <p>Previsualización del DNI:</p>
                       <img
                         src={URL.createObjectURL(dniSelfie)}
                         alt="Selfie Preview"
+                      />
+                    </div>
+                  )}
+                      {dniBack && (
+                    <div className="preview">
+                      <p>Previsualización del Dorso del DNI:</p>
+                      <img
+                        src={URL.createObjectURL(dniBack)}
+                        alt="DNI Back Preview"
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {!verificationStatus && (
+          <div className="estatus active">
+            <div className="danger">
+              <DangerousOutlinedIcon />
+              <span>Su cuenta no se encuentra verificada</span>
+            </div>
+
+            <div className="text">
+              <p>
+                Para verificar su cuenta debe subir una foto de su documento de
+                identidad legible y una foto selfie con el mismo.
+                <ErrorOutlineOutlinedIcon />
+              </p>
+            </div>
+
+            <div className="fotosVerificacion">
+              {/* selfie dni */}
+              {!dniFront && !dniBack && !dniSelfie && (
+                <div className="fotoVerificacion">
+                  <label
+                    htmlFor="selfie"
+                    onClick={() =>
+                      openModal({
+                        text: "Por favor, asegúrate de que la foto del selfie sea clara y legible. Todos los detalles, incluyendo el rostro y cualquier información adicional requerida, deben ser fácilmente distinguibles. Evita sombras, desenfoques o reflejos que puedan afectar la calidad de la imagen.",
+                        imageUrl: ImgSelfie,
+                      })
+                    }
+                  >
+                    Subir Foto Selfie
+                  </label>
+                  <input
+                    type="file"
+                    name="selfie"
+                    id="selfie"
+                    accept=".jpg, .jpeg, .png"
+                    onChange={handleDniFrontChange}
+                  />
+                </div>
+              )}
+
+              {/* dni */}
+              {dniFront && !dniBack && !dniSelfie && (
+                <div className="fotoVerificacion">
+                  <label
+                    htmlFor="dni"
+                    onClick={() =>
+                      openModal({
+                        text: "Por favor, asegúrate de que la foto del DNI sea clara y legible. Todos los detalles, incluyendo el nombre, la fecha de nacimiento y la fotografía, deben ser fácilmente distinguibles. Evita sombras, desenfoques o reflejos que puedan afectar la calidad de la imagen.",
+                        imageUrl: imgDni,
+                      })
+                    }
+                  >
+                    Subir Foto DNI
+                  </label>
+                  <input
+                    type="file"
+                    name="dni"
+                    id="dni"
+                    accept=".jpg, .jpeg, .png"
+                    onChange={handleDniSelfieChange}
+                  />
+                </div>
+              )}
+
+              {/* dni back */}
+              {!dniBack && dniSelfie && (
+                <div className="fotoVerificacion">
+                  <label
+                    htmlFor="dniBack"
+                    onClick={() =>
+                      openModal({
+                        text: "Por favor, asegúrate de que la foto del dorso del DNI sea clara y legible. Todos los detalles deben ser fácilmente distinguibles. Evita sombras, desenfoques o reflejos que puedan afectar la calidad de la imagen.",
+                        imageUrl: imgDni,
+                      })
+                    }
+                  >
+                    Subir Foto Dorso DNI
+                  </label>
+                  <input
+                    type="file"
+                    name="dniBack"
+                    id="dniBack"
+                    accept=".jpg, .jpeg, .png"
+                    onChange={handleDniBackChange}
+                  />
+                </div>
+              )}
+
+              {dniFront && dniBack && dniSelfie && (
+                <button className="btnVerificacion" onClick={handleUpload}>
+                  Enviar Verificación
+                </button>
+              )}
+
+              {(dniFront || dniBack || dniSelfie) && (
+                <div className="previews">
+                  {dniFront && (
+                    <div className="preview">
+                      <p>Previsualización del Selfie con el DNI:</p>
+                      <img
+                        src={URL.createObjectURL(dniFront)}
+                        alt="DNI Preview"
+                      />
+                    </div>
+                  )}
+              
+                  {dniSelfie && (
+                    <div className="preview">
+                      <p>Previsualización del DNI:</p>
+                      <img
+                        src={URL.createObjectURL(dniSelfie)}
+                        alt="Selfie Preview"
+                      />
+                    </div>
+                  )}
+                      {dniBack && (
+                    <div className="preview">
+                      <p>Previsualización del Dorso del DNI:</p>
+                      <img
+                        src={URL.createObjectURL(dniBack)}
+                        alt="DNI Back Preview"
                       />
                     </div>
                   )}
