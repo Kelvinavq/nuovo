@@ -19,10 +19,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = filter_var(intval($data->user_id), FILTER_VALIDATE_INT);
     $bankAccount = htmlspecialchars($data->bankAccount);
     $selectedBankId = filter_var(intval($data->selectedBankId), FILTER_VALIDATE_INT);
-    
 
     try {
-        // Actualizar el número de cuenta bancaria en la tabla user_verification
+        // Verificar si el número de cuenta ya existe en la tabla user_verification
+        $checkExistingAccountQuery = "SELECT id FROM user_verification WHERE bank_account = :bankAccount AND status != 'denied'";
+        $checkExistingAccountStmt = $conexion->prepare($checkExistingAccountQuery);
+        $checkExistingAccountStmt->bindParam(':bankAccount', $bankAccount);
+        $checkExistingAccountStmt->execute();
+
+        if ($checkExistingAccountStmt->rowCount() > 0) {
+            // El número de cuenta ya existe, mostrar alerta y solicitar el número de nuevo
+            http_response_code(400); // Bad Request
+            echo json_encode(array("error" => "El número de cuenta ya existe. Por favor, ingrese un número de cuenta diferente."));
+            exit();
+        }
+
+        // Continuar con la actualización y la inserción
         $updateBankAccountQuery = "UPDATE user_verification SET bank_account = :bankAccount, status = 'approved'  WHERE id = :id";
         $updateStmt = $conexion->prepare($updateBankAccountQuery);
 
@@ -45,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $userName = $userData['name'];
         }
 
-
         // Insertar en la tabla bank_account
         $insertAccountQuery = "INSERT INTO bank_account (user_id, bank_id, account_number, ref) VALUES (:user_id, :bank_id, :account_number, :ref)";
         $insertStmt = $conexion->prepare($insertAccountQuery);
@@ -56,13 +67,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $insertStmt->execute();
 
-
-
         http_response_code(200);
         echo json_encode(array("message" => "Número de cuenta actualizado con éxito."));
     } catch (PDOException $e) {
         http_response_code(500);
-        echo json_encode(array("error" =>"Error al actualizar el número de cuenta." , "details" => $e->getMessage()));
+        echo json_encode(array("error" => "Error al actualizar el número de cuenta.", "details" => $e->getMessage()));
     }
 }
 

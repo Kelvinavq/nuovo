@@ -18,6 +18,7 @@
     "apexcharts": "^3.44.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "keep-react": "^1.1.0",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
     "react-dom": "^18.2.0",

@@ -4,11 +4,43 @@ import Saldo from "../Saldo/Saldo";
 import Swal from "sweetalert2";
 
 const Depositar = () => {
-  const [payment_method, setpayment_method] = useState("transferencia");
-  const [amount, setAmount] = useState("");
-
   const [isUserVerified, setIsUserVerified] = useState(false);
+  const [userId, setUserId] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [amount, setAmount] = useState("");
+  const [selectedBank, setSelectedBank] = useState(null);
+  const [platforms, setPlatforms] = useState([]);
+  const [selectedPlatform, setSelectedPlatform] = useState(null);
+  const [referenceNumber, setReferenceNumber] = useState("");
+  const [bankInfo, setBankInfo] = useState(null);
+  const [platformInfo, setPlatformInfo] = useState(null);
+  const [selectedPlatformInfo, setSelectedPlatformInfo] = useState(null);
 
+  // obtener id del usuario
+  useEffect(() => {
+    // Lógica para obtener el ID del usuario
+    const fetchUserId = async () => {
+      const response = await fetch(
+        "http://localhost/nuovo/backend/api/getUserId.php",
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setUserId(data.userId);
+      } else {
+        console.error("Error al obtener el ID del usuario");
+      }
+    };
+
+    fetchUserId();
+  }, []);
+
+  // verificar estatus del usuario
   useEffect(() => {
     const checkVerification = async () => {
       const response = await fetch(
@@ -24,34 +56,120 @@ const Depositar = () => {
         setIsUserVerified(data.status);
       }
     };
-    
+
     checkVerification();
   }, []);
 
+  // obtener lista de plataformas
+  useEffect(() => {
+    const fetchPlatforms = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost/nuovo/backend/api/getPlatforms.php",
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
 
-  const handleMedioChange = (e) => {
-    setpayment_method(e.target.value);
+        if (response.ok) {
+          const data = await response.json();
+          setPlatforms(data);
+        } else {
+          console.error("Error al obtener la lista de plataformas");
+        }
+      } catch (error) {
+        console.error("Error al obtener la lista de plataformas:", error);
+      }
+    };
+
+    fetchPlatforms();
+  }, []);
+
+  const handlePaymentMethodChange = (e) => {
+    setPaymentMethod(e.target.value);
+    setSelectedBank(null);
+    setSelectedPlatform(null);
+    setBankInfo(null);
+
+    if (e.target.value === "bank") {
+      // Llamar a la función handleBankSelect automáticamente
+      handleBankSelect();
+    }
   };
 
-  const handleMontoChange = (e) => {
-    let value = e.target.value;
+  const handleAmountChange = (e) => {
+    setAmount(formatAmount(e.target.value));
+  };
 
-    // Reemplazar cualquier caracter que no sea número o punto decimal con una cadena vacía
-    value = value.replace(/[^0-9.]/g, "");
-
-    // Formatear con separadores de miles
-    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-    // Solo permitir un punto decimal
-    const decimalIndex = value.indexOf(".");
-    if (decimalIndex !== -1) {
-      value =
-        value.slice(0, decimalIndex + 1) +
-        value.slice(decimalIndex + 1).replace(/\./g, "");
+  const handleBankSelect = async () => {
+    // Lógica para obtener información del banco desde el backend
+    try {
+      // Obtener información del banco desde el backend
+      const response = await fetch(
+        `http://localhost/nuovo/backend/api/getBankInfo.php?userId=${userId}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setBankInfo(data);
+      } else {
+        console.error("Error al obtener la información del banco");
+      }
+    } catch (error) {
+      console.error("Error al obtener la información del banco:", error);
     }
+  };
 
-    // Establecer el valor en el estado
-    setAmount(value);
+  // En la función handlePlatformSelect
+  const handlePlatformSelect = async (e) => {
+    const platformId = e.target.value;
+
+    // Lógica para obtener información detallada de la plataforma desde el backend
+    try {
+      const response = await fetch(
+        `http://localhost/nuovo/backend/api/getPlatformInfo.php?platformId=${platformId}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setPlatformInfo(data);
+        setSelectedPlatformInfo(data);
+      } else {
+        console.error("Error al obtener la información de la plataforma");
+      }
+    } catch (error) {
+      console.error("Error al obtener la información de la plataforma:", error);
+    }
+  };
+
+  const handleReferenceNumberChange = (e) => {
+    const value = e.target.value;
+
+    // Puedes agregar cualquier lógica de validación o formateo necesario aquí
+
+    setReferenceNumber(e.target.value);
+  };
+
+  const formatAmount = (value) => {
+    // Eliminar caracteres no numéricos
+    const numericValue = value.replace(/[^\d]/g, "");
+
+    // Formatear con separador de miles y decimales
+    const formattedValue = new Intl.NumberFormat("en-US", {
+      style: "decimal",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(numericValue / 100); // Dividir por 100 para manejar los dos decimales
+
+    return formattedValue;
   };
 
   const handleSubmit = async (e) => {
@@ -67,12 +185,17 @@ const Depositar = () => {
       return;
     }
 
-    function refreshPage() {
-      window.location.reload(false);
-    }
+    console.log(amount);
 
-    // Enviar la solicitud al backend
+    // Lógica para enviar la solicitud al backend según el método de pago seleccionado
     try {
+      const requestBody = {
+        payment_method: paymentMethod,
+        user_id: userId,
+        amount: amount,
+        reference_number: referenceNumber,
+      };
+
       const response = await fetch(
         "http://localhost/nuovo/backend/api/depositRequest.php",
         {
@@ -81,27 +204,22 @@ const Depositar = () => {
             "Content-Type": "application/json",
           },
           credentials: "include",
-          body: JSON.stringify({
-            payment_method,
-            amount,
-          }),
+          body: JSON.stringify(requestBody),
         }
       );
 
       const data = await response.json();
 
       if (response.ok) {
-        // Procesar la respuesta exitosa
         Swal.fire({
           icon: "success",
           title: "Éxito",
           text: data.message,
           didClose: () => {
-            refreshPage();
+            window.location = "/user/dashboard";
           },
         });
       } else {
-        // Procesar la respuesta de error
         Swal.fire({
           icon: "error",
           title: "Error",
@@ -127,37 +245,156 @@ const Depositar = () => {
         <h2>Depositar</h2>
 
         {isUserVerified === "approved" ? (
-          
           <div className="form">
             <form onSubmit={handleSubmit}>
               <div className="grupo-input">
-                <label htmlFor="payment_method">
-                  Seleccione el medio de pago 
+                <label htmlFor="paymentMethod">
+                  Seleccione el método de pago
                 </label>
                 <select
-                  name="payment_method"
-                  id="payment_method"
-                  value={payment_method}
-                  onChange={handleMedioChange}
+                  name="paymentMethod"
+                  id="paymentMethod"
+                  value={paymentMethod}
+                  onChange={handlePaymentMethodChange}
                 >
-                  <option value="transferencia">Transferencia</option>
+                  <option value="">Seleccionar método de depósito</option>
+                  <option value="bank">Bancos</option>
+                  <option value="platform">Plataformas</option>
+                  <option value="cash">Efectivo</option>
                 </select>
               </div>
 
-              <div className="grupo-input monto">
-                <label htmlFor="amount">Ingrese el monto a depositar</label>
-                <div className="input">
-                  <span>$</span>
-                  <input
-                    type="text"
-                    id="amount"
-                    name="amount"
-                    value={amount}
-                    onChange={handleMontoChange}
-                  />
-                  <label htmlFor="">Min. 1 dólar</label>
-                </div>
-              </div>
+              {paymentMethod === "bank" && (
+                <>
+                  <div className="instrucciones">
+                    {bankInfo && (
+                      <>
+                        <p>Account Name: {bankInfo.account_name}</p>
+                        <p>
+                          Routing Number (ACH): {bankInfo.routing_number_ach}
+                        </p>
+                        <p>
+                          Routing Number (Wire): {bankInfo.routing_number_wire}
+                        </p>
+                        <p>Bank Address: {bankInfo.bank_address}</p>
+                        <p>Account Number: {bankInfo.account_number}</p>
+                        <p>Ref: {bankInfo.ref}</p>
+                      </>
+                    )}
+                  </div>
+
+                  <div className="grupo-input monto">
+                    <label htmlFor="amount">Ingrese el monto a depositar</label>
+                    <div className="input">
+                      <span>$</span>
+                      <input
+                        type="text"
+                        id="amount"
+                        name="amount"
+                        value={amount}
+                        onChange={handleAmountChange}
+                      />
+                      <label htmlFor="">Min. 1 dólar</label>
+                    </div>
+                  </div>
+
+                  <div className="grupo-input">
+                    <label htmlFor="referenceNumber">
+                      Número de Referencia
+                    </label>
+                    <input
+                      type="text"
+                      id="referenceNumber"
+                      name="referenceNumber"
+                      value={referenceNumber}
+                      onChange={handleReferenceNumberChange}
+                    />
+                  </div>
+                </>
+              )}
+
+              {paymentMethod === "platform" && (
+                <>
+                  <div className="grupo-input">
+                    <label htmlFor="selectedPlatform">
+                      Seleccione la plataforma
+                    </label>
+                    <select
+                      name="selectedPlatform"
+                      id="selectedPlatform"
+                      onChange={handlePlatformSelect}
+                    >
+                      <option value="">Seleccionar plataforma</option>
+                      {platforms.map((platform) => (
+                        <option key={platform.id} value={platform.id}>
+                          {platform.platformName}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <br />
+                  {selectedPlatformInfo && (
+                    <div className="mensaje-plataforma">
+                      Envía el dinero a la siguiente dirección:{" "}
+                      {selectedPlatformInfo.value}
+                    </div>
+                  )}
+
+                  <div className="grupo-input monto">
+                    <label htmlFor="amount">Ingrese el monto a depositar</label>
+                    <div className="input">
+                      <span>$</span>
+                      <input
+                        type="text"
+                        id="amount"
+                        name="amount"
+                        value={amount}
+                        onChange={handleAmountChange}
+                      />
+                      <label htmlFor="">Min. 1 dólar</label>
+                    </div>
+                  </div>
+
+                  {selectedPlatform && (
+                    <>
+                      {/* Mostrar información detallada de la plataforma seleccionada */}
+                      {/* Lógica para mostrar información de la plataforma desde el backend */}
+                    </>
+                  )}
+
+                  <div className="grupo-input">
+                    <label htmlFor="referenceNumber">
+                      Número de referencia
+                    </label>
+                    <input
+                      type="text"
+                      id="referenceNumber"
+                      name="referenceNumber"
+                      value={referenceNumber}
+                      onChange={(e) => setReferenceNumber(e.target.value)}
+                    />
+                  </div>
+                </>
+              )}
+
+              {paymentMethod === "cash" && (
+                <>
+                  <div className="grupo-input monto">
+                    <label htmlFor="amount">Ingrese el monto a depositar</label>
+                    <div className="input">
+                      <span>$</span>
+                      <input
+                        type="text"
+                        id="amount"
+                        name="amount"
+                        value={amount}
+                        onChange={handleAmountChange}
+                      />
+                      <label htmlFor="">Min. 1 dólar</label>
+                    </div>
+                  </div>
+                </>
+              )}
 
               <div className="grupo-submit">
                 <input type="submit" value="Enviar Solicitud" />
@@ -166,9 +403,8 @@ const Depositar = () => {
           </div>
         ) : (
           <p>
-            {isUserVerified}
             Debe verificar su cuenta antes de realizar un depósito. Puede
-            encontrar información sobre cómo hacerlo en su perfil.
+            encontrar información sobre cómo hacerlo en Ajustes - Verificación.
           </p>
         )}
       </div>

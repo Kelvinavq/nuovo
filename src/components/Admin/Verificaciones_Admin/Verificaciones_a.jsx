@@ -103,9 +103,10 @@ const Verificaciones_a = () => {
     if (verificationStatusResponse.ok) {
       const verificationStatus = verificationStatusData.status;
 
-  // Verificar si el estado es "denied"
-  const showDeniedMessage = verificationStatus === "denied";
-  const showButtons = verificationStatus !== "approved" && !showDeniedMessage;
+      // Verificar si el estado es "denied"
+      const showDeniedMessage = verificationStatus === "denied";
+      const showButtons =
+        verificationStatus !== "approved" && !showDeniedMessage;
 
       Swal.fire({
         title: `Detalles de la solicitud de ${solicitud.name}`,
@@ -132,23 +133,33 @@ const Verificaciones_a = () => {
 
         <div className="grupo-input img">
           <p>Foto del DNI</p>
-          <img src="http://localhost:5173/src/assets/user_dni/${solicitud.dni_image}" alt="Foto del DNI" />
+          <img src="http://localhost:5173/src/assets/user_dni/${
+            solicitud.dni_image
+          }" alt="Foto del DNI" />
         </div>
 
         <div className="grupo-input img">
         <p>Foto selfie con el DNI</p>
-        <img src="http://localhost:5173/src/assets/user_selfie/${solicitud.selfie_with_dni_image}" alt="Foto del Selfie con DNI" />
+        <img src="http://localhost:5173/src/assets/user_selfie/${
+          solicitud.selfie_with_dni_image
+        }" alt="Foto del Selfie con DNI" />
       </div>
 
         <div className="grupo-input img">
           <p>Foto del dorso DNI</p>
-          <img src="http://localhost:5173/src/assets/user_dni_back/${solicitud.dni_back}" alt="Foto del Selfie con DNI" />
+          <img src="http://localhost:5173/src/assets/user_dni_back/${
+            solicitud.dni_back
+          }" alt="Foto del Selfie con DNI" />
         </div>
 
-        ${showDeniedMessage ? `
+        ${
+          showDeniedMessage
+            ? `
           <p>Solicitud Denegada</p>
           <p>Esta solicitud ha sido denegada. En espera que el usuario envie su informacion de nuevo</p>
-      ` : ''}
+      `
+            : ""
+        }
       `,
         showCancelButton: true,
         confirmButtonColor: "#28a745",
@@ -241,6 +252,13 @@ const Verificaciones_a = () => {
                   },
                 });
                 console.log("Solicitud aprobada:", responseData.message);
+              } else if (updateBankAccountResponse.status === 400) {
+                // Error de número de cuenta existente
+                Swal.fire({
+                  icon: "error",
+                  title: "Número de cuenta existente",
+                  text: "El número de cuenta ya existe. Por favor, ingrese un número de cuenta diferente.",
+                });
               } else {
                 // Manejar errores al actualizar el número de cuenta
                 Swal.fire({
@@ -302,29 +320,37 @@ const Verificaciones_a = () => {
               cancelButtonText: "Cancelar",
               preConfirm: () => {
                 const reasons = Array.from(
-                    document.querySelectorAll('input[name="reason"]:checked')
-                ).map((input) => (input.value === 'otra' ? document.getElementById("otraText").value : input.value));
+                  document.querySelectorAll('input[name="reason"]:checked')
+                ).map((input) =>
+                  input.value === "otra"
+                    ? document.getElementById("otraText").value
+                    : input.value
+                );
                 if (reasons.includes("otra")) {
-                    return {
-                        reasons,
-                        otraText: document.getElementById("otraText").value,
-                    };
+                  return {
+                    reasons,
+                    otraText: document.getElementById("otraText").value,
+                  };
                 }
                 return { reasons };
-            },
-            didOpen: () => {
-              document
+              },
+              didOpen: () => {
+                document
                   .getElementById("otra")
                   .addEventListener("change", (event) => {
-                      document.getElementById("otraText").style.display = event
-                          .target.checked
-                          ? "inline-block"
-                          : "none";
+                    document.getElementById("otraText").style.display = event
+                      .target.checked
+                      ? "inline-block"
+                      : "none";
                   });
-          },
+              },
             });
 
-            if (formValues && formValues.reasons && formValues.reasons.length > 0) {
+            if (
+              formValues &&
+              formValues.reasons &&
+              formValues.reasons.length > 0
+            ) {
               // Denegar la solicitud y registrar el motivo en la base de datos
               const response = await fetch(
                 "http://localhost/nuovo/backend/api/admin/denyVerification.php",

@@ -42,11 +42,13 @@
     margin-left: -7px;
     min-width: 25px;
     max-width: 25px;
+    max-height: 25px;
 }
 
 
 .sidebar img{
-    max-width: 25px;
+    max-width: 25px;    
+    max-height: 25px;
 }
 
 .btnSidebar{

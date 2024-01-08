@@ -3,7 +3,6 @@ import Swal from "sweetalert2";
 import Enlaces_a from "./Enlaces_a";
 
 const Plataformas_a = () => {
-
   const [formData, setFormData] = useState({
     platformType: "",
     customField: "",
@@ -15,7 +14,9 @@ const Plataformas_a = () => {
     // Lógica para obtener la lista de plataformas desde el backend
     const fetchPlatforms = async () => {
       try {
-        const response = await fetch("http://localhost/nuovo/backend/api/admin/getPlatforms.php");
+        const response = await fetch(
+          "http://localhost/nuovo/backend/api/admin/getPlatforms.php"
+        );
         const data = await response.json();
         setPlatforms(data);
       } catch (error) {
@@ -26,38 +27,103 @@ const Plataformas_a = () => {
     fetchPlatforms();
   }, []);
 
-
   const handleEditPlatform = (platformId) => {
-    const platformToEdit = platforms.find((platform) => platform.id === platformId);
+    const platformToEdit = platforms.find(
+      (platform) => platform.id === platformId
+    );
 
     Swal.fire({
       title: "Editar Plataforma",
       html: `
-        <input type="text" id="editCustomField" value="${platformToEdit.customField}" class="swal2-input" required>
+        ${
+          platformToEdit.platformType === "Otra"
+            ? `
+          <input type="text" id="editPlatformName" value="${platformToEdit.platformName}" class="swal2-input" placeholder="Nombre de la plataforma" required>
+          <input type="text" id="editValue" value="${platformToEdit.value}" class="swal2-input" placeholder="Valor del campo" required>
+        `
+            : `
+          <input type="text" id="editCustomField" value="${platformToEdit.value}" class="swal2-input" placeholder="Valor del campo" required>
+        `
+        }
       `,
       focusConfirm: false,
       showCancelButton: true,
+      showDenyButton: true,
       confirmButtonText: "Guardar",
       cancelButtonText: "Cancelar",
+      denyButtonText: `Eliminar`,
       preConfirm: () => {
-        const newCustomField = document.getElementById("editCustomField").value;
-        return {
+        const newValues = {
           platformId: platformId,
-          newCustomField: newCustomField,
         };
+
+        if (platformToEdit.platformType === "Otra") {
+          newValues.platformName =
+            document.getElementById("editPlatformName").value;
+          newValues.value = document.getElementById("editValue").value;
+        } else {
+          newValues.newCustomField =
+            document.getElementById("editCustomField").value;
+        }
+
+        return newValues;
       },
     }).then(async (result) => {
-      if (result.isConfirmed) {
+      if (result.isDenied) {
+        try {
+          const response = await fetch(
+            `http://localhost/nuovo/backend/api/admin/deletePlatform.php?id=${platformId}`,
+            {
+              method: "GET",
+            }
+          );
+
+          const responseData = await response.json();
+
+          if (response.ok) {
+            Swal.fire({
+              title: "Plataforma eliminada con éxito",
+              icon: "success",
+              timer: 2000,
+            });
+            // Actualizar la lista de plataformas después de la eliminación
+            setPlatforms((prevPlatforms) =>
+              prevPlatforms.filter((platform) => platform.id !== platformId)
+            );
+          } else {
+            Swal.fire({
+              title: "Error al eliminar la plataforma",
+              text: "Recargue la página e intente nuevamente",
+              icon: "error",
+              timer: 2000,
+            });
+            console.error(
+              "Error al eliminar la plataforma:",
+              responseData.error
+            );
+          }
+        } catch (error) {
+          Swal.fire({
+            title: "Error al eliminar la plataforma",
+            text: "Recargue la página e intente nuevamente",
+            icon: "error",
+            timer: 2000,
+          });
+          console.error("Error al eliminar la plataforma:", error);
+        }
+      } else if (result.isConfirmed) {
         try {
           // Enviar datos al backend para la actualización
           const response = await fetch(
             "http://localhost/nuovo/backend/api/admin/updatePlatform.php",
             {
-              method: "PUT",
+              method: "POST",
               headers: {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify(result.value),
+              mode: "cors",
+              credentials: "include",
             }
           );
 
@@ -68,11 +134,24 @@ const Plataformas_a = () => {
               title: "Plataforma actualizada con éxito",
               icon: "success",
               timer: 2000,
+              didClose: () => {
+                window.location.reload();
+              },
             });
+
             // Actualizar la lista de plataformas después de la edición
             setPlatforms((prevPlatforms) =>
               prevPlatforms.map((platform) =>
-                platform.id === platformId ? { ...platform, customField: result.value.newCustomField } : platform
+                platform.id === platformId
+                  ? {
+                      ...platform,
+                      platformName:
+                        result.value.platformName || platform.platformName,
+                      value: result.value.value || platform.value,
+                      customField:
+                        result.value.newCustomField || platform.customField,
+                    }
+                  : platform
               )
             );
           } else {
@@ -82,7 +161,10 @@ const Plataformas_a = () => {
               icon: "error",
               timer: 2000,
             });
-            console.error("Error al actualizar la plataforma:", responseData.error);
+            console.error(
+              "Error al actualizar la plataforma:",
+              responseData.error
+            );
           }
         } catch (error) {
           Swal.fire({
@@ -96,8 +178,6 @@ const Plataformas_a = () => {
       }
     });
   };
-
-  
 
   const handleAddPlatform = async () => {
     try {
@@ -145,9 +225,11 @@ const Plataformas_a = () => {
 
           return {
             platformType: selectedPlatform,
-            customField: selectedPlatform === "Otra"
-              ? document.querySelector('input[name="customField"]').value
-              : document.querySelector('input[name="emailCustomField"]').value,
+            customField:
+              selectedPlatform === "Otra"
+                ? document.querySelector('input[name="customField"]').value
+                : document.querySelector('input[name="emailCustomField"]')
+                    .value,
             platformName: document.getElementsByName("platformName")[0]?.value,
           };
         },
@@ -161,21 +243,21 @@ const Plataformas_a = () => {
             const otherField = document.getElementById("otherField");
 
             if (selectedPlatform === "") {
-                emailField.style.display = "none";
-                otherField.style.display = "none";
-              } else if (selectedPlatform === "Otra") {
-                emailField.style.display = "none";
-                otherField.style.display = "block";
-              } else {
-                emailField.style.display = "block";
-                otherField.style.display = "none";
-              }
+              emailField.style.display = "none";
+              otherField.style.display = "none";
+            } else if (selectedPlatform === "Otra") {
+              emailField.style.display = "none";
+              otherField.style.display = "block";
+            } else {
+              emailField.style.display = "block";
+              otherField.style.display = "none";
+            }
           });
         },
       });
 
       if (formValues) {
-        console.log(formValues)
+        console.log(formValues);
 
         // Enviar datos al backend
         const response = await fetch(
@@ -192,13 +274,12 @@ const Plataformas_a = () => {
         const responseData = await response.json();
 
         if (response.ok) {
-
           Swal.fire({
             title: "Plataforma creada con éxito",
             icon: "success",
             timer: 2000,
             didClose: () => {
-            //   window.location.reload();
+              window.location.reload();
             },
           });
         } else {
@@ -209,22 +290,22 @@ const Plataformas_a = () => {
             icon: "error",
             timer: 2000,
             didClose: () => {
-            //   window.location.reload();
+              window.location.reload();
             },
           });
           console.error("Error al agregar la plataforma:", responseData.error);
         }
       }
     } catch (error) {
-        Swal.fire({
-            title: "Error al registrar la plataforma",
-            text: "Recargue la página e intente nuevamente",
-            icon: "error",
-            timer: 2000,
-            didClose: () => {
-            //   window.location.reload();
-            },
-          });
+      Swal.fire({
+        title: "Error al registrar la plataforma",
+        text: "Recargue la página e intente nuevamente",
+        icon: "error",
+        timer: 2000,
+        didClose: () => {
+          //   window.location.reload();
+        },
+      });
       console.error("Error al agregar nueva plataforma:", error);
     }
   };
@@ -239,18 +320,19 @@ const Plataformas_a = () => {
         <Enlaces_a />
 
         <h3>Lista de Plataformas</h3>
-          <ul>
-            {platforms.map((platform) => (
-              <li key={platform.id}>
-                {platform.platformType === "Otra"
+        <ul>
+          {platforms.map((platform) => (
+            <li key={platform.id}>
+              {platform.platformType === "Otra"
+                ? `${platform.platformName}: ${platform.value}`
+                : platform.platformName + ": " + platform.value}
 
-                  ? `${platform.platformName}: ${platform.value}`
-                  : platform.platformName + ": " + platform.value}
-
-                <button onClick={() => handleEditPlatform(platform.id)}>Editar</button>
-              </li>
-            ))}
-          </ul>
+              <button onClick={() => handleEditPlatform(platform.id)}>
+                Editar
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

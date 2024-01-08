@@ -6,6 +6,7 @@ import DepositoIcon from "../../../assets/icons/Depositos.svg";
 import RetirosIcon from "../../../assets/icons/Retiros.svg";
 import VerificacionIcon from "../../../assets/icons/Verificacion.svg";
 import AjustesIcon from "../../../assets/icons/Ajustes.svg";
+import UserIcon from "../../../assets/icons/user-line.svg";
 import LogoutIcon from "../../../assets/icons/Logout.svg";
 
 const Sidebar_a = () => {
@@ -69,6 +70,15 @@ const Sidebar_a = () => {
           <div className="icon">
             <Link to="/admin/verificaciones">
               <img src={VerificacionIcon} alt="" />
+            </Link>
+          </div>
+        </div>
+        <div
+          className={`item i-usuarios ${isActive("/admin/usuarios")}`}
+        >
+          <div className="icon">
+            <Link to="/admin/usuarios">
+              <img src={UserIcon} alt="" />
             </Link>
           </div>
         </div>
