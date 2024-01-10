@@ -2,3 +2,4 @@ rutas de servidor a actualizar:
 
 updateProfilePicture.php
 lateral.jsx
+perfil.js
