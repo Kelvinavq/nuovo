@@ -10,7 +10,7 @@ const Depositar = () => {
   const [amount, setAmount] = useState("");
   const [selectedBank, setSelectedBank] = useState(null);
   const [platforms, setPlatforms] = useState([]);
-  const [selectedPlatform, setSelectedPlatform] = useState(null);
+  const [selectedPlatform, setSelectedPlatform] = useState("");
   const [referenceNumber, setReferenceNumber] = useState("");
   const [bankInfo, setBankInfo] = useState(null);
   const [platformInfo, setPlatformInfo] = useState(null);
@@ -142,6 +142,7 @@ const Depositar = () => {
         const data = await response.json();
         setPlatformInfo(data);
         setSelectedPlatformInfo(data);
+        setSelectedPlatform(data);
       } else {
         console.error("Error al obtener la información de la plataforma");
       }
@@ -176,7 +177,8 @@ const Depositar = () => {
     e.preventDefault();
 
     // Validar que el monto sea mayor o igual a 1 dólar
-    if (parseFloat(amount) < 1) {
+    const numericAmount = parseFloat(amount.replace(/[^\d]/g, ""));
+    if (isNaN(numericAmount) || numericAmount < 1) {
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -184,8 +186,6 @@ const Depositar = () => {
       });
       return;
     }
-
-    console.log(amount);
 
     // Lógica para enviar la solicitud al backend según el método de pago seleccionado
     try {
@@ -195,6 +195,13 @@ const Depositar = () => {
         amount: amount,
         reference_number: referenceNumber,
       };
+
+      // Agregar el campo selected_platform si el paymentMethod es "platform"
+      if (paymentMethod === "platform") {
+        requestBody.selected_platform = selectedPlatform['platformName'];
+      }
+
+      console.log(requestBody)
 
       const response = await fetch(
         "http://localhost/nuovo/backend/api/depositRequest.php",

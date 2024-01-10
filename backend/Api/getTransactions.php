@@ -34,6 +34,7 @@ try {
             'type' => $transaction['type'],
             'amount' => $transaction['amount'],
             'status' => $transaction['status'],
+            'platform_type' => $transaction['platform_type'],
             'transaction_date' => $formattedDate,
             'transaction_time' => $formattedTime
         );

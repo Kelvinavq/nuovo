@@ -48,7 +48,7 @@ const Recents = () => {
               </div>
 
               <div className="detalle">
-                <span>{transaction.type === 'deposit' ? 'Depositar Fondos' : 'Retirar Fondos'}</span>
+                <span>{transaction.type === 'deposit' ? 'Depositar Fondos -' + " " + transaction.platform_type : 'Retirar Fondos'}</span>
                 <small>{transaction.transaction_time}</small>
               </div>
             </div>

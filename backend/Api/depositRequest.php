@@ -27,9 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validar y escapar los datos para prevenir SQL injection
     $paymentMethod = filter_var($data->payment_method, FILTER_SANITIZE_STRING);
     $amount = filter_var($data->amount);
-    $referenceNumber = filter_var($data->reference_number, FILTER_SANITIZE_STRING); 
-    
-    
+    $referenceNumber = filter_var($data->reference_number, FILTER_SANITIZE_STRING);
+
+    // Obtener el tipo de plataforma seleccionada si existe
+    $platformType = property_exists($data, 'selected_platform') ? filter_var($data->selected_platform, FILTER_SANITIZE_STRING) :  $paymentMethod;
 
     // Iniciar transacción
     $conexion->beginTransaction();
@@ -41,10 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $requestDate = date('Y-m-d');
         $requestTime = date('H:i:s');
 
-
-
-        $insertDepositRequest = "INSERT INTO deposit_requests (user_id, payment_method, amount, status, request_date, request_time, reference_number, updated_at) 
-        VALUES (:user_id, :payment_method, :amount, 'pending', :request_date, :request_time, :reference_number, :updated_at)";
+        $insertDepositRequest = "INSERT INTO deposit_requests (user_id, payment_method, amount, status, request_date, request_time, reference_number, platform_type, updated_at) 
+        VALUES (:user_id, :payment_method, :amount, 'pending', :request_date, :request_time, :reference_number, :platform_type, :updated_at)";
 
         $stmtDeposit = $conexion->prepare($insertDepositRequest);
         $stmtDeposit->bindParam(':user_id', $userId, PDO::PARAM_INT);
@@ -52,7 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtDeposit->bindParam(':amount', $amount, PDO::PARAM_STR);
         $stmtDeposit->bindParam(':request_date', $requestDate, PDO::PARAM_STR);
         $stmtDeposit->bindParam(':request_time', $requestTime, PDO::PARAM_STR);
-        $stmtDeposit->bindParam(':reference_number', $referenceNumber, PDO::PARAM_STR); 
+        $stmtDeposit->bindParam(':reference_number', $referenceNumber, PDO::PARAM_STR);
+        $stmtDeposit->bindParam(':platform_type', $platformType, PDO::PARAM_STR);
         $stmtDeposit->bindParam(':updated_at', $currentDateTime, PDO::PARAM_STR);
 
         $stmtDeposit->execute();
@@ -63,8 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Insertar la transacción en la tabla transactions
         $transactionType = 'deposit';
 
-        $insertTransaction = "INSERT INTO transactions (user_id, type, amount, status, transaction_date, transaction_time) 
-        VALUES (:user_id, :type, :amount, 'pending', :transaction_date, :transaction_time)";
+        $insertTransaction = "INSERT INTO transactions (user_id, type, amount, status, transaction_date, transaction_time, payment_method, platform_type) 
+        VALUES (:user_id, :type, :amount, 'pending', :transaction_date, :transaction_time, :payment_method, :platform_type)";
 
         $stmtTransaction = $conexion->prepare($insertTransaction);
         $stmtTransaction->bindParam(':user_id', $userId, PDO::PARAM_INT);
@@ -72,6 +72,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtTransaction->bindParam(':amount', $amount, PDO::PARAM_STR);
         $stmtTransaction->bindParam(':transaction_date', $requestDate, PDO::PARAM_STR);
         $stmtTransaction->bindParam(':transaction_time', $requestTime, PDO::PARAM_STR);
+        $stmtTransaction->bindParam(':payment_method', $paymentMethod, PDO::PARAM_STR);
+        $stmtTransaction->bindParam(':platform_type', $platformType, PDO::PARAM_STR);
+
+
 
         $stmtTransaction->execute();
 
@@ -91,4 +95,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Cerrar la conexión después de usarla
 $conexion = null;
-?>
