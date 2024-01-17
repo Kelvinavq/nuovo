@@ -78,7 +78,7 @@ const Retiros = () => {
 
       <main>
         <Retirar />
-        {/* <Lateral /> */}
+        <Lateral />
       </main>
     </div>
   );
