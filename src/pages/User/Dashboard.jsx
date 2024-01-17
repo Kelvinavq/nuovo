@@ -21,7 +21,7 @@ const Dashboard = () => {
     const checkAuthStatus = async () => {
       try {
         const response = await fetch(
-          "https://digitalvibra.com/nuovo_backend/backend/Api/check-session.php",
+          "https://digitalvibra.com/nuovo_backend/backend/Api/check_session.php",
           {
             method: "GET",
             mode: "cors",
