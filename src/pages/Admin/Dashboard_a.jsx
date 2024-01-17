@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import Sidebar_a from "../../components/Admin/Sidebar_Admin/Sidebar_a";
 import Balance_a from "../../components/Admin/Balance_Admin/Balance_a";
 import Grafico from "../../components/Admin/Grafico_Admin/Grafico";
@@ -10,7 +11,9 @@ import Swal from "sweetalert2";
 const Dashboard_a = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const userRole = localStorage.getItem("user_role");
-  const [showAlert, setShowAlert] = useState(false); 
+
+  // Hook de historial para la redirección
+  const history = useHistory();
 
   useEffect(() => {
     // Verificar si el usuario está autenticado
@@ -32,7 +35,6 @@ const Dashboard_a = () => {
 
           // Verificar el rol del usuario después de la autenticación
           if (userRole !== "admin") {
-            setShowAlert(true);
             // Si el rol no es admin, redirigir al usuario al inicio de sesión
             Swal.fire({
               icon: "error",
@@ -40,12 +42,11 @@ const Dashboard_a = () => {
               text: "Acceso no permitido para el rol actual.",
               timer: 3000,
               didClose: () => {
-                history.back()
+                history.push("/login"); // Redirigir al inicio de sesión
               },
             });
           }
         } else {
-          setShowAlert(true);
           // Si la sesión no es válida, redirige al usuario al inicio de sesión
           Swal.fire({
             icon: "error",
@@ -53,7 +54,7 @@ const Dashboard_a = () => {
             text: "Debes iniciar sesión para acceder a esta página.",
             timer: 3000,
             didClose: () => {
-              // window.location.href = "/login";
+              history.push("/login"); // Redirigir al inicio de sesión
             },
           });
         }
@@ -64,22 +65,21 @@ const Dashboard_a = () => {
 
     // Llamar a la función para verificar la sesión
     checkAuthStatus();
-  }, []);
+  }, [history, userRole]);
 
   // Si el usuario no ha iniciado sesión o no tiene el rol adecuado, no renderizar el componente
-  if (!isLoggedIn || showAlert) {
+  if (!isLoggedIn) {
     return null;
   }
-
   return (
     <div className="dashboard_a">
       <Sidebar_a />
       <Button_a />
 
       <main>
-      <Balance_a />
-      <Grafico />
-      <Lateral_a />
+        <Balance_a />
+        <Grafico />
+        <Lateral_a />
       </main>
     </div>
   );
