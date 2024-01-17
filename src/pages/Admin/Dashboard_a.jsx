@@ -13,6 +13,7 @@ const Dashboard_a = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showAlert, setShowAlert] = useState(false); 
   const userRole = localStorage.getItem("user_role");
+  const userId = localStorage.getItem("user_id");
 
 
 
@@ -20,7 +21,7 @@ const Dashboard_a = () => {
 
   useEffect(() => {
 
-    console.log(userRole);
+    console.log(userId);
 
     // Verificar si el usuario está autenticado
     const checkAuthStatus = async () => {
