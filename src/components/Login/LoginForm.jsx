@@ -32,7 +32,7 @@ const LoginForm = () => {
     // Enviar datos al servidor
     try {
       const response = await fetch(
-        "http://localhost/nuovo/backend/api/login.php",
+        "https://digitalvibra.com/nuovo_backend/backend/api/login.php",
         {
           method: "POST",
           headers: {
