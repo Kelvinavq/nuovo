@@ -49,13 +49,14 @@ const Dashboard_a = () => {
         } else {
           setShowAlert(true);
           // Si la sesión no es válida, redirige al usuario al inicio de sesión
+          console.log(response)
           Swal.fire({
             icon: "error",
             title: "Error",
             text: "Debes iniciar sesión para acceder a esta página.",
             timer: 3000,
             didClose: () => {
-              window.location.href = "/login";
+              // window.location.href = "/login";
             },
           });
         }
