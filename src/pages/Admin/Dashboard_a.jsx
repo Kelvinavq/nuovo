@@ -5,46 +5,27 @@ import Grafico from "../../components/Admin/Grafico_Admin/Grafico";
 import Lateral_a from "../../components/Admin/Lateral_Admin/Lateral_a";
 import Button_a from "../../components/Admin/Sidebar_Admin/Button_a";
 
-import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const Dashboard_a = () => {
-  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showAlert, setShowAlert] = useState(false); 
   const userRole = localStorage.getItem("user_role");
-  const userId = localStorage.getItem("user_id");
-  const userName = localStorage.getItem("user_name");
-  const userEmail = localStorage.getItem("user_email");
+  const [showAlert, setShowAlert] = useState(false); 
 
   useEffect(() => {
-
-
     // Verificar si el usuario está autenticado
     const checkAuthStatus = async () => {
       try {
         const response = await fetch(
           "https://digitalvibra.com/nuovo_backend/backend/Api/check-session.php",
           {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              userRole: userRole,
-              userId: userId,
-              userName: userName,
-              userEmail: userEmail,
-            }),
+            method: "GET",
             mode: "cors",
             credentials: "include",
           }
         );
 
-        
         const responseData = await response.json();
-        
-        console.log(responseData)
 
         if (response.ok) {
           setIsLoggedIn(true);
@@ -65,14 +46,14 @@ const Dashboard_a = () => {
           }
         } else {
           setShowAlert(true);
-
+          // Si la sesión no es válida, redirige al usuario al inicio de sesión
           Swal.fire({
             icon: "error",
             title: "Error",
             text: "Debes iniciar sesión para acceder a esta página.",
             timer: 3000,
             didClose: () => {
-              // window.location.href = "/login";
+              window.location.href = "/login";
             },
           });
         }
