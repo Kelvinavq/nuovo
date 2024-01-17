@@ -14,6 +14,7 @@ const Dashboard_a = () => {
   const userRole = localStorage.getItem("user_role");
   const [showAlert, setShowAlert] = useState(false); 
 
+  console.log(userRole);
   useEffect(() => {
     // Verificar si el usuario está autenticado
     const checkAuthStatus = async () => {
