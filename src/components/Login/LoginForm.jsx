@@ -53,12 +53,12 @@ const LoginForm = () => {
         localStorage.setItem("user_id", responseData.user_id);
 
         if (responseData.user_role === "admin") {
-          // window.location.href = "/admin/dashboard";
+          window.location.href = "/admin/dashboard";
           console.log(responseData)
         } else {
           console.log(responseData)
 
-          // window.location.href = "/user/dashboard";
+          window.location.href = "/user/dashboard";
         }
       } else {
         
