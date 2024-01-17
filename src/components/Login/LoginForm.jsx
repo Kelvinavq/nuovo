@@ -48,15 +48,18 @@ const LoginForm = () => {
       );
 
       const responseData = await response.json();
-
+      return;
       if (response.ok) {
         localStorage.setItem("user_role", responseData.user_role);
         localStorage.setItem("user_id", responseData.user_id);
-return;
+
         if (responseData.user_role === "admin") {
-          window.location.href = "/admin/dashboard";
+          // window.location.href = "/admin/dashboard";
+          console.log(responseData)
         } else {
-          window.location.href = "/user/dashboard";
+          console.log(responseData)
+
+          // window.location.href = "/user/dashboard";
         }
       } else {
         
