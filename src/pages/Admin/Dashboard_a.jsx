@@ -23,7 +23,7 @@ const Dashboard_a = () => {
           {
             method: "GET",
             mode: "cors",
-            credentials: "include",
+            // credentials: "include",
           }
         );
 
@@ -31,7 +31,7 @@ const Dashboard_a = () => {
         const responseData = await response.json();
         
         console.log(responseData)
-        
+
         if (response.ok) {
           setIsLoggedIn(true);
 
