@@ -57,7 +57,7 @@ const Dashboard = () => {
             text: "Debes iniciar sesión para acceder a esta página.",
             timer: 3000,
             didClose: () => {
-              window.location.href = "/login";
+              // window.location.href = "/login";
             },
           });
         }
