@@ -51,13 +51,10 @@ const LoginForm = () => {
       if (response.ok) {
         localStorage.setItem("user_role", responseData.user_role);
         localStorage.setItem("user_id", responseData.user_id);
-        localStorage.setItem("user_name", responseData.user_name);
-        localStorage.setItem("user_email", responseData.user_email);
 
         if (responseData.user_role === "admin") {
           window.location.href = "/admin/dashboard";
           console.log(responseData)
-        
         } else {
           console.log(responseData)
 
