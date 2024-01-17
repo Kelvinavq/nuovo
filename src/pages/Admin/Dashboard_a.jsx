@@ -19,9 +19,9 @@ const Dashboard_a = () => {
         const response = await fetch(
           "https://digitalvibra.com/nuovo_backend/backend/Api/check-session.php",
           {
-            method: "GET",
-            mode: "cors",
-            credentials: "include",
+            // method: "GET",
+            // mode: "cors",
+            // credentials: "include",
           }
         );
 
