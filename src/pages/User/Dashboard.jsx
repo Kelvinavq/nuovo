@@ -6,12 +6,11 @@ import Lateral from "../../components/User/Lateral/Lateral";
 import Recents from "../../components/User/Recents/Recents";
 import Button from "../../components/User/sidebar/Button";
 
-import { useNavigate, useHistory  } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const history = useHistory();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const userRole = localStorage.getItem("user_role");
   const [showAlert, setShowAlert] = useState(false); 
