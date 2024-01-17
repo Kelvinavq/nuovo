@@ -69,7 +69,7 @@ const Dashboard_a = () => {
 
     // Llamar a la función para verificar la sesión
     checkAuthStatus();
-  }, [history]);
+  }, []);
 
   // Si el usuario no ha iniciado sesión o no tiene el rol adecuado, no renderizar el componente
   if (!isLoggedIn || showAlert) {
