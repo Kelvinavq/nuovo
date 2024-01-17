@@ -48,7 +48,6 @@ const LoginForm = () => {
       );
 
       const responseData = await response.json();
-      return;
       if (response.ok) {
         localStorage.setItem("user_role", responseData.user_role);
         localStorage.setItem("user_id", responseData.user_id);
