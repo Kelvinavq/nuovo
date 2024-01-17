@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import Sidebar_a from "../../components/Admin/Sidebar_Admin/Sidebar_a";
 import Balance_a from "../../components/Admin/Balance_Admin/Balance_a";
 import Grafico from "../../components/Admin/Grafico_Admin/Grafico";
@@ -13,7 +12,6 @@ const Dashboard_a = () => {
   const userRole = localStorage.getItem("user_role");
 
   // Hook de historial para la redirección
-  const history = useHistory();
 
   useEffect(() => {
     // Verificar si el usuario está autenticado
@@ -25,7 +23,7 @@ const Dashboard_a = () => {
             method: "POST",
             mode: "cors",
             credentials: "include",
-            
+
           }
         );
 
@@ -43,7 +41,6 @@ const Dashboard_a = () => {
               text: "Acceso no permitido para el rol actual.",
               timer: 3000,
               didClose: () => {
-                history.push("/login"); // Redirigir al inicio de sesión
               },
             });
           }
@@ -55,7 +52,6 @@ const Dashboard_a = () => {
             text: "Debes iniciar sesión para acceder a esta página.",
             timer: 3000,
             didClose: () => {
-              history.push("/login"); // Redirigir al inicio de sesión
             },
           });
         }
