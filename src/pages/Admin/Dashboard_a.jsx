@@ -25,6 +25,7 @@ const Dashboard_a = () => {
             method: "POST",
             mode: "cors",
             credentials: "include",
+            
           }
         );
 
