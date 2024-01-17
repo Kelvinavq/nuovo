@@ -49,7 +49,8 @@ const Dashboard_a = () => {
         } else {
           setShowAlert(true);
           // Si la sesión no es válida, redirige al usuario al inicio de sesión
-          console.log(response)
+          console.error(responseData.error); // Mensaje de sesión no válida
+  console.error(responseData.reason); 
           Swal.fire({
             icon: "error",
             title: "Error",
