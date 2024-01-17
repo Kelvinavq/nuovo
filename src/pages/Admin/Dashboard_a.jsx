@@ -17,7 +17,6 @@ const Dashboard_a = () => {
   const userName = localStorage.getItem("user_name");
   const userEmail = localStorage.getItem("user_email");
 
-console.log(userName, userEmail)
   useEffect(() => {
 
 
@@ -27,9 +26,18 @@ console.log(userName, userEmail)
         const response = await fetch(
           "https://digitalvibra.com/nuovo_backend/backend/Api/check-session.php",
           {
-            method: "GET",
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userRole: userRole,
+              userId: userId,
+              userName: userName,
+              userEmail: userEmail,
+            }),
             mode: "cors",
-            // credentials: "include",
+            credentials: "include",
           }
         );
 
