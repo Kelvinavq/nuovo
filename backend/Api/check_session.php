@@ -1,6 +1,6 @@
 <?php
 // include '../Config/config.php';
-include '../cors.php';
+// include '../cors.php';
 
 // Iniciar la sesión
 session_start();
