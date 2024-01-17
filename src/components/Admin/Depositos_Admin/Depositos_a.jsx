@@ -11,7 +11,7 @@ const Depositos_a = () => {
     const fetchDepositRequests = async () => {
       try {
         const response = await fetch(
-          "http://localhost/nuovo/backend/api/admin/getDepositRequests.php",
+          "https://digitalvibra.com/nuovo_backend/backend/Api/admin/getDepositRequests.php",
           {
             method: "GET",
             credentials: "include",
@@ -154,7 +154,7 @@ const Depositos_a = () => {
   const denyRequest = async (depositRequestId, denialReasons) => {
     try {
       const response = await fetch(
-        `http://localhost/nuovo/backend/api/admin/denyDepositRequest.php?id=${depositRequestId}`,
+        `https://digitalvibra.com/nuovo_backend/backend/Api/admin/denyDepositRequest.php?id=${depositRequestId}`,
         {
           method: "POST",
           credentials: "include",
@@ -188,7 +188,7 @@ const Depositos_a = () => {
   const markAsCompleted = async (depositRequestId) => {
     try {
       const response = await fetch(
-        `http://localhost/nuovo/backend/api/admin/completedDepositRequest.php?id=${depositRequestId}`,
+        `https://digitalvibra.com/nuovo_backend/backend/Api/admin/completedDepositRequest.php?id=${depositRequestId}`,
         {
           method: "POST",
           credentials: "include",

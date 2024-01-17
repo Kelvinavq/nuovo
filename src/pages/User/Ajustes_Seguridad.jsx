@@ -18,7 +18,7 @@ const Ajustes_Seguridad = () => {
     const checkAuthStatus = async () => {
       try {
         const response = await fetch(
-          "http://localhost/nuovo/backend/api/check-session.php",
+          "https://digitalvibra.com/nuovo_backend/backend/Api/check-session.php",
           {
             method: "GET",
             mode: "cors",

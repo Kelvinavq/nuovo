@@ -54,7 +54,7 @@ const Seguridad_a = () => {
     // Enviar la solicitud al backend
     try {
       const response = await fetch(
-        "http://localhost/nuovo/backend/api/admin/updatePassword.php",
+        "https://digitalvibra.com/nuovo_backend/backend/Api/admin/updatePassword.php",
         {
           method: "POST",
           headers: {

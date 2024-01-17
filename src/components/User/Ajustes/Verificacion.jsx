@@ -72,7 +72,7 @@ const Verificacion = () => {
 
     try {
       const response = await fetch(
-        "http://localhost/nuovo/backend/api/uploadVerification.php",
+        "https://digitalvibra.com/nuovo_backend/backend/Api/uploadVerification.php",
         {
           method: "POST",
           body: formData,
@@ -112,7 +112,7 @@ const Verificacion = () => {
 
   useEffect(() => {
     // Obtener estado de verificación al cargar el componente
-    fetch("http://localhost/nuovo/backend/api/getVerificationStatus.php", {
+    fetch("https://digitalvibra.com/nuovo_backend/backend/Api/getVerificationStatus.php", {
       method: "GET",
       credentials: "include",
     })

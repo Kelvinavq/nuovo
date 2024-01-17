@@ -21,7 +21,7 @@ const Depositar = () => {
     // Lógica para obtener el ID del usuario
     const fetchUserId = async () => {
       const response = await fetch(
-        "http://localhost/nuovo/backend/api/getUserId.php",
+        "https://digitalvibra.com/nuovo_backend/backend/Api/getUserId.php",
         {
           method: "GET",
           credentials: "include",
@@ -44,7 +44,7 @@ const Depositar = () => {
   useEffect(() => {
     const checkVerification = async () => {
       const response = await fetch(
-        "http://localhost/nuovo/backend/api/checkVerification.php",
+        "https://digitalvibra.com/nuovo_backend/backend/Api/checkVerification.php",
         {
           method: "GET",
           credentials: "include",
@@ -65,7 +65,7 @@ const Depositar = () => {
     const fetchPlatforms = async () => {
       try {
         const response = await fetch(
-          "http://localhost/nuovo/backend/api/getPlatforms.php",
+          "https://digitalvibra.com/nuovo_backend/backend/Api/getPlatforms.php",
           {
             method: "GET",
             credentials: "include",
@@ -108,7 +108,7 @@ const Depositar = () => {
     try {
       // Obtener información del banco desde el backend
       const response = await fetch(
-        `http://localhost/nuovo/backend/api/getBankInfo.php?userId=${userId}`,
+        `https://digitalvibra.com/nuovo_backend/backend/Api/getBankInfo.php?userId=${userId}`,
         {
           method: "GET",
           credentials: "include",
@@ -132,7 +132,7 @@ const Depositar = () => {
     // Lógica para obtener información detallada de la plataforma desde el backend
     try {
       const response = await fetch(
-        `http://localhost/nuovo/backend/api/getPlatformInfo.php?platformId=${platformId}`,
+        `https://digitalvibra.com/nuovo_backend/backend/Api/getPlatformInfo.php?platformId=${platformId}`,
         {
           method: "GET",
           credentials: "include",
@@ -204,7 +204,7 @@ const Depositar = () => {
       console.log(requestBody)
 
       const response = await fetch(
-        "http://localhost/nuovo/backend/api/depositRequest.php",
+        "https://digitalvibra.com/nuovo_backend/backend/Api/depositRequest.php",
         {
           method: "POST",
           headers: {

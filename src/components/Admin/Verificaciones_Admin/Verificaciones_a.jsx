@@ -11,7 +11,7 @@ const Verificaciones_a = () => {
     const obtenerSolicitudes = async () => {
       try {
         const response = await fetch(
-          "http://localhost/nuovo/backend/api/admin/getVerificationRequests.php",
+          "https://digitalvibra.com/nuovo_backend/backend/Api/admin/getVerificationRequests.php",
           {
             method: "GET",
             mode: "cors",
@@ -51,7 +51,7 @@ const Verificaciones_a = () => {
     const obtenerBancos = async () => {
       try {
         const response = await fetch(
-          "http://localhost/nuovo/backend/api/admin/getBankAccounts.php",
+          "https://digitalvibra.com/nuovo_backend/backend/Api/admin/getBankAccounts.php",
           {
             method: "GET",
             mode: "cors",
@@ -87,7 +87,7 @@ const Verificaciones_a = () => {
   const handleClick = async (solicitud) => {
     // Obtener el estado de verificación del usuario
     const verificationStatusResponse = await fetch(
-      `http://localhost/nuovo/backend/api/admin/getVerificationStatus.php?user_id=${solicitud.user_id}`,
+      `https://digitalvibra.com/nuovo_backend/backend/Api/admin/getVerificationStatus.php?user_id=${solicitud.user_id}`,
       {
         method: "GET",
         mode: "cors",
@@ -133,21 +133,21 @@ const Verificaciones_a = () => {
 
         <div className="grupo-input img">
           <p>Foto del DNI</p>
-          <img src="http://localhost:5173/src/assets/user_dni/${
+          <img src="https://nuovo.vercel.app//src/assets/user_dni/${
             solicitud.dni_image
           }" alt="Foto del DNI" />
         </div>
 
         <div className="grupo-input img">
         <p>Foto selfie con el DNI</p>
-        <img src="http://localhost:5173/src/assets/user_selfie/${
+        <img src="https://nuovo.vercel.app//src/assets/user_selfie/${
           solicitud.selfie_with_dni_image
         }" alt="Foto del Selfie con DNI" />
       </div>
 
         <div className="grupo-input img">
           <p>Foto del dorso DNI</p>
-          <img src="http://localhost:5173/src/assets/user_dni_back/${
+          <img src="https://nuovo.vercel.app//src/assets/user_dni_back/${
             solicitud.dni_back
           }" alt="Foto del Selfie con DNI" />
         </div>
@@ -221,7 +221,7 @@ const Verificaciones_a = () => {
               const selectedBankId = bankAccountSelect.value;
 
               const updateBankAccountResponse = await fetch(
-                "http://localhost/nuovo/backend/api/admin/updateBankAccount.php",
+                "https://digitalvibra.com/nuovo_backend/backend/Api/admin/updateBankAccount.php",
                 {
                   method: "POST",
                   mode: "cors",
@@ -353,7 +353,7 @@ const Verificaciones_a = () => {
             ) {
               // Denegar la solicitud y registrar el motivo en la base de datos
               const response = await fetch(
-                "http://localhost/nuovo/backend/api/admin/denyVerification.php",
+                "https://digitalvibra.com/nuovo_backend/backend/Api/admin/denyVerification.php",
                 {
                   method: "POST",
                   mode: "cors",

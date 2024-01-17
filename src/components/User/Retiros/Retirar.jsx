@@ -25,7 +25,7 @@ const Retirar = () => {
   useEffect(() => {
     const checkVerification = async () => {
       const response = await fetch(
-        "http://localhost/nuovo/backend/api/checkVerification.php",
+        "https://digitalvibra.com/nuovo_backend/backend/Api/checkVerification.php",
         {
           method: "GET",
           credentials: "include",
@@ -45,7 +45,7 @@ const Retirar = () => {
     const fetchAllEmails = async () => {
       try {
         const response = await fetch(
-          "http://localhost/nuovo/backend/api/getAllEmails.php",
+          "https://digitalvibra.com/nuovo_backend/backend/Api/getAllEmails.php",
           {
             method: "GET",
             credentials: "include",
@@ -453,7 +453,7 @@ const Retirar = () => {
 
     try {
       // Enviar la solicitud al backend
-      const response = await fetch("http://localhost/nuovo/backend/api/withdrawalRequests.php", {
+      const response = await fetch("https://digitalvibra.com/nuovo_backend/backend/Api/withdrawalRequests.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

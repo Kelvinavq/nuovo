@@ -15,7 +15,7 @@ const Plataformas_a = () => {
     const fetchPlatforms = async () => {
       try {
         const response = await fetch(
-          "http://localhost/nuovo/backend/api/admin/getPlatforms.php"
+          "https://digitalvibra.com/nuovo_backend/backend/Api/admin/getPlatforms.php"
         );
         const data = await response.json();
         setPlatforms(data);
@@ -72,7 +72,7 @@ const Plataformas_a = () => {
       if (result.isDenied) {
         try {
           const response = await fetch(
-            `http://localhost/nuovo/backend/api/admin/deletePlatform.php?id=${platformId}`,
+            `https://digitalvibra.com/nuovo_backend/backend/Api/admin/deletePlatform.php?id=${platformId}`,
             {
               method: "GET",
             }
@@ -115,7 +115,7 @@ const Plataformas_a = () => {
         try {
           // Enviar datos al backend para la actualización
           const response = await fetch(
-            "http://localhost/nuovo/backend/api/admin/updatePlatform.php",
+            "https://digitalvibra.com/nuovo_backend/backend/Api/admin/updatePlatform.php",
             {
               method: "POST",
               headers: {
@@ -261,7 +261,7 @@ const Plataformas_a = () => {
 
         // Enviar datos al backend
         const response = await fetch(
-          "http://localhost/nuovo/backend/api/admin/createPlatform.php",
+          "https://digitalvibra.com/nuovo_backend/backend/Api/admin/createPlatform.php",
           {
             method: "POST",
             headers: {

@@ -43,7 +43,7 @@ const Bancos_a = () => {
   const cargarCuentasBanco = async () => {
     try {
       const response = await fetch(
-        "http://localhost/nuovo/backend/api/admin/getBankAccounts.php",
+        "https://digitalvibra.com/nuovo_backend/backend/Api/admin/getBankAccounts.php",
         {
           method: "GET",
           mode: "cors",
@@ -74,7 +74,7 @@ const Bancos_a = () => {
 
     try {
       const response = await fetch(
-        "http://localhost/nuovo/backend/api/admin/createBank.php",
+        "https://digitalvibra.com/nuovo_backend/backend/Api/admin/createBank.php",
         {
           method: "POST",
           mode: "cors",
@@ -115,7 +115,7 @@ const Bancos_a = () => {
 
     try {
       const response = await fetch(
-        `http://localhost/nuovo/backend/api/admin/getBankAccountDetails.php?id=${selectedAccount}`,
+        `https://digitalvibra.com/nuovo_backend/backend/Api/admin/getBankAccountDetails.php?id=${selectedAccount}`,
         {
           method: "GET",
           mode: "cors",

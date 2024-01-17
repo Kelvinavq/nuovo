@@ -13,7 +13,7 @@ const ListUsers = () => {
     const obtenerUsuarios = async () => {
       try {
         const url = new URL(
-          "http://localhost/nuovo/backend/api/admin/getUsers.php"
+          "https://digitalvibra.com/nuovo_backend/backend/Api/admin/getUsers.php"
         );
 
         url.searchParams.append("estatus", estatusFilter);
@@ -60,7 +60,7 @@ const ListUsers = () => {
     const obtenerBancos = async () => {
       try {
         const response = await fetch(
-          "http://localhost/nuovo/backend/api/admin/getBanksFilter.php",
+          "https://digitalvibra.com/nuovo_backend/backend/Api/admin/getBanksFilter.php",
           {
             method: "GET",
             mode: "cors",
