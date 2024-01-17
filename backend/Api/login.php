@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = htmlspecialchars(strip_tags($data->password));
 
     // Buscar usuario por correo electrónico
-    $buscarUsuario = "SELECT id, name, password, role FROM users WHERE email = :email";
+    $buscarUsuario = "SELECT id, name, password, role, email FROM users WHERE email = :email";
     $stmtBuscar = $conexion->prepare($buscarUsuario);
     $stmtBuscar->bindParam(':email', $email);
     $stmtBuscar->execute();
@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $usuario['id'];
             $_SESSION['user_name'] = $usuario['name'];
             $_SESSION['user_role'] = $usuario['role'];
+            $_SESSION['user_email'] = $usuario['email'];
 
             // Devolver información del usuario en la respuesta
             http_response_code(200);
@@ -45,6 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 "user_id" => $usuario['id'],
                 "user_name" => $usuario['name'],
                 "user_role" => $usuario['role'],
+                "user_email" => $usuario['email'],
+                
             ));
         } else {
             // Contraseña incorrecta

@@ -99,7 +99,8 @@ const Depositar = () => {
   };
 
   const handleAmountChange = (e) => {
-    setAmount(formatAmount(e.target.value));
+    const formattedAmount = formatAmount(e.target.value);
+    setAmount(formattedAmount);
   };
 
   const handleBankSelect = async () => {
@@ -154,8 +155,6 @@ const Depositar = () => {
   const handleReferenceNumberChange = (e) => {
     const value = e.target.value;
 
-    // Puedes agregar cualquier lógica de validación o formateo necesario aquí
-
     setReferenceNumber(e.target.value);
   };
 
@@ -168,7 +167,7 @@ const Depositar = () => {
       style: "decimal",
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    }).format(numericValue / 100); // Dividir por 100 para manejar los dos decimales
+    }).format(parseFloat(numericValue) / 100);
 
     return formattedValue;
   };
@@ -177,7 +176,7 @@ const Depositar = () => {
     e.preventDefault();
 
     // Validar que el monto sea mayor o igual a 1 dólar
-    const numericAmount = parseFloat(amount.replace(/[^\d]/g, ""));
+    const numericAmount = parseFloat(amount.replace(/[^\d.]/g, ""));
     if (isNaN(numericAmount) || numericAmount < 1) {
       Swal.fire({
         icon: "error",
@@ -186,6 +185,7 @@ const Depositar = () => {
       });
       return;
     }
+  
 
     // Lógica para enviar la solicitud al backend según el método de pago seleccionado
     try {

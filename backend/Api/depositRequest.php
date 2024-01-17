@@ -63,8 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Insertar la transacción en la tabla transactions
         $transactionType = 'deposit';
 
-        $insertTransaction = "INSERT INTO transactions (user_id, type, amount, status, transaction_date, transaction_time, payment_method, platform_type) 
-        VALUES (:user_id, :type, :amount, 'pending', :transaction_date, :transaction_time, :payment_method, :platform_type)";
+        $insertTransaction = "INSERT INTO transactions (user_id, type, amount, status, transaction_date, transaction_time, payment_method, platform_type, deposit_request_id) 
+        VALUES (:user_id, :type, :amount, 'pending', :transaction_date, :transaction_time, :payment_method, :platform_type, :deposit_request_id)";
 
         $stmtTransaction = $conexion->prepare($insertTransaction);
         $stmtTransaction->bindParam(':user_id', $userId, PDO::PARAM_INT);
@@ -74,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtTransaction->bindParam(':transaction_time', $requestTime, PDO::PARAM_STR);
         $stmtTransaction->bindParam(':payment_method', $paymentMethod, PDO::PARAM_STR);
         $stmtTransaction->bindParam(':platform_type', $platformType, PDO::PARAM_STR);
+        $stmtTransaction->bindParam(':deposit_request_id', $depositRequestId, PDO::PARAM_INT);
 
 
 
