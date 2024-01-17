@@ -11,10 +11,17 @@ import Swal from "sweetalert2";
 const Dashboard_a = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const userRole = localStorage.getItem("user_role");
   const [showAlert, setShowAlert] = useState(false); 
+  const userRole = localStorage.getItem("user_role");
+
+
+
+
 
   useEffect(() => {
+
+    console.log(userRole);
+
     // Verificar si el usuario está autenticado
     const checkAuthStatus = async () => {
       try {
