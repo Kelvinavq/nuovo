@@ -49,13 +49,13 @@ const LoginForm = () => {
 
       const responseData = await response.json();
       if (response.ok) {
-    
+        localStorage.setItem("user_role", responseData.user_role);
+        localStorage.setItem("user_id", responseData.user_id);
 
         if (responseData.user_role === "admin") {
           window.location.href = "/admin/dashboard";
           console.log(responseData)
-          localStorage.setItem("user_role", responseData.user_role);
-          localStorage.setItem("user_id", responseData.user_id);
+        
         } else {
           console.log(responseData)
 
