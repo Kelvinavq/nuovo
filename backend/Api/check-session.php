@@ -1,5 +1,4 @@
 <?php
-// include '../Config/config.php';
 include '../cors.php';
 
 // Iniciar la sesión
