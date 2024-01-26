@@ -19,7 +19,6 @@ import Perfil from "./pages/User/Ajustes_Perfil";
 import Ajustes_Verificacion from "./pages/User/Ajustes_Verificacion";
 import Ajustes_Seguridad from "./pages/User/Ajustes_Seguridad";
 
-
 // admin
 import Dashboard_a from "./pages/Admin/Dashboard_a";
 import Retiros_admin from "./pages/Admin/Retiros_admin";
@@ -31,8 +30,8 @@ import Users from "./pages/Admin/Users";
 import Ajustes_a_Seguridad from "./pages/Admin/Ajustes_a_Seguridad";
 import Bancos from "./pages/Admin/Bancos";
 import Plataformas from "./pages/Admin/Plataformas";
-
-
+import Movimientos from "./pages/User/Movimientos";
+import Movimientos_admin from "./pages/Admin/Movimientos_admin"
 // paths
 const router = createBrowserRouter([
   {
@@ -70,6 +69,10 @@ const router = createBrowserRouter([
   {
     path: "/user/ajustes/seguridad",
     element: <Ajustes_Seguridad />,
+  },
+  {
+    path: "/user/movimientos",
+    element: <Movimientos />,
   },
 
   // admin
@@ -112,6 +115,10 @@ const router = createBrowserRouter([
   {
     path: "/admin/ajustes/plataformas",
     element: <Plataformas />,
+  },
+  {
+    path: "/admin/movimientos",
+    element: <Movimientos_admin />,
   },
 ]);
 

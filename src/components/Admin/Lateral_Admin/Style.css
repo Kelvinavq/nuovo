@@ -168,7 +168,7 @@
     font-weight: 500;
 }
 
-.lateral_a .recents .transaccion .monto p.completed{
+.lateral_a .recents .transaccion .monto p.approved{
     color: var(--green);
 }
 

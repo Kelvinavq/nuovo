@@ -42,7 +42,7 @@ const Register_Form = () => {
 
     try {
       const response = await fetch(
-        `https://digitalvibra.com/nuovo_backend/backend/Api/usuarios.php`,
+        `http://localhost/nuovo/backend/Api/usuarios.php`,
         {
           method: "POST",
           headers: {

@@ -1,0 +1,140 @@
+.movimientos main {
+  width: calc(100% - 120px);
+  padding: 10px;
+}
+
+.movimientos .title h2 {
+  font-weight: 500;
+}
+
+.movimientos .lista_retiros {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.movimientos ul {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  padding: 0;
+  margin: 10px 0;
+  border-radius: 15px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s;
+}
+.movimientos ul:nth-child(odd) {
+  background: var(--blue);
+}
+
+.movimientos ul:nth-child(even) {
+  background: var(--blue2);
+}
+
+.movimientos ul:hover {
+  background: #181c1f;
+  box-shadow: var(--shadow);
+  transition: all 0.3s;
+}
+
+.movimientos ul li {
+  width: 100%;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+
+}
+
+.movimientos ul li span{
+  
+}
+
+.movimientos ul li.estatus {
+  margin-right: 20px;
+}
+
+.movimientos ul li.estatus.pending span {
+  color: var(--yellow);
+}
+.movimientos ul li.estatus.denied span {
+  color: var(--red);
+}
+.movimientos ul li.estatus.approved span {
+  color: var(--green);
+}
+.movimientos ul li .icono {
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  background: var(--bg);
+  border-radius: 20px;
+  margin-left: 20px;
+  color: var(--green);
+}
+
+.movimientos ul li .icono.deposit{
+    color: var(--green);
+}
+.movimientos ul li .icono.withdrawal{
+    color: var(--red);
+}
+
+
+.movimientos ul li .icono svg {
+  font-size: 2em;
+}
+
+.movimientos ul li h2 {
+  margin: 0;
+  font-size: 1.2em;
+  font-weight: 500;
+}
+
+.movimientos ul li span {
+  color: var(--gray);
+  font-size: 0.9em;
+  
+}
+
+@media (max-width: 750px) {
+  .movimientos ul li h2 {
+    font-size: 1em;
+  }
+
+  .movimientos ul li span {
+    font-size: 0.8em;
+  }
+  .movimientos ul li .icono {
+    margin-left: 5px;
+  }
+  .movimientos ul li.estatus {
+    margin-right: 5px;
+  }
+}
+
+@media (max-width: 620px) {
+  .movimientos main {
+    width: calc(100% - 20px);
+    padding: 0;
+  }
+}
+
+@media (max-width: 550px) {
+  .movimientos ul {
+    height: 60px;
+  }
+  .movimientos ul li .icono {
+    display: none;
+  }
+  .movimientos ul li h2 {
+    font-size: 0.7em;
+  }
+
+  .movimientos ul li span {
+    font-size: 0.6em;
+  }
+}

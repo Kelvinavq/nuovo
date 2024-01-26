@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import "./Style.css";
 import usuarioIcon from "../../../assets/icons/usuario.png";
@@ -15,6 +15,8 @@ const Lateral_a = () => {
 
   const [userData, setUserData] = useState({});
   const [notifications, setNotifications] = useState([]);
+  const [recentDeposits, setRecentDeposits] = useState([]);
+  const [recentWithdrawals, setRecentWithdrawals] = useState([]);
 
   const toggleProfileDropdown = () => {
     setIsProfileOpen(!isProfileOpen);
@@ -33,7 +35,7 @@ const Lateral_a = () => {
   const getNotifications = async () => {
     try {
       const response = await fetch(
-        "https://digitalvibra.com/nuovo_backend/backend/Api/getNotifications.php",
+        "http://localhost/nuovo/backend/Api/getNotifications.php",
         {
           method: "GET",
           credentials: "include",
@@ -49,9 +51,43 @@ const Lateral_a = () => {
     }
   };
 
+  const getRecentTransactions = async () => {
+    try {
+      // Obtener los últimos 3 depósitos
+      const depositResponse = await fetch(
+        "http://localhost/nuovo/backend/Api/admin/getRecentDeposits.php",
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
+      const depositData = await depositResponse.json();
+      if (depositResponse.ok) {
+        setRecentDeposits(depositData);
+      }
+
+      // Obtener los últimos 3 retiros
+      const withdrawalResponse = await fetch(
+        "http://localhost/nuovo/backend/Api/admin/getRecentWithdrawals.php",
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+
+      const withdrawalData = await withdrawalResponse.json();
+      if (withdrawalResponse.ok) {
+        setRecentWithdrawals(withdrawalData);
+      }
+    } catch (error) {
+      console.error("Error al obtener transacciones recientes", error);
+    }
+  };
+
   useEffect(() => {
     // Obtener información del usuario al cargar el componente
-    fetch("https://digitalvibra.com/nuovo_backend/backend/Api/admin/getUserInfo.php", {
+    fetch("http://localhost/nuovo/backend/Api/admin/getUserInfo.php", {
       method: "GET",
       credentials: "include",
     })
@@ -79,6 +115,12 @@ const Lateral_a = () => {
       closeNotificationsDropdownOutsideClick
     );
 
+    // Llamada para obtener notificaciones
+    getNotifications();
+
+    // Llamada para obtener las últimas transacciones
+    getRecentTransactions();
+
     return () => {
       document.removeEventListener(
         "mousedown",
@@ -89,10 +131,7 @@ const Lateral_a = () => {
         closeNotificationsDropdownOutsideClick
       );
     };
-    getNotifications();
   }, []);
-
-  // manejo de notificaciones
 
   return (
     <div className="lateral_a">
@@ -137,141 +176,71 @@ const Lateral_a = () => {
 
           <div className="transacciones">
             <div className="date">
-              <span>Depositos</span>
+              <span>Depósitos</span>
             </div>
 
-            <div className="transaccion">
-              <div className="left">
-                <div className="icono depositar">
-                  <AddOutlinedIcon />
-                </div>
+            {recentDeposits.map((deposit) => (
+              <div className="transaccion" key={deposit.id}>
+                <div className="left">
+                  <div className="icono depositar">
+                    <AddOutlinedIcon />
+                  </div>
 
-                <div className="detalle">
-                  <span>Depositar Fondos</span>
-                  <small>11:55 A.M</small>
+                  <div className="detalle">
+                    <span> {deposit.type === "deposit" ? "Depósito" : ""}</span>
+                    <small>{deposit.transaction_time}</small>
+                  </div>
+                </div>
+                <div className="right">
+                  <div className="monto">
+                    <span>
+                      {deposit.amount} <small>USD</small>
+                    </span>
+                    <p className={`${deposit.status}`}>{deposit.status}</p>
+                  </div>
                 </div>
               </div>
-              <div className="right">
-                <div className="monto">
-                  <span>
-                    500 <small>USD</small>
-                  </span>
-                  <p className="pending">Pendiente</p>
-                </div>
-              </div>
-            </div>
-            <div className="transaccion">
-              <div className="left">
-                <div className="icono depositar">
-                  <AddOutlinedIcon />
-                </div>
-
-                <div className="detalle">
-                  <span>Depositar Fondos</span>
-                  <small>11:55 A.M</small>
-                </div>
-              </div>
-              <div className="right">
-                <div className="monto">
-                  <span>
-                    500 <small>USD</small>
-                  </span>
-                  <p className="pending">Pendiente</p>
-                </div>
-              </div>
-            </div>
-            <div className="transaccion">
-              <div className="left">
-                <div className="icono depositar">
-                  <AddOutlinedIcon />
-                </div>
-
-                <div className="detalle">
-                  <span>Depositar Fondos</span>
-                  <small>11:55 A.M</small>
-                </div>
-              </div>
-              <div className="right">
-                <div className="monto">
-                  <span>
-                    500 <small>USD</small>
-                  </span>
-                  <p className="pending">Pendiente</p>
-                </div>
-              </div>
-            </div>
+            ))}
 
             <div className="enlace">
-              <Link>Ver más</Link>
+              <Link to="/admin/movimientos?tipo=depositos">Ver más</Link>
             </div>
           </div>
+
           <div className="transacciones">
             <div className="date">
               <span>Retiros</span>
             </div>
 
-            <div className="transaccion">
-              <div className="left">
-                <div className="icono retirar">
-                  <HorizontalRuleOutlinedIcon />
-                </div>
+            {recentWithdrawals.map((withdrawal) => (
+              <div className="transaccion" key={withdrawal.id}>
+                <div className="left">
+                  <div className="icono retirar">
+                    <HorizontalRuleOutlinedIcon />
+                  </div>
 
-                <div className="detalle">
-                  <span>Retirar Fondos</span>
-                  <small>11:55 A.M</small>
+                  <div className="detalle">
+                    <span>
+                      {withdrawal.type === "withdrawal" ? "Retiro" : ""}
+                    </span>
+                    <small>{withdrawal.transaction_time}</small>
+                  </div>
+                </div>
+                <div className="right">
+                  <div className="monto">
+                    <span>
+                      {withdrawal.amount} <small>USD</small>
+                    </span>
+                    <p className={`${withdrawal.status}`}>
+                      {withdrawal.status}
+                    </p>
+                  </div>
                 </div>
               </div>
-              <div className="right">
-                <div className="monto">
-                  <span>
-                    500 <small>USD</small>
-                  </span>
-                  <p className="completed">Completada</p>
-                </div>
-              </div>
-            </div>
-            <div className="transaccion">
-              <div className="left">
-                <div className="icono retirar">
-                  <HorizontalRuleOutlinedIcon />
-                </div>
+            ))}
 
-                <div className="detalle">
-                  <span>Retirar Fondos</span>
-                  <small>11:55 A.M</small>
-                </div>
-              </div>
-              <div className="right">
-                <div className="monto">
-                  <span>
-                    500 <small>USD</small>
-                  </span>
-                  <p className="completed">Completada</p>
-                </div>
-              </div>
-            </div>
-            <div className="transaccion">
-              <div className="left">
-                <div className="icono retirar">
-                  <HorizontalRuleOutlinedIcon />
-                </div>
-
-                <div className="detalle">
-                  <span>Retirar Fondos</span>
-                  <small>11:55 A.M</small>
-                </div>
-              </div>
-              <div className="right">
-                <div className="monto">
-                  <span>
-                    500 <small>USD</small>
-                  </span>
-                  <p className="completed">Completada</p>
-                </div>
-              </div>
-            </div>
             <div className="enlace">
-              <Link>Ver más</Link>
+              <Link to="/admin/movimientos?tipo=retiros">Ver más</Link>
             </div>
           </div>
         </div>

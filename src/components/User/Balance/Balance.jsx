@@ -15,7 +15,7 @@ const Balance = () => {
     }
 
     // Obtener el saldo del usuario
-    fetch("https://digitalvibra.com/nuovo_backend/backend/Api/getUserBalance.php", {
+    fetch("http://localhost/nuovo/backend/Api/getUserBalance.php", {
       method: "GET",
       credentials: "include",
     })
@@ -63,7 +63,7 @@ const Balance = () => {
             </div>
 
             <div className="enlace">
-              <Link to="/">Ver todos los movimientos</Link>
+              <Link to="/user/movimientos">Ver todos los movimientos</Link>
             </div>
           </div>
         </div>

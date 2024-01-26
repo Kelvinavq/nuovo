@@ -10,7 +10,7 @@ const Recents = () => {
     // Lógica para obtener las transacciones desde el backend
     const fetchTransactions = async () => {
       try {
-        const response = await fetch("https://digitalvibra.com/nuovo_backend/backend/Api/getTransactions.php", {
+        const response = await fetch("http://localhost/nuovo/backend/Api/getTransactions.php", {
           method: "GET",
           credentials: "include",
         });

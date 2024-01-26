@@ -28,9 +28,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $selectedMethod = filter_var($data->selectedMethod, FILTER_SANITIZE_STRING);
     $amount = filter_var($data->amount, FILTER_SANITIZE_STRING);
 
+    // Limpiar y formatear el monto para convertirlo a valor numérico
+    $amount = str_replace(',', '', $amount); // Eliminar comas
+    $amount = floatval($amount); // Convertir a valor numérico
+
     // Obtener el ID de usuario al que se realizará la transferencia (en el caso de transferencia entre usuarios)
     $recipientUserId = null;
     $status = "pending"; // Valor predeterminado
+    $type = "withdrawal"; // Valor predeterminado
+
+
 
     // Lógica para Transferencia entre Usuarios
     if ($selectedMethod === 'transferencia_entre_usuarios') {
@@ -71,6 +78,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    // Lógica para verificar saldo suficiente
+    $userId = $_SESSION['user_id'];
+
+    // Obtener el saldo actual del usuario remitente
+    $getSenderBalanceQuery = "SELECT balance FROM user_balances WHERE user_id = :sender_user_id";
+    $stmtSenderBalance = $conexion->prepare($getSenderBalanceQuery);
+    $stmtSenderBalance->bindParam(':sender_user_id', $userId, PDO::PARAM_INT);
+    $stmtSenderBalance->execute();
+
+    if ($stmtSenderBalance->rowCount() > 0) {
+        $senderBalance = floatval($stmtSenderBalance->fetch(PDO::FETCH_ASSOC)['balance']);
+
+        // Verificar si el usuario tiene fondos suficientes
+        if ($senderBalance < $amount) {
+            // Fondos insuficientes, devolver un mensaje de error
+            http_response_code(400); // Bad Request
+            echo json_encode(array("error" => "Fondos insuficientes para realizar la transacción."));
+            exit();
+        }
+    } else {
+        // Manejar el caso en que no se encuentre el saldo del usuario remitente
+        // Devolver un mensaje de error
+        http_response_code(500); // Internal Server Error
+        echo json_encode(array("error" => "Error al procesar la solicitud de retiro. No se encontró el saldo del usuario remitente."));
+        exit();
+    }
+
+    // Restar el monto del retiro al saldo del usuario remitente
+    $newSenderBalance = $senderBalance - $amount;
+
+    // Actualizar el saldo del usuario remitente
+    $updateSenderBalanceQuery = "UPDATE user_balances SET balance = :new_balance WHERE user_id = :sender_user_id";
+    $stmtUpdateSenderBalance = $conexion->prepare($updateSenderBalanceQuery);
+    $stmtUpdateSenderBalance->bindParam(':new_balance', $newSenderBalance, PDO::PARAM_STR);
+    $stmtUpdateSenderBalance->bindParam(':sender_user_id', $userId, PDO::PARAM_INT);
+    $stmtUpdateSenderBalance->execute();
+
     // Iniciar transacción
     $conexion->beginTransaction();
 
@@ -84,6 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // insert si es transferencia entre usuarios
         if ($selectedMethod === 'transferencia_entre_usuarios') {
+
             $insertWithdrawalRequest = "INSERT INTO withdrawal_requests (user_id, amount, status, request_date, request_time, updated_at, recipient_email, sender_email, completed_at, method, recipient_user_id) VALUES(:user_id, :amount, :status, :request_date, :request_time, :updated_at, :recipient_email, :sender_email, :completed_at, :method, :recipient_user_id)";
 
             $stmtWithdrawal = $conexion->prepare($insertWithdrawalRequest);
@@ -99,6 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmtWithdrawal->bindParam(':completed_at', $currentDateTime, PDO::PARAM_STR);
             $stmtWithdrawal->bindParam(':method', $selectedMethod, PDO::PARAM_STR);
             $stmtWithdrawal->bindParam(':recipient_user_id', $recipientUserId, PDO::PARAM_STR);
+
         } else if ($selectedMethod === 'transferencia_nacional') {
             $aliasCbu = filter_var($data->aliasCbu, FILTER_SANITIZE_STRING);
 
@@ -185,6 +231,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Ejecutar la consulta
         $stmtWithdrawal->execute();
 
+        
+
+
+        // Verificar si se insertaron filas
+        if ($stmtWithdrawal->rowCount() > 0) {
+            // La inserción en withdrawal_requests fue exitosa, proceder con la obtención del ID
+            $lastWithdrawalRequestId = $conexion->lastInsertId();
+ 
+        } 
+
+        $insertTransactionQuery = "INSERT INTO transactions (user_id, type, amount, status, transaction_date, transaction_time, payment_method, withdrawal_request_id) VALUES(:user_id, :typeTransaction, :amount, :status, :transaction_date, :transaction_time, :payment_method, :withdrawal_request_id)";
+
+        $stmtTransaction = $conexion->prepare($insertTransactionQuery);
+
+        $stmtTransaction->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmtTransaction->bindParam(':typeTransaction', $type, PDO::PARAM_STR);
+        $stmtTransaction->bindParam(':amount', $amount, PDO::PARAM_STR);
+        $stmtTransaction->bindParam(':status', $status, PDO::PARAM_STR);
+        $stmtTransaction->bindParam(':transaction_date', $requestDate, PDO::PARAM_STR);
+        $stmtTransaction->bindParam(':transaction_time', $requestTime, PDO::PARAM_STR);
+        $stmtTransaction->bindParam(':payment_method', $selectedMethod, PDO::PARAM_STR);
+        $stmtTransaction->bindParam(':withdrawal_request_id', $lastWithdrawalRequestId, PDO::PARAM_INT);
+
+        // Ejecutar la consulta de transacción
+        $stmtTransaction->execute();
+
         if ($selectedMethod === 'transferencia_entre_usuarios') {
             // Obtener el saldo actual del usuario destinatario
             $getRecipientBalanceQuery = "SELECT balance FROM user_balances WHERE user_id = :recipient_user_id";
@@ -193,7 +265,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmtRecipientBalance->execute();
 
             if ($stmtRecipientBalance->rowCount() > 0) {
-                $recipientBalance = $stmtRecipientBalance->fetch(PDO::FETCH_ASSOC)['balance'];
+                $recipientBalance = floatval($stmtRecipientBalance->fetch(PDO::FETCH_ASSOC)['balance']);
+
 
                 // Sumar el monto de la transferencia al saldo actual
                 $newRecipientBalance = $recipientBalance + $amount;

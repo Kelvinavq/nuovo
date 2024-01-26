@@ -25,7 +25,7 @@ const Retirar = () => {
   useEffect(() => {
     const checkVerification = async () => {
       const response = await fetch(
-        "https://digitalvibra.com/nuovo_backend/backend/Api/checkVerification.php",
+        "http://localhost/nuovo/backend/Api/checkVerification.php",
         {
           method: "GET",
           credentials: "include",
@@ -45,7 +45,7 @@ const Retirar = () => {
     const fetchAllEmails = async () => {
       try {
         const response = await fetch(
-          "https://digitalvibra.com/nuovo_backend/backend/Api/getAllEmails.php",
+          "http://localhost/nuovo/backend/Api/getAllEmails.php",
           {
             method: "GET",
             credentials: "include",
@@ -453,7 +453,7 @@ const Retirar = () => {
 
     try {
       // Enviar la solicitud al backend
-      const response = await fetch("https://digitalvibra.com/nuovo_backend/backend/Api/withdrawalRequests.php", {
+      const response = await fetch("http://localhost/nuovo/backend/Api/withdrawalRequests.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -470,7 +470,10 @@ const Retirar = () => {
         Swal.fire({
           icon: "success",
           title: "Éxito",
-          text: "La operación se ha realizado con éxito.",
+          text: responseData["message"],
+          didClose: () =>{
+            window.location.reload();
+          }
         });
       } else {
         // Manejar el caso en que la respuesta no es exitosa

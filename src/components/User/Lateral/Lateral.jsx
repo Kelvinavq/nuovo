@@ -33,7 +33,7 @@ const Lateral = () => {
   const getNotifications = async () => {
     try {
       const response = await fetch(
-        "https://digitalvibra.com/nuovo_backend/backend/Api/getNotifications.php",
+        "http://localhost/nuovo/backend/Api/getNotifications.php",
         {
           method: "GET",
           credentials: "include",
@@ -55,7 +55,7 @@ const Lateral = () => {
     document.addEventListener("mousedown", closeDropdownOutsideClick);
 
     // Obtener información del usuario al cargar el componente
-    fetch("https://digitalvibra.com/nuovo_backend/backend/Api/getUserInfo.php", {
+    fetch("http://localhost/nuovo/backend/Api/getUserInfo.php", {
       method: "GET",
       credentials: "include",
     })
@@ -67,7 +67,7 @@ const Lateral = () => {
 
     const checkVerification = async () => {
       const response = await fetch(
-        "https://digitalvibra.com/nuovo_backend/backend/Api/checkVerification.php",
+        "http://localhost/nuovo/backend/Api/checkVerification.php",
         {
           method: "GET",
           credentials: "include",

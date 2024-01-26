@@ -17,7 +17,7 @@ const Sidebar = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("https://digitalvibra.com/nuovo_backend/backend/Api/logout.php", {
+      const response = await fetch("http://localhost/nuovo/backend/Api/logout.php", {
         method: "POST",
         mode: "cors",
         credentials: "include",

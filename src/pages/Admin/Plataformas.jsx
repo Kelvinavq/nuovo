@@ -17,7 +17,7 @@ const Plataformas = () => {
     const checkAuthStatus = async () => {
       try {
         const response = await fetch(
-          "https://digitalvibra.com/nuovo_backend/backend/Api/check-session.php",
+          "http://localhost/nuovo/backend/Api/check-session.php",
           {
             method: "GET",
             mode: "cors",

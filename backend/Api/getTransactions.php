@@ -18,7 +18,7 @@ try {
     $user_id = $_SESSION['user_id'];
 
     // Consulta para obtener las transacciones del usuario
-    $getTransactionsQuery = "SELECT * FROM transactions WHERE user_id = :user_id ORDER BY transaction_date DESC, transaction_time DESC LIMIT 10";
+    $getTransactionsQuery = "SELECT * FROM transactions WHERE user_id = :user_id ORDER BY transaction_date DESC, transaction_time DESC LIMIT 6";
     $getTransactionsStmt = $conexion->prepare($getTransactionsQuery);
     $getTransactionsStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $getTransactionsStmt->execute();

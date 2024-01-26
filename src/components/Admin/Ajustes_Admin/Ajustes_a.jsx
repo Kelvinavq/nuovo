@@ -16,7 +16,7 @@ const Ajustes_a = () => {
 
   useEffect(() => {
     // Obtener información del usuario al cargar el componente
-    fetch("https://digitalvibra.com/nuovo_backend/backend/Api/admin/getUserInfo.php", {
+    fetch("http://localhost/nuovo/backend/Api/admin/getUserInfo.php", {
       method: "GET",
       credentials: "include",
     })
@@ -57,7 +57,7 @@ const Ajustes_a = () => {
         formData.append("profile_picture", file);
 
         // Enviar la nueva imagen al servidor
-        fetch("https://digitalvibra.com/nuovo_backend/backend/Api/admin/updateProfilePicture.php", {
+        fetch("http://localhost/nuovo/backend/Api/admin/updateProfilePicture.php", {
           method: "POST",
           credentials: "include",
           body: formData,

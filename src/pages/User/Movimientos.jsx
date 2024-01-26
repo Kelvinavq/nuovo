@@ -1,17 +1,17 @@
-
 import React, { useState, useEffect, useContext } from "react";
-import Sidebar_a from "../../components/Admin/Sidebar_Admin/Sidebar_a";
-import Seguridad_a from "../../components/Admin/Ajustes_Admin/Seguridad_a";
+import Sidebar from "../../components/User/sidebar/Sidebar";
+import Button from "../../components/User/sidebar/Button";
+import Lateral from "../../components/User/Lateral/Lateral";
+import ListaMovimientos from "../../components/User/Movimientos/ListaMovimientos";
 
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const Ajustes_a_Seguridad = () => {
-
+const Movimientos = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const userRole = localStorage.getItem("user_role");
-  const [showAlert, setShowAlert] = useState(false); 
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     // Verificar si el usuario está autenticado
@@ -32,16 +32,16 @@ const Ajustes_a_Seguridad = () => {
           setIsLoggedIn(true);
 
           // Verificar el rol del usuario después de la autenticación
-          if (userRole !== "admin") {
+          if (userRole !== "user") {
             setShowAlert(true);
-            // Si el rol no es admin, redirigir al usuario al inicio de sesión
+            // Si el rol no es user, redirigir al usuario al inicio de sesión
             Swal.fire({
               icon: "error",
               title: "Error",
               text: "Acceso no permitido para el rol actual.",
               timer: 3000,
               didClose: () => {
-                history.back()
+                history.back();
               },
             });
           }
@@ -73,14 +73,16 @@ const Ajustes_a_Seguridad = () => {
   }
 
   return (
-    <div>
-      <Sidebar_a />
+    <div className="movimientos">
+      <Sidebar />
+      <Button />
 
       <main>
-        <Seguridad_a />
+        <ListaMovimientos />
+        <Lateral />
       </main>
     </div>
   );
 };
 
-export default Ajustes_a_Seguridad;
+export default Movimientos;
