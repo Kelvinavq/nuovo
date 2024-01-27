@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const Movimientos_admin = () => {
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const userRole = localStorage.getItem("user_role");
 
@@ -25,7 +24,6 @@ const Movimientos_admin = () => {
             method: "POST",
             mode: "cors",
             credentials: "include",
-
           }
         );
 
@@ -42,8 +40,7 @@ const Movimientos_admin = () => {
               title: "Error",
               text: "Acceso no permitido para el rol actual.",
               timer: 3000,
-              didClose: () => {
-              },
+              didClose: () => {},
             });
           }
         } else {
@@ -53,8 +50,7 @@ const Movimientos_admin = () => {
             title: "Error",
             text: "Debes iniciar sesión para acceder a esta página.",
             timer: 3000,
-            didClose: () => {
-            },
+            didClose: () => {},
           });
         }
       } catch (error) {
@@ -72,15 +68,14 @@ const Movimientos_admin = () => {
   }
   return (
     <div className="movimientos_a">
-    <Sidebar_a />
-    <Button_a />
+      <Sidebar_a />
+      <Button_a />
 
-    <main>
-      <ListaMovimientos_a />
-      <Lateral_a />
-    </main>
-  </div>
-  )
-}
+      <main>
+        <ListaMovimientos_a />
+      </main>
+    </div>
+  );
+};
 
-export default Movimientos_admin
+export default Movimientos_admin;

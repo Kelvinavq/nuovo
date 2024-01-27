@@ -2,39 +2,11 @@ import "./Style.css";
 import HorizontalRuleOutlinedIcon from "@mui/icons-material/HorizontalRuleOutlined";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+
 import Swal from "sweetalert2";
 
 const ListaMovimientos_a = () => {
   const [transactions, setTransactions] = useState([]);
-  const location = useLocation();
-  const [tipoTransaccion, setTipoTransaccion] = useState(null);
-
-  useEffect(() => {
-    // Obtener el tipo de transacción desde la URL
-    const tipo = new URLSearchParams(location.search).get("tipo");
-    setTipoTransaccion(tipo);
-
-    // Llamada al backend para obtener las transacciones según el tipo
-    const fetchTransacciones = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost/nuovo/backend/Api/admin/getTransacciones.php?tipo=${tipo}`
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          setTransacciones(data.transactions);
-        } else {
-          console.error("Error al obtener las transacciones");
-        }
-      } catch (error) {
-        console.error("Error al obtener las transacciones:", error);
-      }
-    };
-
-    fetchTransacciones();
-  }, [location.search]);
 
   useEffect(() => {
     // Llamada al backend para obtener la lista de movimientos

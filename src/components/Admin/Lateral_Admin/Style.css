@@ -86,7 +86,7 @@
 
 @media (max-width: 920px) {
     .lateral_a{
-        display: none;
+        display: none !important;
     }
 }
 
@@ -208,6 +208,6 @@
 
 @media (max-width: 960px) {
     .lateral_a{
-        display: none;
+        display: none !important;
     }
 }

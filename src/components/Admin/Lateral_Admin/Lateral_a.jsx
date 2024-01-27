@@ -203,7 +203,7 @@ const Lateral_a = () => {
             ))}
 
             <div className="enlace">
-              <Link to="/admin/movimientos?tipo=depositos">Ver más</Link>
+              <Link to="/admin/movimientos?tipo=deposit">Ver más</Link>
             </div>
           </div>
 

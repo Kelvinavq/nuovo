@@ -14,6 +14,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 try {
+    
     // Consulta para obtener todas las transacciones
     $getTransactionsQuery = "
         SELECT 
