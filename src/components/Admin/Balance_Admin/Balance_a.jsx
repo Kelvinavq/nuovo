@@ -47,11 +47,62 @@ const Balance_a = () => {
     fetchBalance();
   }, []);
 
+  
+
+  const generateExcelReport = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost/nuovo/backend/Api/admin/generateExcelReport.php",
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+  
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          // Construir la URL completa del archivo
+          const baseUrl = 'http://localhost/nuovo/src/assets/reports';
+          const fullUrl = `${baseUrl}/${data.file_url}`;
+  
+          // Mostrar la alerta con el botón de descarga
+          Swal.fire({
+            icon: "success",
+            title: "Informe generado",
+            text: "El informe se ha generado exitosamente.",
+            footer: `<a href="${fullUrl}" download>Descargar informe</a>`,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error al generar el informe",
+            text: "Hubo un problema al generar el informe.",
+          });
+        }
+      } else {
+        console.error("Error al generar el informe:", response.statusText);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Error inesperado al generar el informe",
+        });
+      }
+    } catch (error) {
+      console.error("Error al generar el informe:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error inesperado al generar el informe",
+      });
+    }
+  };
+
   return (
     <div className="balance_a">
       <div className="title">
         <h2>Dashboard</h2>
-        <button>
+        <button className="report" onClick={generateExcelReport}>
           <Link>
             <DescriptionIcon />
           </Link>
