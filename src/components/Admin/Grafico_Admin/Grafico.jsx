@@ -26,14 +26,14 @@ const Grafico = () => {
         categories: [],
         labels: {
           style: {
-            colors: "var(--gray)",
+            colors: "#606064",
           },
         },
       },
       yaxis: {
         labels: {
           style: {
-            colors: "var(--gray)",
+            colors: "#606064",
           },
         },
         tooltip: {
@@ -48,7 +48,7 @@ const Grafico = () => {
         },
       },
       grid: {
-        borderColor: "var(--gray)",
+        borderColor: "#606064",
         strokeDashArray: 1,
       },
       fill: {
@@ -62,7 +62,7 @@ const Grafico = () => {
           opacityTo: 0,
         },
       },
-      colors: ["var(--green)", "var(--gray)"],
+      colors: ["#85ff2e", "#606064"],
       legend: {
         position: "top",
         horizontalAlign: "left",
