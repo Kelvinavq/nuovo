@@ -3,6 +3,7 @@ import Enlaces from "./Enlaces";
 import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import Pusher from 'pusher-js';
 
 const Perfil = () => {
   const [userData, setUserData] = useState({});
@@ -84,13 +85,35 @@ const Perfil = () => {
     });
   };
 
+  const [notifications, setNotifications] = useState([]);
+  useEffect(() => {
+    const pusher = new Pusher('afe7fd857579ff4b05d7', {
+        cluster: 'mt1',
+        encrypted: true,
+    });
+
+    const channel = pusher.subscribe('canal');
+    channel.bind('evento', data => {
+        // Manejar la notificación recibida
+        setNotifications(prevNotifications => [...prevNotifications, data]);
+    });
+
+    // Limpieza al desmontar el componente
+    return () => {
+        channel.unbind();
+        pusher.unsubscribe('canal');
+    };
+}, []);
+
   return (
     <div className="ajustes_perfil">
       <Saldo />
 
       <div className="content">
         <h2>Ajustes</h2>
-
+        {notifications.map((notification, index) => (
+                    <li key={index}>{notification.message}</li>
+                ))}
         <Enlaces />
 
         <div className="imgPerfil">

@@ -12,6 +12,7 @@ const Ajustes_Seguridad = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const userRole = localStorage.getItem("user_role");
   const [showAlert, setShowAlert] = useState(false); 
+  const [notifications, setNotifications] = useState([]); 
 
   useEffect(() => {
     // Verificar si el usuario está autenticado
@@ -70,7 +71,6 @@ const Ajustes_Seguridad = () => {
   if (!isLoggedIn || showAlert) {
     return null;
   }
-
   
   return (
     <div className="perfil">
@@ -78,8 +78,8 @@ const Ajustes_Seguridad = () => {
       <Button />
 
       <main>
-        <Seguridad />
-        <Lateral />
+       <Seguridad />
+        <Lateral  />
       </main>
     </div>
   )

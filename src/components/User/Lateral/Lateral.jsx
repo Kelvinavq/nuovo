@@ -4,6 +4,7 @@ import "./Style.css";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import VerifiedIcon from "@mui/icons-material/Verified";
+import Pusher from "pusher-js";
 
 const Lateral = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -11,10 +12,11 @@ const Lateral = () => {
 
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const notificationsDropdownRef = useRef(null);
+  const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
+  const [notifications, setNotifications] = useState([]);
 
   const [userData, setUserData] = useState({});
   const [isUserVerified, setIsUserVerified] = useState(false);
-  const [notifications, setNotifications] = useState([]);
 
   const toggleProfileDropdown = () => {
     setIsProfileOpen(!isProfileOpen);
@@ -25,7 +27,11 @@ const Lateral = () => {
   };
 
   const closeDropdownOutsideClick = (event, dropdownRef, setIsOpen) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    if (
+      dropdownRef &&
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target)
+    ) {
       setIsOpen(false);
     }
   };
@@ -40,16 +46,44 @@ const Lateral = () => {
         }
       );
 
-      const data = await response.json();
-      if (response.ok) {
-        setNotifications(data);
+      if (!response.ok) {
+        throw new Error(`Error en la solicitud: ${response.statusText}`);
       }
+
+      const data = await response.json();
+
+      setNotifications(data);
+      console.log(data)
+      const unreadCount = data.filter(
+        (notification) => notification.status === "unread"
+      ).length;
+      setUnreadNotificationsCount(unreadCount);
     } catch (error) {
       console.error("Error al obtener notificaciones", error);
     }
   };
 
   useEffect(() => {
+    // Configurar Pusher
+    const pusher = new Pusher("afe7fd857579ff4b05d7", {
+      cluster: "mt1",
+      useTLS: true,
+      encrypted: true,
+    });
+
+    // Suscribirse al canal de notificaciones
+    const channel = pusher.subscribe("notifications-channel");
+
+    // Manejar nuevos eventos de notificación
+    channel.bind("evento", (newNotification) => {
+      // Actualizar la lista de notificaciones con la nueva notificación
+      setNotifications((prevNotifications) => [
+        ...prevNotifications,
+        newNotification,
+      ]);
+      getNotifications();
+    });
+
     getNotifications();
 
     document.addEventListener("mousedown", closeDropdownOutsideClick);
@@ -110,7 +144,6 @@ const Lateral = () => {
         closeNotificationsDropdownOutsideClick
       );
     };
-
   }, []);
 
   return (
@@ -147,10 +180,15 @@ const Lateral = () => {
         <div className="notification">
           <button onClick={toggleNotificationsDropdown}>
             <NotificationsNoneOutlinedIcon />
+            {unreadNotificationsCount > 0 && (
+              <span className="notification-count">
+                {unreadNotificationsCount}
+              </span>
+            )}
           </button>
           {isNotificationsOpen && (
             <div className="dropdown-content" ref={notificationsDropdownRef}>
-              {notifications.map((notification) => (
+                {notifications.map((notification) => (
                 <p key={notification.id}>{notification.content}</p>
               ))}
             </div>

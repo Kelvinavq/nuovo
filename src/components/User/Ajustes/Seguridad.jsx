@@ -4,7 +4,6 @@ import Enlaces from "./Enlaces";
 import Saldo from "../Saldo/Saldo";
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 
-
 const Seguridad = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -15,7 +14,7 @@ const Seguridad = () => {
     setIsModalOpen(true);
   };
 
-  const closePasswordModal = ()  => {
+  const closePasswordModal = () => {
     setIsModalOpen(false);
     // Limpiar los estados al cerrar el modal si es necesario
     setCurrentPassword("");
@@ -23,9 +22,9 @@ const Seguridad = () => {
     setConfirmPassword("");
   };
 
-  const handleUpdatePassword = async (e)  => {
+  const handleUpdatePassword = async (e) => {
     e.preventDefault();
-  
+
     // Validar la longitud mínima de las contraseñas
     if (
       currentPassword.length < 8 ||
@@ -39,7 +38,7 @@ const Seguridad = () => {
       });
       return;
     }
-  
+
     // Validar que la nueva contraseña y la confirmación coincidan
     if (newPassword !== confirmPassword) {
       Swal.fire({
@@ -49,7 +48,7 @@ const Seguridad = () => {
       });
       return;
     }
-  
+
     // Enviar la solicitud al backend
     try {
       const response = await fetch(
@@ -66,16 +65,36 @@ const Seguridad = () => {
           credentials: "include",
         }
       );
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
+        console.log(data);
         // Procesar la respuesta exitosa
         Swal.fire({
           icon: "success",
           title: "Éxito",
           text: data.message,
+          timer: 5000,
+          didClose: () => {
+            // window.location.reload();
+          },
         });
+
+        // Verificar si la notificación está relacionada con la actualización de contraseña
+        if (data.type === "password_update") {
+          // Puedes personalizar la notificación según tus necesidades
+          Swal.fire({
+            icon: "success",
+            title: "Contraseña actualizada",
+            text: "Tu contraseña ha sido actualizada con éxito.",
+            timer: 5000,
+            didClose: () => {
+              // window.location.reload();
+            },
+          });
+        }
+
         closePasswordModal();
       } else {
         // Procesar la respuesta de error
@@ -97,7 +116,6 @@ const Seguridad = () => {
 
   return (
     <div className="ajustes_seguridad">
- 
       <Saldo />
       <div className="content">
         <h2>Ajustes</h2>
@@ -107,8 +125,8 @@ const Seguridad = () => {
           <button onClick={openPasswordModal}>Actualizar contraseña</button>
         </div>
       </div>
-           {isModalOpen && (
-        <div className="modal" >
+      {isModalOpen && (
+        <div className="modal">
           <div className="overlay" onClick={closePasswordModal}></div>
           <div className="modal-content">
             <div className="message">

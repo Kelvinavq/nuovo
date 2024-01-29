@@ -16,18 +16,26 @@ if (!isset($_SESSION['user_id'])) {
 
 $userId = $_SESSION['user_id'];
 
+// Verificar si la solicitud es de tipo GET
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // Obtener el ID de usuario de la sesión
+    $userId = $_SESSION['user_id'];
 
-try {
-    $query = "SELECT * FROM notifications WHERE user_id = :userId ORDER BY created_at DESC";
-    $stmt = $conexion->prepare($query);
-    $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
-    $stmt->execute();
+    // Consulta para obtener las notificaciones del usuario
+    $getNotificationsQuery = "SELECT * FROM pusher_notifications WHERE user_id = :userId ORDER BY created_at DESC";
+    $stmtGetNotifications = $conexion->prepare($getNotificationsQuery);
+    $stmtGetNotifications->bindParam(':userId', $userId);
+    $stmtGetNotifications->execute();
 
-    $notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Obtener todas las notificaciones
+    $notifications = ($stmtGetNotifications->rowCount() > 0)
+        ? $stmtGetNotifications->fetchAll(PDO::FETCH_ASSOC)
+        : array();
 
-    http_response_code(200);
+    // Devolver las notificaciones como respuesta JSON
+    header('Content-Type: application/json');
     echo json_encode($notifications);
-} catch (PDOException $e) {
-    http_response_code(500);
-    echo json_encode(array("error" => "Error al obtener notificaciones", "details" => $e->getMessage()));
 }
+
+// Cerrar la conexión después de usarla
+$conexion = null;
