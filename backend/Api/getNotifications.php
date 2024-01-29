@@ -32,6 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         ? $stmtGetNotifications->fetchAll(PDO::FETCH_ASSOC)
         : array();
 
+         // Formatear la fecha y hora en cada notificación
+    foreach ($notifications as &$notification) {
+        $notification['created_at'] = date('d-m-Y H:i:s', strtotime($notification['created_at']));
+    }
+
     // Devolver las notificaciones como respuesta JSON
     header('Content-Type: application/json');
     echo json_encode($notifications);

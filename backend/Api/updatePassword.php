@@ -66,10 +66,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         'type' => 'password_update',
                         'user_id' => $userId
                     ];
+
                     $pusher->trigger('notifications-channel', 'evento', $data);
 
                     // Enviar notificación por correo electrónico
-                    $to = $userEmail; 
+                    $to = $userEmail;
                     $subject = 'Actualización de Contraseña';
                     $message = 'Su contraseña de acceso a NUOVO se ha actualizado con éxito';
 
@@ -78,8 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         'X-Mailer: PHP/' . phpversion();
 
                     if (mail($to, $subject, $message, $headers)) {
-                       
-                    }else{
+                    } else {
                         http_response_code(500);
                         echo json_encode(array("error" => "Error al enviar correo electronico"));
                     }

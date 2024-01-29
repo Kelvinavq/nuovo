@@ -1,105 +1,132 @@
-.lateral{
-    position: fixed;
-    right: 0;
-    top: 0;
-    width: 320px;
-    height: 100vh;
+.lateral {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 320px;
+  height: 100vh;
 }
 
-.lateral .profile{
-    width: 100%;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.lateral .profile {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.lateral .profile .img{
-    display: flex;
-    align-items: center;
+.lateral .profile .img {
+  display: flex;
+  align-items: center;
 }
 
-.lateral .profile .img img{
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: 1px solid var(--green);
+.lateral .profile .img img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid var(--green);
 }
 
-.lateral .profile .verified svg{
-    position: absolute;
-    left: 35px;
-    color: var(--green);
+.lateral .profile .verified svg {
+  position: absolute;
+  left: 35px;
+  color: var(--green);
 }
 
-.lateral .profile .dropdown button{
-    background: none;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    color: var(--green);
+.lateral .profile .dropdown button {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: var(--green);
 }
 
-.lateral .profile .dropdown .dropdown-content{
-    width: 200px;
-    position: absolute;
-    background: var(--blue);
-    padding: 10px;
-    border-radius: 15px;
+.lateral .profile .dropdown .dropdown-content {
+  width: 200px;
+  position: absolute;
+  background: var(--blue);
+  padding: 10px;
+  border-radius: 15px;
 
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.lateral .profile .dropdown .dropdown-content a{
-    padding: 10px 2px;
+.lateral .profile .dropdown .dropdown-content a {
+  padding: 10px 2px;
 }
 
-.lateral .profile .dropdown .dropdown-content a:hover{
-    background: var(--green);
-    color: var(--blue);
-    font-weight: 600;
-    border-radius: 12px;
+.lateral .profile .dropdown .dropdown-content a:hover {
+  background: var(--green);
+  color: var(--blue);
+  font-weight: 600;
+  border-radius: 12px;
 }
 
 .lateral .profile .notification {
-    position: relative;
+  position: relative;
 }
-.lateral .profile .notification button{
-    background: none;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    color: var(--green);
+.lateral .profile .notification button {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: var(--green);
 }
 
-.lateral .profile .notification .dropdown-content{
-    position: absolute;
-    right: 10px;
-    width: 300px;
-    position: absolute;
-    background: var(--bg);
-    box-shadow: var(--shadow);
+.lateral .profile .notification .dropdown-content {
+  position: absolute;
+  right: 10px;
+  width: 300px;
+  max-height: 320px;
+  overflow-y: auto;
+  position: absolute;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  padding: 10px;
+  border-radius: 15px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.lateral .profile .notification .dropdown-content p{
+    margin: 0;
     padding: 10px;
     border-radius: 15px;
-
+    background: var(--blue2);
     display: flex;
     flex-direction: column;
     gap: 12px;
+    font-size: 1;
+}
+.lateral .profile .notification .dropdown-content div:nth-child(odd) p{
+    background: var(--blue);
 }
 
+.lateral .profile .notification .dropdown-content small{
+    font-size: .8em;
+    text-align: right;
+    color: var(--gray);
+}
+
+
 @media (max-width: 920px) {
-    .lateral{
-        display: none;
-    }
-}.notification-count {
-    background-color: red;
-    color: white;
-    border-radius: 50%;
-    padding: 4px;
-    position: absolute;
-    top: 0;
-    right: 0;
-    font-size: 12px;
+  .lateral {
+    display: none;
   }
+}
+.notification-count {
+  background-color: red;
+  color: var(--white);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  position: absolute;
+  top: -10px;
+  left: 0;
+  font-size: 12px;
+}

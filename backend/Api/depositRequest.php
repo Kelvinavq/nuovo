@@ -77,8 +77,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtTransaction->bindParam(':deposit_request_id', $depositRequestId, PDO::PARAM_INT);
 
 
+        if ($stmtTransaction->execute()) {
+            // Agregar notificación
+            $notificationMessage = "Solictud de depósito enviada correctamente";
 
-        $stmtTransaction->execute();
+            // Insertar la notificación en la base de datos
+            $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, content, status, type) VALUES (:userId, :content, 'unread', 'deposit_request')";
+            $stmtInsertNotification = $conexion->prepare($insertNotificationQuery);
+            $stmtInsertNotification->bindParam(':userId', $userId);
+            $stmtInsertNotification->bindParam(':content', $notificationMessage);
+            $stmtInsertNotification->execute();
+
+
+            // Enviar notificación a Pusher
+            include("../pusher.php");
+
+            $data = [
+                'message' => "Solictud de depósito enviada correctamente",
+                'status' => 'unread',
+                'type' => 'deposit_request',
+                'user_id' => $userId
+            ];
+            $pusher->trigger('notifications-channel', 'evento', $data);
+
+            $userEmail = $_SESSION['user_email'];
+
+            // Enviar notificación por correo electrónico
+            $to = $userEmail;
+            $subject = 'Nuovo - Solicitud de Depósito';
+            $message = 'Su solictud de depósito ha sido enviada correctamente';
+
+            $headers = 'From: nuovo@gmail.com' . "\r\n" .
+                'Reply-To: nuovo@gmail.com' . "\r\n" .
+                'X-Mailer: PHP/' . phpversion();
+
+            if (mail($to, $subject, $message, $headers)) {
+            } else {
+                http_response_code(500);
+                echo json_encode(array("error" => "Error al enviar correo electronico"));
+            }
+        } else {
+            // Revertir la transacción en caso de error
+            $conexion->rollBack();
+
+            http_response_code(500); // Internal Server Error
+            echo json_encode(array("error" => "Error al procesar la solicitud de depósito.", "details" => $e->getMessage()));
+        }
+
 
         // Confirmar la transacción
         $conexion->commit();

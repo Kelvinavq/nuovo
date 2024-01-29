@@ -73,14 +73,43 @@ if ($stmtCheck->rowCount() > 0) {
         if ($stmtUpdate->execute()) {
             // Agregar notificación
             $notificationMessage = "Tu solicitud de verificación ha sido recibida. Está pendiente de revisión.";
-            $addNotification = "INSERT INTO notifications (user_id, content, is_read) VALUES (:userId, :message, 0)";
-            $stmtNotification = $conexion->prepare($addNotification);
-            $stmtNotification->bindParam(':userId', $userId);
-            $stmtNotification->bindParam(':message', $notificationMessage);
-            $stmtNotification->execute();
 
-            http_response_code(200);
-            echo json_encode(array("message" => "Solicitud existente actualizada correctamente."));
+            // Insertar la notificación en la base de datos
+            $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, content, status, type) VALUES (:userId, :content, 'unread', 'verification_pending')";
+            $stmtInsertNotification = $conexion->prepare($insertNotificationQuery);
+            $stmtInsertNotification->bindParam(':userId', $userId);
+            $stmtInsertNotification->bindParam(':content', $notificationMessage);
+            $stmtInsertNotification->execute();
+
+
+            // Enviar notificación a Pusher
+            include("../pusher.php");
+
+            $data = [
+                'message' => "Tu solicitud de verificación ha sido recibida. Está pendiente de revisión.",
+                'status' => 'unread',
+                'type' => 'verification_pending',
+                'user_id' => $userId
+            ];
+            $pusher->trigger('notifications-channel', 'evento', $data);
+
+            $userEmail = $_SESSION['user_email'];
+
+            // Enviar notificación por correo electrónico
+            $to = $userEmail;
+            $subject = 'Nuovo - Verificación';
+            $message = 'Su solicitud de verificación ha sido recibida. Está pendiente de revisión. Será notificado por este medio cuando su cuenta se encuentre verificada';
+
+            $headers = 'From: nuovo@gmail.com' . "\r\n" .
+                'Reply-To: nuovo@gmail.com' . "\r\n" .
+                'X-Mailer: PHP/' . phpversion();
+
+            if (mail($to, $subject, $message, $headers)) {
+            } else {
+                http_response_code(500);
+                echo json_encode(array("error" => "Error al enviar correo electronico"));
+            }
+            
         } else {
             http_response_code(500); // Internal Server Error
             echo json_encode(array("error" => "Error al actualizar la solicitud existente."));
@@ -110,11 +139,43 @@ if ($stmtCheck->rowCount() > 0) {
 
             // Agregar notificación
             $notificationMessage = "Tu solicitud de verificación ha sido recibida. Está pendiente de revisión.";
-            $addNotification = "INSERT INTO notifications (user_id, content, is_read) VALUES (:userId, :message, 0)";
-            $stmtNotification = $conexion->prepare($addNotification);
-            $stmtNotification->bindParam(':userId', $userId);
-            $stmtNotification->bindParam(':message', $notificationMessage);
-            $stmtNotification->execute();
+
+            // Insertar la notificación en la base de datos
+            $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, content, status, type) VALUES (:userId, :content, 'unread', 'verification_pending')";
+            $stmtInsertNotification = $conexion->prepare($insertNotificationQuery);
+            $stmtInsertNotification->bindParam(':userId', $userId);
+            $stmtInsertNotification->bindParam(':content', $notificationMessage);
+            $stmtInsertNotification->execute();
+
+
+            // Enviar notificación a Pusher
+            include("../pusher.php");
+
+            $data = [
+                'message' => "Su solicitud de verificación ha sido recibida. Está pendiente de revisión.",
+                'status' => 'unread',
+                'type' => 'verification_pending',
+                'user_id' => $userId
+            ];
+            $pusher->trigger('notifications-channel', 'evento', $data);
+
+            $userEmail = $_SESSION['user_email'];
+
+            // Enviar notificación por correo electrónico
+            $to = $userEmail;
+            $subject = 'Nuovo - Verificación';
+            $message = 'Su solicitud de verificación ha sido recibida. Está pendiente de revisión. Será notificado por este medio cuando su cuenta se encuentre verificada';
+
+            $headers = 'From: nuovo@gmail.com' . "\r\n" .
+                'Reply-To: nuovo@gmail.com' . "\r\n" .
+                'X-Mailer: PHP/' . phpversion();
+
+            if (mail($to, $subject, $message, $headers)) {
+            } else {
+                http_response_code(500);
+                echo json_encode(array("error" => "Error al enviar correo electronico"));
+            }
+
 
             http_response_code(200);
             echo json_encode(array("message" => "Imágenes subidas y registradas correctamente."));

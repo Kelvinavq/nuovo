@@ -27,6 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validar y escapar los datos para prevenir SQL injection
     $selectedMethod = filter_var($data->selectedMethod, FILTER_SANITIZE_STRING);
     $amount = filter_var($data->amount, FILTER_SANITIZE_STRING);
+    // Agregar notificación
+    $notificationMessage = "Solicitud de retiro enviada correctamente";
 
     // Limpiar y formatear el monto para convertirlo a valor numérico
     $amount = str_replace(',', '', $amount); // Eliminar comas
@@ -80,6 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Lógica para verificar saldo suficiente
     $userId = $_SESSION['user_id'];
+
 
     // Obtener el saldo actual del usuario remitente
     $getSenderBalanceQuery = "SELECT balance FROM user_balances WHERE user_id = :sender_user_id";
@@ -145,6 +148,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmtWithdrawal->bindParam(':method', $selectedMethod, PDO::PARAM_STR);
             $stmtWithdrawal->bindParam(':recipient_user_id', $recipientUserId, PDO::PARAM_STR);
 
+            // Agregar notificación
+            $notificationMessage = "La transferencia se ha realizado correctamente";
         } else if ($selectedMethod === 'transferencia_nacional') {
             $aliasCbu = filter_var($data->aliasCbu, FILTER_SANITIZE_STRING);
 
@@ -231,15 +236,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Ejecutar la consulta
         $stmtWithdrawal->execute();
 
-        
+
 
 
         // Verificar si se insertaron filas
         if ($stmtWithdrawal->rowCount() > 0) {
             // La inserción en withdrawal_requests fue exitosa, proceder con la obtención del ID
             $lastWithdrawalRequestId = $conexion->lastInsertId();
- 
-        } 
+        }
 
         $insertTransactionQuery = "INSERT INTO transactions (user_id, type, amount, status, transaction_date, transaction_time, payment_method, withdrawal_request_id) VALUES(:user_id, :typeTransaction, :amount, :status, :transaction_date, :transaction_time, :payment_method, :withdrawal_request_id)";
 
@@ -255,7 +259,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtTransaction->bindParam(':withdrawal_request_id', $lastWithdrawalRequestId, PDO::PARAM_INT);
 
         // Ejecutar la consulta de transacción
-        $stmtTransaction->execute();
+
+
+        if ($stmtTransaction->execute()) {
+            // Insertar la notificación en la base de datos
+            $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, content, status, type) VALUES (:userId, :content, 'unread', 'withdrawal_request')";
+            $stmtInsertNotification = $conexion->prepare($insertNotificationQuery);
+            $stmtInsertNotification->bindParam(':userId', $userId);
+            $stmtInsertNotification->bindParam(':content', $notificationMessage);
+            $stmtInsertNotification->execute();
+
+            // Enviar notificación a Pusher
+            include("../pusher.php");
+
+            $data = [
+                'message' => $notificationMessage,
+                'status' => 'unread',
+                'type' => 'withdrawal_request',
+                'user_id' => $userId
+            ];
+            $pusher->trigger('notifications-channel', 'evento', $data);
+
+            $userEmail = $_SESSION['user_email'];
+
+            // Enviar notificación por correo electrónico
+            $to = $userEmail;
+            $subject = 'Nuovo - Retiro';
+            $message = $notificationMessage;
+
+            $headers = 'From: nuovo@gmail.com' . "\r\n" .
+                'Reply-To: nuovo@gmail.com' . "\r\n" .
+                'X-Mailer: PHP/' . phpversion();
+
+            if (mail($to, $subject, $message, $headers)) {
+            } else {
+                http_response_code(500);
+                echo json_encode(array("error" => "Error al enviar correo electronico"));
+            }
+
+            // Confirmar la transacción
+            $conexion->commit();
+
+            http_response_code(201); // Created
+            echo json_encode(array("message" => "Solicitud de retiro enviada con éxito."));
+        } else {
+            // Revertir la transacción en caso de error
+            $conexion->rollBack();
+            error_log($e->getMessage());
+            http_response_code(500); // Internal Server Error
+            echo json_encode(array("error" => "Error al procesar la solicitud de retiro.", "details" => $e->getMessage()));
+        }
+
 
         if ($selectedMethod === 'transferencia_entre_usuarios') {
             // Obtener el saldo actual del usuario destinatario
@@ -279,13 +333,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmtUpdateRecipientBalance->execute();
             }
         }
-
-
-        // Confirmar la transacción
-        $conexion->commit();
-
-        http_response_code(201); // Created
-        echo json_encode(array("message" => "Solicitud de retiro enviada con éxito."));
     } catch (PDOException $e) {
         // Revertir la transacción en caso de error
         $conexion->rollBack();

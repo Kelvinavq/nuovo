@@ -23,6 +23,7 @@ const Lateral = () => {
   };
 
   const toggleNotificationsDropdown = () => {
+    markNotificationsAsRead();
     setIsNotificationsOpen(!isNotificationsOpen);
   };
 
@@ -53,13 +54,43 @@ const Lateral = () => {
       const data = await response.json();
 
       setNotifications(data);
-      console.log(data)
+      console.log(data);
       const unreadCount = data.filter(
         (notification) => notification.status === "unread"
       ).length;
       setUnreadNotificationsCount(unreadCount);
     } catch (error) {
       console.error("Error al obtener notificaciones", error);
+    }
+  };
+
+  const markNotificationsAsRead = async () => {
+    try {
+      // Enviar una solicitud para marcar las notificaciones como "read"
+      const response = await fetch(
+        "http://localhost/nuovo/backend/Api/markNotificationsAsRead.php",
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
+  
+      if (!response.ok) {
+        throw new Error(`Error en la solicitud: ${response.statusText}`);
+      }
+  
+      // Actualizar el estado local de las notificaciones
+      setNotifications((prevNotifications) =>
+        prevNotifications.map((notification) => ({
+          ...notification,
+          status: "read",
+        }))
+      );
+  
+      // Actualizar el recuento de notificaciones no leídas
+      setUnreadNotificationsCount(0);
+    } catch (error) {
+      console.error("Error al marcar las notificaciones como leídas", error);
     }
   };
 
@@ -146,6 +177,7 @@ const Lateral = () => {
     };
   }, []);
 
+
   return (
     <div className="lateral">
       <div className="profile">
@@ -188,8 +220,13 @@ const Lateral = () => {
           </button>
           {isNotificationsOpen && (
             <div className="dropdown-content" ref={notificationsDropdownRef}>
-                {notifications.map((notification) => (
-                <p key={notification.id}>{notification.content}</p>
+              {notifications.map((notification) => (
+                <div key={notification.id}>
+                  <p>
+                    {notification.content}
+                    <small>{notification.created_at}</small>
+                  </p>
+                </div>
               ))}
             </div>
           )}

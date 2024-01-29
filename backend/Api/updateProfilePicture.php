@@ -33,8 +33,8 @@ if ($stmtUserInfo->rowCount() > 0) {
     $fileName = basename($file['name']);
     $uploadFilePath = $uploadDirectory . $fileName;
 
-     // Verificar si la imagen anterior no es la predeterminada
-     if ($userInfo['profile_picture'] !== 'default.jpg') {
+    // Verificar si la imagen anterior no es la predeterminada
+    if ($userInfo['profile_picture'] !== 'default.jpg') {
         // Ruta de la imagen anterior
         $previousFilePath = $uploadDirectory . $userInfo['profile_picture'];
 
@@ -53,6 +53,46 @@ if ($stmtUserInfo->rowCount() > 0) {
         $stmtUpdatePicture->bindParam(':userId', $userId);
 
         if ($stmtUpdatePicture->execute()) {
+
+            // Agregar notificación
+            $notificationMessage = "Foto de perfil actualizada correctamente";
+
+            // Insertar la notificación en la base de datos
+            $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, content, status, type) VALUES (:userId, :content, 'unread', 'profile_update')";
+            $stmtInsertNotification = $conexion->prepare($insertNotificationQuery);
+            $stmtInsertNotification->bindParam(':userId', $userId);
+            $stmtInsertNotification->bindParam(':content', $notificationMessage);
+            $stmtInsertNotification->execute();
+
+            // Enviar notificación a Pusher
+            include("../pusher.php");
+
+            $data = [
+                'message' => "Foto de perfil actualizada correctamente",
+                'status' => 'unread',
+                'type' => 'profile_update',
+                'user_id' => $userId
+            ];
+            $pusher->trigger('notifications-channel', 'evento', $data);
+
+            $userEmail = $_SESSION['user_email'];
+
+            // Enviar notificación por correo electrónico
+            $to = $userEmail;
+            $subject = 'Nuovo - Foto de Perfil';
+            $message = 'Su foto de perfil ha sido actualizada correctamente';
+
+            $headers = 'From: nuovo@gmail.com' . "\r\n" .
+                'Reply-To: nuovo@gmail.com' . "\r\n" .
+                'X-Mailer: PHP/' . phpversion();
+
+            if (mail($to, $subject, $message, $headers)) {
+            } else {
+                http_response_code(500);
+                echo json_encode(array("error" => "Error al enviar correo electronico"));
+            }
+
+
             http_response_code(200);
             echo json_encode(array("message" => "Foto de perfil actualizada correctamente."));
         } else {
@@ -69,4 +109,3 @@ if ($stmtUserInfo->rowCount() > 0) {
 }
 // Cerrar la conexión después de usarla
 $conexion = null;
-?>
