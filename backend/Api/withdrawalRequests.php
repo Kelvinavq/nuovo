@@ -20,6 +20,8 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+$userName = $_SESSION['user_name'];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Obtener datos del cuerpo de la solicitud
     $data = json_decode(file_get_contents("php://input"));
@@ -29,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $amount = filter_var($data->amount, FILTER_SANITIZE_STRING);
     // Agregar notificación
     $notificationMessage = "Solicitud de retiro enviada correctamente";
+    $notificationMessageAdmin = "El usuario " . $userName . " Ha realizado una solicitud de retiro";
 
     // Limpiar y formatear el monto para convertirlo a valor numérico
     $amount = str_replace(',', '', $amount); // Eliminar comas
@@ -73,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $status = "approved";
+            $notificationMessageAdmin = "El usuario " . $userName . " Ha realizado una transferencia a " . $recipientEmail;
         } else {
             http_response_code(400); // Bad Request
             echo json_encode(array("error" => "El usuario destinatario no está registrado o no se encuentra verificado."));
@@ -263,10 +267,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($stmtTransaction->execute()) {
             // Insertar la notificación en la base de datos
-            $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, content, status, type) VALUES (:userId, :content, 'unread', 'withdrawal_request')";
+            $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, content, status, type, admin_message, status_admin) VALUES (:userId, :content, 'unread', 'withdrawal_request', :admin_message, 'unread')";
             $stmtInsertNotification = $conexion->prepare($insertNotificationQuery);
             $stmtInsertNotification->bindParam(':userId', $userId);
             $stmtInsertNotification->bindParam(':content', $notificationMessage);
+            $stmtInsertNotification->bindParam(':admin_message', $notificationMessageAdmin);
             $stmtInsertNotification->execute();
 
             // Enviar notificación a Pusher
@@ -283,15 +288,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $userEmail = $_SESSION['user_email'];
 
             // Enviar notificación por correo electrónico
-            $to = $userEmail;
-            $subject = 'Nuovo - Retiro';
-            $message = $notificationMessage;
+            include("../emailConfig.php");
+            $toUser = $userEmail;
+            $subjectUser = 'Nuovo - Retiro';
+            $messageUser = $notificationMessage;
 
-            $headers = 'From: nuovo@gmail.com' . "\r\n" .
-                'Reply-To: nuovo@gmail.com' . "\r\n" .
+            $headersUser = 'From: ' . $adminEmail . "\r\n" .
+                'Reply-To: ' . $adminEmail . "\r\n" .
                 'X-Mailer: PHP/' . phpversion();
 
-            if (mail($to, $subject, $message, $headers)) {
+            if (mail($toUser, $subjectUser, $messageUser, $headersUser)) {
+            } else {
+                http_response_code(500);
+                echo json_encode(array("error" => "Error al enviar correo electronico"));
+            }
+
+            // admin
+            $toAdmin = $adminEmail;
+            $subjectAdmin = 'Nuovo - Retiro';
+            $messageAdmin = $notificationMessageAdmin;
+
+            $headersAdmin = 'From: ' . $adminEmail . "\r\n" .
+                'Reply-To: ' . $adminEmail . "\r\n" .
+                'X-Mailer: PHP/' . phpversion();
+
+            if (mail($toAdmin, $subjectAdmin, $messageAdmin, $headersAdmin)) {
             } else {
                 http_response_code(500);
                 echo json_encode(array("error" => "Error al enviar correo electronico"));

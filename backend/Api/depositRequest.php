@@ -20,6 +20,8 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+$userName = $_SESSION['user_name'];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Obtener datos del cuerpo de la solicitud
     $data = json_decode(file_get_contents("php://input"));
@@ -80,17 +82,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($stmtTransaction->execute()) {
             // Agregar notificación
             $notificationMessage = "Solictud de depósito enviada correctamente";
+            $notificationMessageAdmin = "El usuario " . $userName . " ha realizado una solicitud de depósito.";
 
             // Insertar la notificación en la base de datos
-            $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, content, status, type) VALUES (:userId, :content, 'unread', 'deposit_request')";
+            $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, content, status, type, admin_message, status_admin) VALUES (:userId, :content, 'unread', 'withdrawal_request', :admin_message, 'unread')";
             $stmtInsertNotification = $conexion->prepare($insertNotificationQuery);
             $stmtInsertNotification->bindParam(':userId', $userId);
             $stmtInsertNotification->bindParam(':content', $notificationMessage);
+            $stmtInsertNotification->bindParam(':admin_message', $notificationMessageAdmin);
             $stmtInsertNotification->execute();
 
 
             // Enviar notificación a Pusher
             include("../pusher.php");
+            include("../emailConfig.php");
 
             $data = [
                 'message' => "Solictud de depósito enviada correctamente",
@@ -116,6 +121,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 http_response_code(500);
                 echo json_encode(array("error" => "Error al enviar correo electronico"));
             }
+
+            // admin
+            $toAdmin = $adminEmail;
+            $subjectAdmin = 'Nuovo - Solicitud de Depósito';
+            $messageAdmin = $notificationMessageAdmin;
+
+            $headersAdmin = 'From: ' . $adminEmail . "\r\n" .
+                'Reply-To: ' . $adminEmail . "\r\n" .
+                'X-Mailer: PHP/' . phpversion();
+
+            if (mail($toAdmin, $subjectAdmin, $messageAdmin, $headersAdmin)) {
+            } else {
+                http_response_code(500);
+                echo json_encode(array("error" => "Error al enviar correo electronico"));
+            }
+
         } else {
             // Revertir la transacción en caso de error
             $conexion->rollBack();

@@ -6,15 +6,17 @@ import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNone
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import HorizontalRuleOutlinedIcon from "@mui/icons-material/HorizontalRuleOutlined";
+import Pusher from "pusher-js";
 
 const Lateral_a = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileDropdownRef = useRef(null);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const notificationsDropdownRef = useRef(null);
+  const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
+  const [notifications, setNotifications] = useState([]);
 
   const [userData, setUserData] = useState({});
-  const [notifications, setNotifications] = useState([]);
   const [recentDeposits, setRecentDeposits] = useState([]);
   const [recentWithdrawals, setRecentWithdrawals] = useState([]);
 
@@ -23,6 +25,7 @@ const Lateral_a = () => {
   };
 
   const toggleNotificationsDropdown = () => {
+    markNotificationsAsRead();
     setIsNotificationsOpen(!isNotificationsOpen);
   };
 
@@ -35,7 +38,7 @@ const Lateral_a = () => {
   const getNotifications = async () => {
     try {
       const response = await fetch(
-        "http://localhost/nuovo/backend/Api/getNotifications.php",
+        "http://localhost/nuovo/backend/Api/admin/getNotifications.php",
         {
           method: "GET",
           credentials: "include",
@@ -45,9 +48,43 @@ const Lateral_a = () => {
       const data = await response.json();
       if (response.ok) {
         setNotifications(data);
+        const unreadCount = data.filter(
+          (notification) => notification.status_admin === "unread"
+        ).length;
+        setUnreadNotificationsCount(unreadCount);
       }
     } catch (error) {
       console.error("Error al obtener notificaciones", error);
+    }
+  };
+
+  const markNotificationsAsRead = async () => {
+    try {
+      // Enviar una solicitud para marcar las notificaciones como "read"
+      const response = await fetch(
+        "http://localhost/nuovo/backend/Api/admin/markNotificationsAsRead.php",
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
+  
+      if (!response.ok) {
+        throw new Error(`Error en la solicitud: ${response.statusText}`);
+      }
+  
+      // Actualizar el estado local de las notificaciones
+      setNotifications((prevNotifications) =>
+        prevNotifications.map((notification) => ({
+          ...notification,
+          status: "read",
+        }))
+      );
+  
+      // Actualizar el recuento de notificaciones no leídas
+      setUnreadNotificationsCount(0);
+    } catch (error) {
+      console.error("Error al marcar las notificaciones como leídas", error);
     }
   };
 
@@ -85,7 +122,31 @@ const Lateral_a = () => {
     }
   };
 
+
+
   useEffect(() => {
+    // Configurar Pusher
+    const pusher = new Pusher("afe7fd857579ff4b05d7", {
+      cluster: "mt1",
+      useTLS: true,
+      encrypted: true,
+    });
+
+    // Suscribirse al canal de notificaciones
+    const channel = pusher.subscribe("notifications-channel");
+
+    // Manejar nuevos eventos de notificación
+    channel.bind("evento", (newNotification) => {
+      // Actualizar la lista de notificaciones con la nueva notificación
+      setNotifications((prevNotifications) => [
+        ...prevNotifications,
+        newNotification,
+      ]);
+      getNotifications();
+    });
+
+    getNotifications();
+
     // Obtener información del usuario al cargar el componente
     fetch("http://localhost/nuovo/backend/Api/admin/getUserInfo.php", {
       method: "GET",
@@ -157,11 +218,21 @@ const Lateral_a = () => {
         <div className="notification">
           <button onClick={toggleNotificationsDropdown}>
             <NotificationsNoneOutlinedIcon />
+            {unreadNotificationsCount > 0 && (
+              <span className="notification-count">
+                {unreadNotificationsCount}
+              </span>
+            )}
           </button>
           {isNotificationsOpen && (
             <div className="dropdown-content" ref={notificationsDropdownRef}>
               {notifications.map((notification) => (
-                <p key={notification.id}>{notification.content}</p>
+                <div key={notification.id}>
+                  <p>
+                    {notification.admin_message}
+                    <small>{notification.created_at}</small>
+                  </p>
+                </div>
               ))}
             </div>
           )}

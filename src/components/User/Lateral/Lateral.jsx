@@ -54,7 +54,6 @@ const Lateral = () => {
       const data = await response.json();
 
       setNotifications(data);
-      console.log(data);
       const unreadCount = data.filter(
         (notification) => notification.status === "unread"
       ).length;

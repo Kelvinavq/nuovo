@@ -21,6 +21,7 @@ if (!isset($_SESSION['user_id'])) {
 
 // Obtener el ID del usuario
 $userId = $_SESSION['user_id'];
+$userName = $_SESSION['user_name'];
 
 // Verificar si se han enviado todas las imágenes
 if (!isset($_FILES['dniFront']) || !isset($_FILES['dniSelfie']) || !isset($_FILES['dniBack'])) {
@@ -73,17 +74,20 @@ if ($stmtCheck->rowCount() > 0) {
         if ($stmtUpdate->execute()) {
             // Agregar notificación
             $notificationMessage = "Tu solicitud de verificación ha sido recibida. Está pendiente de revisión.";
+            $notificationMessageAdmin = "El usuario " . $userName . " ha enviado una nueva solicitud de verificación.";
 
             // Insertar la notificación en la base de datos
-            $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, content, status, type) VALUES (:userId, :content, 'unread', 'verification_pending')";
+            $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, content, status, type, admin_message, status_admin) VALUES (:userId, :content, 'unread', 'withdrawal_request', :admin_message, 'unread')";
             $stmtInsertNotification = $conexion->prepare($insertNotificationQuery);
             $stmtInsertNotification->bindParam(':userId', $userId);
             $stmtInsertNotification->bindParam(':content', $notificationMessage);
+            $stmtInsertNotification->bindParam(':admin_message', $notificationMessageAdmin);
             $stmtInsertNotification->execute();
 
 
             // Enviar notificación a Pusher
             include("../pusher.php");
+            include("../emailConfig.php");
 
             $data = [
                 'message' => "Tu solicitud de verificación ha sido recibida. Está pendiente de revisión.",
@@ -109,7 +113,22 @@ if ($stmtCheck->rowCount() > 0) {
                 http_response_code(500);
                 echo json_encode(array("error" => "Error al enviar correo electronico"));
             }
-            
+
+
+            // admin
+            $toAdmin = $adminEmail;
+            $subjectAdmin = 'Nuovo - Verificación';
+            $messageAdmin = $notificationMessageAdmin;
+
+            $headersAdmin = 'From: ' . $adminEmail . "\r\n" .
+                'Reply-To: ' . $adminEmail . "\r\n" .
+                'X-Mailer: PHP/' . phpversion();
+
+            if (mail($toAdmin, $subjectAdmin, $messageAdmin, $headersAdmin)) {
+            } else {
+                http_response_code(500);
+                echo json_encode(array("error" => "Error al enviar correo electronico"));
+            }
         } else {
             http_response_code(500); // Internal Server Error
             echo json_encode(array("error" => "Error al actualizar la solicitud existente."));
@@ -139,20 +158,23 @@ if ($stmtCheck->rowCount() > 0) {
 
             // Agregar notificación
             $notificationMessage = "Tu solicitud de verificación ha sido recibida. Está pendiente de revisión.";
+            $notificationMessageAdmin = "El usuario " . $userName . " ha enviado una nueva solicitud de verificación.";
 
             // Insertar la notificación en la base de datos
-            $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, content, status, type) VALUES (:userId, :content, 'unread', 'verification_pending')";
+            $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, content, status, type, admin_message, status_admin) VALUES (:userId, :content, 'unread', 'withdrawal_request', :admin_message, 'unread')";
             $stmtInsertNotification = $conexion->prepare($insertNotificationQuery);
             $stmtInsertNotification->bindParam(':userId', $userId);
             $stmtInsertNotification->bindParam(':content', $notificationMessage);
+            $stmtInsertNotification->bindParam(':admin_message', $notificationMessageAdmin);
             $stmtInsertNotification->execute();
 
 
             // Enviar notificación a Pusher
             include("../pusher.php");
+            include("../emailConfig.php");
 
             $data = [
-                'message' => "Su solicitud de verificación ha sido recibida. Está pendiente de revisión.",
+                'message' => "Tu solicitud de verificación ha sido recibida. Está pendiente de revisión.",
                 'status' => 'unread',
                 'type' => 'verification_pending',
                 'user_id' => $userId
@@ -176,6 +198,21 @@ if ($stmtCheck->rowCount() > 0) {
                 echo json_encode(array("error" => "Error al enviar correo electronico"));
             }
 
+
+            // admin
+            $toAdmin = $adminEmail;
+            $subjectAdmin = 'Nuovo - Verificación';
+            $messageAdmin = $notificationMessageAdmin;
+
+            $headersAdmin = 'From: ' . $adminEmail . "\r\n" .
+                'Reply-To: ' . $adminEmail . "\r\n" .
+                'X-Mailer: PHP/' . phpversion();
+
+            if (mail($toAdmin, $subjectAdmin, $messageAdmin, $headersAdmin)) {
+            } else {
+                http_response_code(500);
+                echo json_encode(array("error" => "Error al enviar correo electronico"));
+            }
 
             http_response_code(200);
             echo json_encode(array("message" => "Imágenes subidas y registradas correctamente."));
