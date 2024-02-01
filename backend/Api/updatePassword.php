@@ -74,8 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $subject = 'Actualización de Contraseña';
                     $message = 'Su contraseña de acceso a NUOVO se ha actualizado con éxito';
 
-                    $headers = 'From: nuovo@gmail.com' . "\r\n" .
-                        'Reply-To: nuovo@gmail.com' . "\r\n" .
+                    $headers = 'From: ' . $adminEmail . "\r\n" .
+                    'Reply-To: ' . $adminEmail . "\r\n" .
                         'X-Mailer: PHP/' . phpversion();
 
                     if (mail($to, $subject, $message, $headers)) {

@@ -19,6 +19,7 @@ if (!isset($_SESSION['user_id'])) {
     echo json_encode(array("error" => "No hay una sesión activa."));
     exit();
 }
+$adminId = $_SESSION['user_id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Obtener el ID de la solicitud de depósito desde la solicitud
@@ -70,6 +71,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtUpdateBalance->bindParam(':user_id', $depositInfo['user_id'], PDO::PARAM_INT);
         $stmtUpdateBalance->execute();
 
+
+        // obtener nombre del usuario
+        $getUserNameQuery = "SELECT name, email FROM users WHERE id = :idUser";
+        $getUserName = $conexion->prepare($getUserNameQuery);
+        $getUserName->bindParam(':idUser', $depositInfo['user_id'], PDO::PARAM_INT);
+        $getUserName->execute();
+        $result = $getUserName->fetch(PDO::FETCH_LAZY);
+        $userName = $result['name'];
+        $userEmail = $result['email'];
+
+        // notificaciones
+
+        $contentUser = "Su solicitud de depósito por $" . $depositInfo['amount'] . " ha sido aprobada.";
+        $contentAdmin = "Un administrador aprobó la solicitud de depósito del usuario " . $userName . " correo electrónico: " . $userEmail . " por un monto de $" . $depositInfo['amount'];
+
+        // Insertar la notificación en la base de datos
+        $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, type, content, admin_message, status, status_admin, admin_id) VALUES (:user_id, 'approval_deposit', :content_user, :content_admin, 'unread', 'unread', :admin_id)";
+        $stmtInsertNotification = $conexion->prepare($insertNotificationQuery);
+        $stmtInsertNotification->bindParam(':user_id', $depositInfo['user_id']);
+        $stmtInsertNotification->bindParam(':content_user', $contentUser);
+        $stmtInsertNotification->bindParam(':content_admin', $contentAdmin);
+        $stmtInsertNotification->bindParam(':admin_id', $adminId);
+        $stmtInsertNotification->execute();
+
+        // Enviar notificación a Pusher
+        include("../../pusher.php");
+        include("../../emailConfig.php");
+
+        $notificationData = array('message' => 'Un administrador aprobó la solicitud de depósito del usuario ' . $userName);
+
+        $data = [
+            'message' => "Un administrador aprobó la solicitud de depósito del usuario " . $userName,
+            'status' => 'unread',
+            'type' => 'approval_deposit',
+            'user_id' => $adminId
+        ];
+
+        $pusher->trigger('notifications-channel', 'evento', $data);
+
+        // Enviar notificación por correo electrónico 
+        $to = $userEmail;
+        $subject = 'Nuovo - Solicitud de depósito aprobada';
+        $message = 'Su solicitud de depósito por el monto de $ ' . $depositInfo['amount'] . ' ha sido aprobada.';
+
+        $headers = 'From: ' . $adminEmail . "\r\n" .
+            'Reply-To: ' . $adminEmail . "\r\n" .
+            'X-Mailer: PHP/' . phpversion();
+
+        if (mail($to, $subject, $message, $headers)) {
+        } else {
+            http_response_code(500);
+            echo json_encode(array("error" => "Error al enviar correo electronico"));
+        }
+
+        // admin
+        $toAdmin = $adminEmail;
+        $subjectAdmin = 'Nuovo - Solicitud de depósito aprobada';
+        $messageAdmin = 'Se ha aprobado la solicitud de depósito por el monto de $ ' . $depositInfo['amount'] . ' de la cuenta del usuario ' . $userName . ' correo electrónico: ' . $userEmail;
+
+        $headersAdmin = 'From: ' . $adminEmail . "\r\n" .
+            'Reply-To: ' . $adminEmail . "\r\n" .
+            'X-Mailer: PHP/' . phpversion();
+
+        if (mail($toAdmin, $subjectAdmin, $messageAdmin, $headersAdmin)) {
+        } else {
+            http_response_code(500);
+            echo json_encode(array("error" => "Error al enviar correo electronico"));
+        }
+
+
         // Confirmar la transacción
         $conexion->commit();
 
@@ -80,10 +151,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conexion->rollBack();
 
         http_response_code(500); // Internal Server Error
-        echo json_encode(array("error" => "Error al marcar la solicitud como completada." .$e, "details" => $e->getMessage()));
+        echo json_encode(array("error" => "Error al marcar la solicitud como completada." . $e, "details" => $e->getMessage()));
     }
 }
 
 // Cerrar la conexión después de usarla
 $conexion = null;
-?>

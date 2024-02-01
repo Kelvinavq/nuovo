@@ -11,6 +11,8 @@ if (!isset($_SESSION['user_id'])) {
     echo json_encode(array("error" => "No hay una sesión activa."));
     exit();
 }
+$adminId = $_SESSION['user_id'];
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"));
@@ -43,13 +45,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $getUserStmt->execute();
         $userId = $getUserStmt->fetchColumn();
 
-        // Agregar notificación al usuario
-        $notificationMessage = "El estado de tu solicitud de verificación ha sido actualizado a denegado. Motivo: $formattedReasons";
-        $addNotification = "INSERT INTO notifications (user_id, content, is_read) VALUES (:userId, :message, 0)";
-        $stmtNotification = $conexion->prepare($addNotification);
-        $stmtNotification->bindParam(':userId', $userId);
-        $stmtNotification->bindParam(':message', $notificationMessage);
-        $stmtNotification->execute();
+        // obtener nombre del usuario
+        $getUserNameQuery = "SELECT name, email FROM users WHERE id = :idUser";
+        $getUserName = $conexion->prepare($getUserNameQuery);
+        $getUserName->bindParam(':idUser', $userId, PDO::PARAM_INT);
+        $getUserName->execute();
+        $result = $getUserName->fetch(PDO::FETCH_LAZY);
+        $userName = $result['name'];
+        $userEmail = $result['email'];
+
+
+        $contentUser = "Su solicitud de verificacion ha sido denegada. Se ha enviado un correo electronico con los motivos.";
+        $contentAdmin = "Un administrador denegó la solicitud de verificación del usuario " . $userName;
+
+        // Insertar la notificación en la base de datos
+        $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, type, content, admin_message, status, status_admin, admin_id) VALUES (:user_id, 'deny_verification', :content_user, :content_admin, 'unread', 'unread', :admin_id)";
+        $stmtInsertNotification = $conexion->prepare($insertNotificationQuery);
+        $stmtInsertNotification->bindParam(':user_id', $userId);
+        $stmtInsertNotification->bindParam(':content_user', $contentUser);
+        $stmtInsertNotification->bindParam(':content_admin', $contentAdmin);
+        $stmtInsertNotification->bindParam(':admin_id', $adminId);
+        $stmtInsertNotification->execute();
+
+        // Enviar notificación a Pusher
+        include("../../pusher.php");
+        include("../../emailConfig.php");
+
+        $notificationData = array('message' => 'Un administrador denegó la solicitud de verificación del usuario ' . $userName);
+
+        $data = [
+            'message' => "Un administrador denegó la solicitud de verificación del usuario " . $userName,
+            'status' => 'unread',
+            'type' => 'deny_verification',
+            'user_id' => $adminId
+        ];
+
+        $pusher->trigger('notifications-channel', 'evento', $data);
+
+        // Enviar notificación por correo electrónico 
+        $to = $userEmail;
+        $subject = 'Nuovo - Verificación de Cuenta';
+        $message = 'Su solicitud de verificacion ha sido denegada por los siguientes motivos: ' . $formattedReasons;
+
+        $headers = 'From: ' . $adminEmail . "\r\n" .
+            'Reply-To: ' . $adminEmail . "\r\n" .
+            'X-Mailer: PHP/' . phpversion();
+
+        if (mail($to, $subject, $message, $headers)) {
+        } else {
+            http_response_code(500);
+            echo json_encode(array("error" => "Error al enviar correo electronico"));
+        }
+
+        // admin
+        $toAdmin = $adminEmail;
+        $subjectAdmin = 'Nuovo - Verificación de Cuenta';
+        $messageAdmin = 'Se ha denegado la verificacion de la cuenta del usuario ' . $userName . ' correo electrónico: ' . $userEmail . ' por los motivos: ' .$formattedReasons;
+
+        $headersAdmin = 'From: ' . $adminEmail . "\r\n" .
+            'Reply-To: ' . $adminEmail . "\r\n" .
+            'X-Mailer: PHP/' . phpversion();
+
+        if (mail($toAdmin, $subjectAdmin, $messageAdmin, $headersAdmin)) {
+        } else {
+            http_response_code(500);
+            echo json_encode(array("error" => "Error al enviar correo electronico"));
+        }
+
 
         http_response_code(200);
         echo json_encode(array("message" => "Solicitud de verificación denegada con éxito."));
@@ -60,4 +122,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $conexion = null;
-?>

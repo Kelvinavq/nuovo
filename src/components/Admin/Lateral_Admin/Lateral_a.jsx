@@ -68,11 +68,11 @@ const Lateral_a = () => {
           credentials: "include",
         }
       );
-  
+
       if (!response.ok) {
         throw new Error(`Error en la solicitud: ${response.statusText}`);
       }
-  
+
       // Actualizar el estado local de las notificaciones
       setNotifications((prevNotifications) =>
         prevNotifications.map((notification) => ({
@@ -80,7 +80,7 @@ const Lateral_a = () => {
           status: "read",
         }))
       );
-  
+
       // Actualizar el recuento de notificaciones no leídas
       setUnreadNotificationsCount(0);
     } catch (error) {
@@ -121,8 +121,6 @@ const Lateral_a = () => {
       console.error("Error al obtener transacciones recientes", error);
     }
   };
-
-
 
   useEffect(() => {
     // Configurar Pusher
@@ -244,75 +242,87 @@ const Lateral_a = () => {
           <div className="title">
             <h2>Transacciones Recientes</h2>
           </div>
-
-          <div className="transacciones">
-            <div className="date">
-              <span>Depósitos</span>
-            </div>
-
-            {recentDeposits.map((deposit) => (
-              <div className="transaccion" key={deposit.id}>
-                <div className="left">
-                  <div className="icono depositar">
-                    <AddOutlinedIcon />
-                  </div>
-
-                  <div className="detalle">
-                    <span> {deposit.type === "deposit" ? "Depósito" : ""}</span>
-                    <small>{deposit.transaction_time}</small>
-                  </div>
-                </div>
-                <div className="right">
-                  <div className="monto">
-                    <span>
-                      {deposit.amount} <small>USD</small>
-                    </span>
-                    <p className={`${deposit.status}`}>{deposit.status}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-
-            <div className="enlace">
-              <Link to="/admin/movimientos?tipo=deposit">Ver más</Link>
-            </div>
+          <div className="date">
+            <span>Depósitos</span>
           </div>
+
+          {recentDeposits.length === 0 ? (
+            <p>No hay depositos por el momento</p>
+          ) : (
+            <div className="transacciones">
+              {recentDeposits.map((deposit) => (
+                <div className="transaccion" key={deposit.id}>
+                  <div className="left">
+                    <div className="icono depositar">
+                      <AddOutlinedIcon />
+                    </div>
+
+                    <div className="detalle">
+                      <span>
+                        {" "}
+                        {deposit.type === "deposit" ? "Depósito" : ""}
+                      </span>
+                      <small>{deposit.transaction_time}</small>
+                    </div>
+                  </div>
+                  <div className="right">
+                    <div className="monto">
+                      <span>
+                        {deposit.amount} <small>USD</small>
+                      </span>
+                      <p className={`${deposit.status}`}>{deposit.status}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              {/* <div className="enlace">
+                <Link to="/admin/movimientos?tipo=deposit">Ver más</Link>
+              </div> */}
+            </div>
+          )}
 
           <div className="transacciones">
             <div className="date">
               <span>Retiros</span>
             </div>
 
-            {recentWithdrawals.map((withdrawal) => (
-              <div className="transaccion" key={withdrawal.id}>
-                <div className="left">
-                  <div className="icono retirar">
-                    <HorizontalRuleOutlinedIcon />
-                  </div>
+            {recentWithdrawals.length === 0 ? (
+              <p>No hay retiros por el momento</p>
+            ) : (
+              <div className="transacciones">
+                {recentWithdrawals.map((withdrawal) => (
+                  <div className="transaccion" key={withdrawal.id}>
+                    <div className="left">
+                      <div className="icono retirar">
+                        <HorizontalRuleOutlinedIcon />
+                      </div>
 
-                  <div className="detalle">
-                    <span>
-                      {withdrawal.type === "withdrawal" ? "Retiro" : ""}
-                    </span>
-                    <small>{withdrawal.transaction_time}</small>
+                      <div className="detalle">
+                        <span>
+                          {withdrawal.type === "withdrawal" ? "Retiro" : ""}
+                        </span>
+                        <small>{withdrawal.transaction_time}</small>
+                      </div>
+                    </div>
+                    <div className="right">
+                      <div className="monto">
+                        <span>
+                          {withdrawal.amount} <small>USD</small>
+                        </span>
+                        <p className={`${withdrawal.status}`}>
+                          {withdrawal.status}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="right">
-                  <div className="monto">
-                    <span>
-                      {withdrawal.amount} <small>USD</small>
-                    </span>
-                    <p className={`${withdrawal.status}`}>
-                      {withdrawal.status}
-                    </p>
-                  </div>
-                </div>
+                ))}
+
+                {/* <div className="enlace">
+                  <Link to="/admin/movimientos?tipo=retiros">Ver más</Link>
+                </div> */}
               </div>
-            ))}
-
-            <div className="enlace">
-              <Link to="/admin/movimientos?tipo=retiros">Ver más</Link>
-            </div>
+            )}
           </div>
         </div>
       </div>

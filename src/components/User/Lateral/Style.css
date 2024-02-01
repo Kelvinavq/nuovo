@@ -111,12 +111,6 @@
     color: var(--gray);
 }
 
-
-@media (max-width: 920px) {
-  .lateral {
-    display: none;
-  }
-}
 .notification-count {
   background-color: red;
   color: var(--white);
@@ -129,4 +123,14 @@
   top: -10px;
   left: 0;
   font-size: 12px;
+}
+
+
+
+@media (max-width: 920px) {
+  .lateral {
+    display: none;
+  }
+
+ 
 }

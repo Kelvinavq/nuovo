@@ -11,6 +11,7 @@ if (!isset($_SESSION['user_id'])) {
     echo json_encode(array("error" => "No hay una sesión activa."));
     exit();
 }
+$adminId = $_SESSION['user_id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"));
@@ -57,6 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $userName = $userData['name'];
         }
 
+        $userEmail = $userData['email'];
+
         // Insertar en la tabla bank_account
         $insertAccountQuery = "INSERT INTO bank_account (user_id, bank_id, account_number, ref) VALUES (:user_id, :bank_id, :account_number, :ref)";
         $insertStmt = $conexion->prepare($insertAccountQuery);
@@ -66,6 +69,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $insertStmt->bindParam(':ref', $userName);
 
         $insertStmt->execute();
+
+        // Insertar la notificación en la base de datos
+        $contentUser = "Su solicitud de verificacion ha sido aprobada. Se ha enviado un correo electronico con los detalles.";
+        $contentAdmin = "Un administrador aprobó la solicitud de verificación del usuario " . $userName;
+
+        $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, type, content, admin_message, status, status_admin, admin_id) VALUES (:user_id, 'approval_verification', :content_user, :content_admin, 'unread', 'unread', :admin_id)";
+        $stmtInsertNotification = $conexion->prepare($insertNotificationQuery);
+        $stmtInsertNotification->bindParam(':user_id', $user_id);
+        $stmtInsertNotification->bindParam(':content_user', $contentUser);
+        $stmtInsertNotification->bindParam(':content_admin', $contentAdmin);
+        $stmtInsertNotification->bindParam(':admin_id', $adminId);
+        $stmtInsertNotification->execute();
+
+        // Enviar notificación a Pusher
+        include("../../pusher.php");
+        include("../../emailConfig.php");
+
+        $notificationData = array('message' => 'Un administrador aprobó la solicitud de verificación del usuario ' . $userName);
+
+        $data = [
+            'message' => "Un administrador aprobó la solicitud de verificación del usuario " . $userName,
+            'status' => 'unread',
+            'type' => 'approval_verification',
+            'user_id' => $adminId
+        ];
+
+        $pusher->trigger('notifications-channel', 'evento', $data);
+
+
+        // Enviar notificación por correo electrónico 
+        $to = $userEmail;
+        $subject = 'Nuovo - Verificación de Cuenta';
+        $message = 'Su solicitud de verificacion ha sido aprobada, su número de cuenta dentro de NUOVO es: ' . $bankAccount;
+
+        $headers = 'From: ' . $adminEmail . "\r\n" .
+            'Reply-To: ' . $adminEmail . "\r\n" .
+            'X-Mailer: PHP/' . phpversion();
+
+        if (mail($to, $subject, $message, $headers)) {
+        } else {
+            http_response_code(500);
+            echo json_encode(array("error" => "Error al enviar correo electronico"));
+        }
+
+        // admin
+        $toAdmin = $adminEmail;
+        $subjectAdmin = 'Nuovo - Verificación de Cuenta';
+        $messageAdmin = 'Se ha aprobado la verificacion de la cuenta del usuario ' . $userName . ' correo electrónico: ' . $userEmail . ' y se le asignó el número de cuenta: ' .$bankAccount;
+
+        $headersAdmin = 'From: ' . $adminEmail . "\r\n" .
+            'Reply-To: ' . $adminEmail . "\r\n" .
+            'X-Mailer: PHP/' . phpversion();
+
+        if (mail($toAdmin, $subjectAdmin, $messageAdmin, $headersAdmin)) {
+        } else {
+            http_response_code(500);
+            echo json_encode(array("error" => "Error al enviar correo electronico"));
+        }
 
         http_response_code(200);
         echo json_encode(array("message" => "Número de cuenta actualizado con éxito."));

@@ -24,22 +24,14 @@ try {
     // Obtener las solicitudes de depósito desde la base de datos
     $query = "SELECT
     dr.*,
-    u.name AS user_name,
-    ba.account_number,
-    ba.bank_id,
-    b.account_name,
-    b.routing_number_ach,
-    b.routing_number_wire
+    u.name AS user_name
 FROM
     deposit_requests dr
 LEFT JOIN
     users u ON dr.user_id = u.id
-LEFT JOIN
-    bank_account ba ON dr.user_id = ba.user_id
-LEFT JOIN
-    banks b ON ba.bank_id = b.id
+
 ORDER BY
-    dr.updated_at DESC;";
+    dr.updated_at DESC";
     $stmt = $conexion->prepare($query);
     $stmt->execute();
 

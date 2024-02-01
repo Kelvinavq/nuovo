@@ -42,43 +42,58 @@ const Depositos_a = () => {
     fetchDepositRequests();
   }, []);
 
-  const handleItemClick = (solicitud) => {
-    // Crear y mostrar el modal de SweetAlert2 con la información de la solicitud
-
-    // Mostrar los botones solo si el estado es "pending"
-    const isPending = solicitud.status === "pending";
-
-    Swal.fire({
-      title: `Detalles de la Solicitud - ${solicitud.platform_type}`,
-      html: `
-      <span>Información bancaria del usuario</span>
-      <p><strong>Banco:</strong> ${solicitud.account_name}</p>
-      <p><strong>R.N (ACH):</strong> ${solicitud.routing_number_ach}</p>
-      <p><strong>R.N (WIRE):</strong> ${solicitud.routing_number_wire}</p>
-      <p><strong>Número de cuenta:</strong> ${solicitud.account_number}</p>
-
-      <span>Detalles del depósito</span>
-        <p><strong>Tipo:</strong> ${solicitud.platform_type}</p>
-        <p><strong>Fecha y Hora:</strong> ${solicitud.request_date} ${
-        solicitud.request_time
-      }</p>
-        <p><strong>Monto:</strong> $${solicitud.amount}</p>
-        <p><strong>Usuario:</strong> ${solicitud.user_name}</p>
-        <p><strong>Estatus:</strong> ${solicitud.status}</p>
-        <p><strong>Numero de transaccion:</strong> ${
-          solicitud.reference_number || "No aplica"
-        }</p>
-        <p></p>
-      `,
-
-      confirmButtonText: "Marcar como Completado",
-      cancelButtonText: "Denegar Operación",
-      confirmButtonColor: "#28a745",
-      cancelButtonColor: "#dc3545",
-      showConfirmButton: isPending,
-      showCancelButton: isPending,
-      showCloseButton: true,
-    }).then((result) => {
+  const handleItemClick = async (solicitud) => {
+    try {
+      // Obtener detalles específicos del depósito
+      const response = await fetch(
+        `http://localhost/nuovo/backend/Api/admin/getDepositDetails.php?id=${solicitud.id}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+  
+      if (!response.ok) {
+        console.error("Error al obtener detalles del depósito");
+        Swal.fire({
+          title: "Error al obtener detalles del depósito",
+          text: "Hubo un error al obtener los detalles del depósito",
+          icon: "error",
+        });
+        return;
+      }
+  
+      const depositDetails = await response.json();
+  
+      // Mostrar el modal de SweetAlert2 con la información de la solicitud y los nuevos detalles
+      const isPending = solicitud.status === "pending";
+  
+      Swal.fire({
+        title: `Detalles de la Solicitud - ${solicitud.platform_type}`,
+        html: `
+          <span>Información bancaria del usuario</span>
+          <p><strong>Banco:</strong> ${depositDetails.account_name}</p>
+          <p><strong>R.N (ACH):</strong> ${depositDetails.routing_number_ach}</p>
+          <p><strong>R.N (WIRE):</strong> ${depositDetails.routing_number_wire}</p>
+          <p><strong>Número de cuenta:</strong> ${depositDetails.account_number}</p>
+  
+          <span>Detalles del depósito</span>
+          <p><strong>Tipo:</strong> ${solicitud.platform_type}</p>
+          <p><strong>Fecha y Hora:</strong> ${solicitud.request_date} ${solicitud.request_time}</p>
+          <p><strong>Monto:</strong> $${solicitud.amount}</p>
+          <p><strong>Usuario:</strong> ${solicitud.user_name}</p>
+          <p><strong>Estatus:</strong> ${solicitud.status}</p>
+          <p><strong>Numero de transaccion:</strong> ${solicitud.reference_number || "No aplica"}</p>
+          <p></p>
+        `,
+        confirmButtonText: "Marcar como Completado",
+        cancelButtonText: "Denegar Operación",
+        confirmButtonColor: "#28a745",
+        cancelButtonColor: "#dc3545",
+        showConfirmButton: isPending,
+        showCancelButton: isPending,
+        showCloseButton: true,
+      }).then((result) => {
         if (result.isConfirmed) {
           // Lógica para marcar como completado
           Swal.fire({
@@ -96,9 +111,7 @@ const Depositos_a = () => {
               markAsCompleted(solicitud.id);
             }
           });
-        } else if (
-          result.dismiss === Swal.DismissReason.cancel
-        ) {
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
           // Lógica para denegar operación
           Swal.fire({
             title: "¿Estás seguro?",
@@ -114,21 +127,21 @@ const Depositos_a = () => {
               Swal.fire({
                 title: "Motivo de Denegación",
                 html: `
-                <form id="denialForm">
-                  <div>
-                    <input type="checkbox" id="refIncorrecto" name="reason" value="Numero de referencia incorrecto">
-                    <label for="refIncorrecto">Número de referencia incorrecto</label>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="montoNoCoincide" name="reason" value="El monto de la operación no coincide con el depositado">
-                    <label for="montoNoCoincide">El monto de la operación no coincide con el depositado</label>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="noSeEncuentraDeposito" name="reason" value="No se encuentra el depósito">
-                    <label for="noSeEncuentraDeposito">No se encuentra el depósito</label>
-                  </div>
-                </form>
-              `,
+                  <form id="denialForm">
+                    <div>
+                      <input type="checkbox" id="refIncorrecto" name="reason" value="Numero de referencia incorrecto">
+                      <label for="refIncorrecto">Número de referencia incorrecto</label>
+                    </div>
+                    <div>
+                      <input type="checkbox" id="montoNoCoincide" name="reason" value="El monto de la operación no coincide con el depositado">
+                      <label for="montoNoCoincide">El monto de la operación no coincide con el depositado</label>
+                    </div>
+                    <div>
+                      <input type="checkbox" id="noSeEncuentraDeposito" name="reason" value="No se encuentra el depósito">
+                      <label for="noSeEncuentraDeposito">No se encuentra el depósito</label>
+                    </div>
+                  </form>
+                `,
                 focusConfirm: false,
                 showCancelButton: true,
                 confirmButtonText: "Denegar",
@@ -140,7 +153,7 @@ const Depositos_a = () => {
                   )
                     .map((reasonCheckbox) => reasonCheckbox.value)
                     .join(", ");
-
+  
                   // Lógica para denegar la solicitud con motivos
                   denyRequest(solicitud.id, denialReasons);
                 }
@@ -148,8 +161,17 @@ const Depositos_a = () => {
             }
           });
         }
-    });
+      });
+    } catch (error) {
+      console.error("Error al manejar la solicitud de detalles:", error);
+      Swal.fire({
+        title: "Error",
+        text: "Error inesperado al manejar la solicitud de detalles",
+        icon: "error",
+      });
+    }
   };
+  
 
   const denyRequest = async (depositRequestId, denialReasons) => {
     try {
@@ -224,6 +246,7 @@ const Depositos_a = () => {
     }
   };
 
+
   return (
     <div className="depositos_admin">
       <div className="title">
@@ -234,43 +257,43 @@ const Depositos_a = () => {
         <p>No hay solicitudes de depósito.</p>
       ) : (
         <div className="lista_depositos">
-          {depositRequests.map((solicitud, index) => (
-            <ul key={index} onClick={() => handleItemClick(solicitud)}>
-              <li>
-                <div className="icono">
-                  <AddOutlinedIcon />
-                </div>
-              </li>
+        {depositRequests.map((solicitud, index) => (
+          <ul key={index} onClick={() => handleItemClick(solicitud)}>
+            <li>
+              <div className="icono">
+                <AddOutlinedIcon />
+              </div>
+            </li>
 
-              <li>
-                <h2>Depositar</h2>
-                <span>{solicitud.platform_type}</span>
-              </li>
+            <li>
+              <h2>Depositar</h2>
+              <span>{solicitud.platform_type}</span>
+            </li>
 
-              <li>
-                <h2>Fecha</h2>
-                <span>
-                  {solicitud.request_date} {solicitud.request_time}
-                </span>
-              </li>
+            <li>
+              <h2>Fecha</h2>
+              <span>
+                {solicitud.request_date} {solicitud.request_time}
+              </span>
+            </li>
 
-              <li className="monto">
-                <h2>Monto</h2>
-                <span>${solicitud.amount}</span>
-              </li>
+            <li className="monto">
+              <h2>Monto</h2>
+              <span>${solicitud.amount}</span>
+            </li>
 
-              <li>
-                <h2>Usuario</h2>
-                <span>{solicitud.user_name}</span>
-              </li>
+            <li>
+              <h2>Usuario</h2>
+              <span>{solicitud.user_name}</span>
+            </li>
 
-              <li className={`estatus ${solicitud.status}`}>
-                <h2>Estatus</h2>
-                <span>{solicitud.status}</span>
-              </li>
-            </ul>
-          ))}
-        </div>
+            <li className={`estatus ${solicitud.status}`}>
+              <h2>Estatus</h2>
+              <span>{solicitud.status}</span>
+            </li>
+          </ul>
+        ))}
+      </div>
       )}
     </div>
   );
