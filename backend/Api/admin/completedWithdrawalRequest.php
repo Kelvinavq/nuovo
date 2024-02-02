@@ -40,6 +40,8 @@ try {
     $userId = $withdrawalInfo['user_id'];
     switch ($method) {
         case 'efectivo':
+            updateTransactionStatus($conexion, $withdrawalRequestId, 'approved');
+
             // Actualizar la columna 'message' con el mensaje proporcionado desde el frontend
             updateWithdrawalRequest($conexion, $withdrawalRequestId, array('message' => $data['withdrawalAddress'], 'status' => 'approved'));
             break;

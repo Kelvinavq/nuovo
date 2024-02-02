@@ -6,10 +6,11 @@ import { Link } from "react-router-dom";
 const Head = () => {
   return (
     <div className="head">
-      <div className="logo">
-        <img src={logotipo} alt="nuovotech logo" />
-      </div>
-
+      <Link to={"/"}>
+        <div className="logo">
+          <img src={logotipo} alt="nuovotech logo" />
+        </div>
+      </Link>
       <div className="buttons">
         <button>
           <Link to="/login">Iniciar Sesión</Link>

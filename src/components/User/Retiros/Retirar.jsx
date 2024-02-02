@@ -531,7 +531,7 @@ const Retirar = () => {
               {renderSpecificFields()}
 
               <div className="grupo-submit">
-                <input type="submit" value="Enviar" />
+                <input className="btns" type="submit" value="Enviar" />
               </div>
             </form>
           </div>

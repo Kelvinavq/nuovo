@@ -35,6 +35,18 @@
     color: var(--green);
 }
 
+.lateral_a .profile .dropdown-content{
+    width: 200px;
+    position: absolute;
+    background: var(--blue);
+    padding: 10px;
+    border-radius: 15px;
+  
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
 
 .lateral_a .profile .notification .dropdown-content {
     position: absolute;

@@ -1,11 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 @font-face {
-  font-family: 'VenusRisingRG';
-  src: url('../assets/fonts/venusrising.otf') format('opentype');
+  font-family: "VenusRisingRG";
+  src: url("../assets/fonts/venusrising.otf") format("opentype");
 }
-
-
 
 :root {
   --bg: #191a19;
@@ -14,7 +12,7 @@
   --gray: #606064;
   --green: #85ff2e;
   --blue: #21282b;
-  --blue2: #37474F;
+  --blue2: #37474f;
   --shadow: 0px 0px 20px 0px #85ff2e3f;
 
   --red: #ff7782;
@@ -50,10 +48,10 @@ html {
   transition: 0.3s;
 }
 
-div:where(.swal2-container) div:where(.swal2-popup){
+div:where(.swal2-container) div:where(.swal2-popup) {
   background: var(--bg) !important;
   border-radius: 30px !important;
-  box-shadow: var(--shadow) ;
+  box-shadow: var(--shadow);
   color: var(--white) !important;
 }
 
@@ -64,7 +62,7 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
   outline: none !important;
 }
 
-div:where(.swal2-container) div:where(.swal2-popup) .message{
+div:where(.swal2-container) div:where(.swal2-popup) .message {
   background: var(--blue);
   width: calc(100% - 30px);
   height: 80px;
@@ -72,7 +70,7 @@ div:where(.swal2-container) div:where(.swal2-popup) .message{
   padding: 15px;
 }
 
-div:where(.swal2-container) div:where(.swal2-popup) .message .icon{
+div:where(.swal2-container) div:where(.swal2-popup) .message .icon {
   width: 100%;
   display: flex;
   align-items: center;
@@ -81,13 +79,13 @@ div:where(.swal2-container) div:where(.swal2-popup) .message .icon{
   font-weight: 600;
 }
 
-div:where(.swal2-container) div:where(.swal2-popup) .message .text{
-  font-size: .8em;
+div:where(.swal2-container) div:where(.swal2-popup) .message .text {
+  font-size: 0.8em;
   text-align: left;
   margin-top: -5px;
 }
 
-div:where(.swal2-container) div:where(.swal2-popup) .grupo-input{
+div:where(.swal2-container) div:where(.swal2-popup) .grupo-input {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -96,12 +94,12 @@ div:where(.swal2-container) div:where(.swal2-popup) .grupo-input{
   margin-top: 15px;
 }
 
-div:where(.swal2-container) div:where(.swal2-popup) .grupo-input label{
+div:where(.swal2-container) div:where(.swal2-popup) .grupo-input label {
   font-size: 1em;
   cursor: pointer;
 }
 
-div:where(.swal2-container) div:where(.swal2-popup) .grupo-input input{
+div:where(.swal2-container) div:where(.swal2-popup) .grupo-input input {
   height: 45px;
   border: none;
   outline: none;
@@ -111,6 +109,88 @@ div:where(.swal2-container) div:where(.swal2-popup) .grupo-input input{
   color: var(--white);
   padding-left: 10px;
 }
+
+/* botones */
+div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
+  position: relative;
+  cursor: pointer;
+  border-radius: 7px;
+  border: 1px solid var(--green) !important;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 2px;
+  background: transparent !important;
+  color: var(--white);
+  overflow: hidden;
+  box-shadow: 0 0 0 0 transparent;
+  -webkit-transition: all 0.2s ease-in;
+  -moz-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+  outline: none !important;
+}
+
+div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:hover {
+  background: var(--green) !important;
+  box-shadow: 0 0 30px 5px rgba(20, 236, 0, 0.219);
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+
+div:where(.swal2-container)
+  button:where(.swal2-styled).swal2-confirm:hover::before {
+  -webkit-animation: sh02 0.5s 0s linear;
+  -moz-animation: sh02 0.5s 0s linear;
+  animation: sh02 0.5s 0s linear;
+}
+
+div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm::before {
+  content: "";
+  display: block;
+  width: 0px;
+  height: 86%;
+  position: absolute;
+  top: 7%;
+  left: 0%;
+  opacity: 0;
+  background: var(--white);
+  box-shadow: 0 0 50px 30px var(--white);
+  -webkit-transform: skewX(-20deg);
+  -moz-transform: skewX(-20deg);
+  -ms-transform: skewX(-20deg);
+  -o-transform: skewX(-20deg);
+  transform: skewX(-20deg);
+}
+
+@keyframes sh02 {
+  from {
+    opacity: 0;
+    left: 0%;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    left: 100%;
+  }
+}
+
+div:where(.swal2-container)
+  button:where(.swal2-styled).swal2-confirm:last-child:active {
+  box-shadow: 0 0 0 0 transparent;
+  -webkit-transition: box-shadow 0.2s ease-in;
+  -moz-transition: box-shadow 0.2s ease-in;
+  transition: box-shadow 0.2s ease-in;
+}
+
+.swal2-html-container select option{
+  background: var(--bg) !important;
+}
+
 /* Sections
        ========================================================================== */
 
@@ -200,7 +280,6 @@ abbr[title] {
 b,
 strong {
   font-weight: bolder;
-
 }
 
 /**

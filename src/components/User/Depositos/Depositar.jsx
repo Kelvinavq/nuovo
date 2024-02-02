@@ -404,7 +404,7 @@ const Depositar = () => {
               )}
 
               <div className="grupo-submit">
-                <input type="submit" value="Enviar Solicitud" />
+                <input className="btns" type="submit" value="Enviar Solicitud" />
               </div>
             </form>
           </div>

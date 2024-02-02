@@ -134,6 +134,15 @@
   }
 }
 
+@media (max-width: 440px) {
+  .head .buttons button:last-child {
+    padding: 8px 10px;
+    font-size: 12px;
+    text-transform: capitalize;
+    font-weight: 500;
+  }
+}
+
 @media (max-width: 400px) {
   .head .logo img {
     max-width: 100px;

@@ -2,6 +2,8 @@
     width: 100%;
     display: flex;
     justify-content: center;
+    position: relative;
+    /* background: #00ff001e; */
 }
 
 .header {

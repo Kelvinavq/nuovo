@@ -315,7 +315,7 @@ const Plataformas_a = () => {
       <div className="content">
         <div className="title">
           <h2>Plataformas</h2>
-          <button onClick={handleAddPlatform}>Agregar nueva plataforma</button>
+          <button className="btns" onClick={handleAddPlatform}>Agregar nueva plataforma</button>
         </div>
         <Enlaces_a />
 
@@ -327,7 +327,7 @@ const Plataformas_a = () => {
                 ? `${platform.platformName}: ${platform.value}`
                 : platform.platformName + ": " + platform.value}
 
-              <button onClick={() => handleEditPlatform(platform.id)}>
+              <button className="btns" onClick={() => handleEditPlatform(platform.id)}>
                 Editar
               </button>
             </li>

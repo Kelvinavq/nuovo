@@ -192,7 +192,7 @@ const Register_Form = () => {
               <label htmlFor="phoneNumber">Teléfono</label>
               <PhoneInput
                 id="phoneNumber"
-                country={"ve"}
+                country={"ar"}
                 value={phoneNumber}
                 onChange={handlePhoneChange}
               />

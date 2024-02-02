@@ -1,0 +1,24 @@
+.contenedor_legales{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+
+.legales{
+    width: 85%;
+    max-width: 650px;
+    height: auto;
+    overflow-y: auto;
+    padding: 15px;
+    box-shadow: var(--shadow);
+    border-radius: 30px;
+}
+
+.legales ul li{
+    margin: 10px 0;
+}
+

@@ -8,7 +8,7 @@ const Balance_a = () => {
   const [balance, setBalance] = useState({
     total_deposit: 0,
     total_withdrawal: 0,
-    total_users: 0
+    total_users: 0,
   });
 
   useEffect(() => {
@@ -47,25 +47,65 @@ const Balance_a = () => {
     fetchBalance();
   }, []);
 
-  
-
   const generateExcelReport = async () => {
+    const { value: dateRange } = await Swal.fire({
+      title: "Selecciona un rango de fechas",
+      html: `
+      <div className="rangos">
+        <div className="grupo-input">
+          <label for="startDate">Desde:</label>
+          <input type="date" id="startDate" class="swal2-input">
+        </div>
+
+        <div className="grupo-input">
+          <label for="endDate">Hasta:</label>
+          <input type="date" id="endDate" class="swal2-input">
+        </div>
+      </div>
+
+      `,
+      focusConfirm: false,
+      preConfirm: () => {
+        // Obtener valores de las fechas
+        const startDate = document.getElementById("startDate").value;
+        const endDate = document.getElementById("endDate").value;
+
+        // Validar las fechas
+        if (!startDate || !endDate || startDate > endDate) {
+          Swal.showValidationMessage("Rango de fechas no válido");
+          return false;
+        }
+
+        return { startDate, endDate };
+      },
+    });
+
+    // Si se cancela el primer Swal o las fechas no son válidas, salir
+    if (!dateRange) {
+      return;
+    }
+
+    // Desestructurar las fechas desde el objeto dateRange
+    const { startDate, endDate } = dateRange;
+    const params = new URLSearchParams();
+    params.append("startDate", startDate);
+    params.append("endDate", endDate);
     try {
       const response = await fetch(
-        "http://localhost/nuovo/backend/Api/admin/generateExcelReport.php",
+        `http://localhost/nuovo/backend/Api/admin/generateExcelReport.php?${params.toString()}`,
         {
           method: "GET",
           credentials: "include",
         }
       );
-  
+
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
           // Construir la URL completa del archivo
-          const baseUrl = 'http://localhost/nuovo/src/assets/reports';
+          const baseUrl = "http://localhost/nuovo/src/assets/reports";
           const fullUrl = `${baseUrl}/${data.file_url}`;
-  
+
           // Mostrar la alerta con el botón de descarga
           Swal.fire({
             icon: "success",
@@ -151,5 +191,4 @@ const Balance_a = () => {
     </div>
   );
 };
-
 export default Balance_a;

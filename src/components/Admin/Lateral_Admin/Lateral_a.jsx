@@ -203,10 +203,10 @@ const Lateral_a = () => {
             </button>
             {isProfileOpen && (
               <div className="dropdown-content">
-                <Link>Perfil</Link>
-                <Link>Verificación</Link>
-                <Link>Seguridad</Link>
-                <Link>Ajustes</Link>
+                <Link to={"/admin/ajustes"}>Perfil</Link>
+                <Link to={"/admin/ajustes/seguridad"}>Seguridad</Link>
+                <Link to={"/admin/ajustes/bancos"}>Bancos</Link>
+                <Link to={"/admin/ajustes/plataformas"}>Plataformas</Link>
               </div>
             )}
           </div>

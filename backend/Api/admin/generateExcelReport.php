@@ -19,57 +19,88 @@ if (!isset($_SESSION['user_id'])) {
 $conexion = obtenerConexion();
 
 try {
+
+    // Obtener las fechas desde la URL
+    $startDate = $_GET['startDate'];
+    $endDate = $_GET['endDate'];
+
+
     // Consultar los datos necesarios para el informe
     $sqlTransactions = "SELECT
-                t.transaction_date,
-                t.transaction_time,
-                t.amount,
-                t.status,
-                t.type AS transaction_type,
-                t.payment_method,
-                u.name AS client_name,
-                ub.balance AS initial_balance,
-                t.withdrawal_request_id,
-                t.deposit_request_id
-            FROM
-                transactions t
-            JOIN users u ON t.user_id = u.id
-            JOIN user_balances ub ON t.user_id = ub.user_id
-            WHERE
-                t.status IN ('pending', 'approved') 
-            ORDER BY
-                t.transaction_date DESC
-            LIMIT 100"; // Puedes ajustar el límite según tus necesidades
+    t.transaction_date,
+    t.transaction_time,
+    t.amount,
+    t.status,
+    t.type AS transaction_type,
+    t.payment_method,
+    u.name AS client_name,
+    ub.balance AS initial_balance,
+    t.withdrawal_request_id,
+    t.deposit_request_id
+FROM
+    transactions t
+JOIN users u ON t.user_id = u.id
+JOIN user_balances ub ON t.user_id = ub.user_id
+WHERE
+    t.status IN ('pending', 'approved', 'denied') 
+    AND t.transaction_date BETWEEN :start_date AND :end_date
+ORDER BY
+    t.transaction_date DESC";
 
-    $sqlDepositTotalApproved = "SELECT SUM(amount) AS total_approved FROM transactions WHERE type = 'deposit' AND status = 'approved'";
-    $sqlDepositTotalPending = "SELECT SUM(amount) AS total_pending FROM transactions WHERE type = 'deposit' AND status = 'pending'";
-    $sqlDepositTotalDenied = "SELECT SUM(amount) AS total_denied FROM transactions WHERE type = 'deposit' AND status = 'denied'";
+    // Consultar totales de depósitos dentro del rango de fechas
+    $sqlDepositTotalApproved = "SELECT SUM(amount) AS total_approved FROM transactions WHERE type = 'deposit' AND status = 'approved' AND transaction_date BETWEEN :start_date AND :end_date";
+    $sqlDepositTotalPending = "SELECT SUM(amount) AS total_pending FROM transactions WHERE type = 'deposit' AND status = 'pending' AND transaction_date BETWEEN :start_date AND :end_date";
+    $sqlDepositTotalDenied = "SELECT SUM(amount) AS total_denied FROM transactions WHERE type = 'deposit' AND status = 'denied' AND transaction_date BETWEEN :start_date AND :end_date";
 
-    $sqlWithdrawalTotalApproved = "SELECT SUM(amount) AS total_approved FROM transactions WHERE type = 'withdrawal' AND status = 'approved'";
-    $sqlWithdrawalTotalPending = "SELECT SUM(amount) AS total_pending FROM transactions WHERE type = 'withdrawal' AND status = 'pending'";
-    $sqlWithdrawalTotalDenied = "SELECT SUM(amount) AS total_denied FROM transactions WHERE type = 'withdrawal' AND status = 'denied'";
+    // Consultar totales de retiros dentro del rango de fechas
+    $sqlWithdrawalTotalApproved = "SELECT SUM(amount) AS total_approved FROM transactions WHERE type = 'withdrawal' AND status = 'approved' AND transaction_date BETWEEN :start_date AND :end_date";
+    $sqlWithdrawalTotalPending = "SELECT SUM(amount) AS total_pending FROM transactions WHERE type = 'withdrawal' AND status = 'pending' AND transaction_date BETWEEN :start_date AND :end_date";
+    $sqlWithdrawalTotalDenied = "SELECT SUM(amount) AS total_denied FROM transactions WHERE type = 'withdrawal' AND status = 'denied' AND transaction_date BETWEEN :start_date AND :end_date";
 
-    $stmtTransactions = $conexion->query($sqlTransactions);
+
+    $stmtTransactions = $conexion->prepare($sqlTransactions);
+    $stmtTransactions->bindParam(':start_date', $startDate, PDO::PARAM_STR);
+    $stmtTransactions->bindParam(':end_date', $endDate, PDO::PARAM_STR);
+    $stmtTransactions->execute();
     $dataFromDatabase = $stmtTransactions->fetchAll(PDO::FETCH_ASSOC);
 
+
     // Obtener totales de depósitos
-    $stmtDepositTotalApproved = $conexion->query($sqlDepositTotalApproved);
+    $stmtDepositTotalApproved = $conexion->prepare($sqlDepositTotalApproved);
+    $stmtDepositTotalApproved->bindParam(':start_date', $startDate, PDO::PARAM_STR);
+    $stmtDepositTotalApproved->bindParam(':end_date', $endDate, PDO::PARAM_STR);
+    $stmtDepositTotalApproved->execute();
     $totalDepositApproved = $stmtDepositTotalApproved->fetch(PDO::FETCH_ASSOC)['total_approved'];
 
-    $stmtDepositTotalPending = $conexion->query($sqlDepositTotalPending);
+    $stmtDepositTotalPending = $conexion->prepare($sqlDepositTotalPending);
+    $stmtDepositTotalPending->bindParam(':start_date', $startDate, PDO::PARAM_STR);
+    $stmtDepositTotalPending->bindParam(':end_date', $endDate, PDO::PARAM_STR);
+    $stmtDepositTotalPending->execute();
     $totalDepositPending = $stmtDepositTotalPending->fetch(PDO::FETCH_ASSOC)['total_pending'];
 
-    $stmtDepositTotalDenied = $conexion->query($sqlDepositTotalDenied);
+    $stmtDepositTotalDenied = $conexion->prepare($sqlDepositTotalDenied);
+    $stmtDepositTotalDenied->bindParam(':start_date', $startDate, PDO::PARAM_STR);
+    $stmtDepositTotalDenied->bindParam(':end_date', $endDate, PDO::PARAM_STR);
+    $stmtDepositTotalDenied->execute();
     $totalDepositDenied = $stmtDepositTotalDenied->fetch(PDO::FETCH_ASSOC)['total_denied'];
 
     // Obtener totales de retiros
-    $stmtWithdrawalTotalApproved = $conexion->query($sqlWithdrawalTotalApproved);
+    $stmtWithdrawalTotalApproved = $conexion->prepare($sqlWithdrawalTotalApproved);
+    $stmtWithdrawalTotalApproved->bindParam(':start_date', $startDate, PDO::PARAM_STR);
+    $stmtWithdrawalTotalApproved->bindParam(':end_date', $endDate, PDO::PARAM_STR);
+    $stmtWithdrawalTotalApproved->execute();
     $totalWithdrawalApproved = $stmtWithdrawalTotalApproved->fetch(PDO::FETCH_ASSOC)['total_approved'];
 
-    $stmtWithdrawalTotalPending = $conexion->query($sqlWithdrawalTotalPending);
+    $stmtWithdrawalTotalPending = $conexion->prepare($sqlWithdrawalTotalPending);
+    $stmtWithdrawalTotalPending->bindParam(':start_date', $startDate, PDO::PARAM_STR);
+    $stmtWithdrawalTotalPending->bindParam(':end_date', $endDate, PDO::PARAM_STR);
+    $stmtWithdrawalTotalPending->execute();
     $totalWithdrawalPending = $stmtWithdrawalTotalPending->fetch(PDO::FETCH_ASSOC)['total_pending'];
 
-    $stmtWithdrawalTotalDenied = $conexion->query($sqlWithdrawalTotalDenied);
+    $stmtWithdrawalTotalDenied = $conexion->prepare($sqlWithdrawalTotalDenied);
+    $stmtWithdrawalTotalDenied->bindParam(':start_date', $startDate, PDO::PARAM_STR);
+    $stmtWithdrawalTotalDenied->bindParam(':end_date', $endDate, PDO::PARAM_STR);
+    $stmtWithdrawalTotalDenied->execute();
     $totalWithdrawalDenied = $stmtWithdrawalTotalDenied->fetch(PDO::FETCH_ASSOC)['total_denied'];
 
     // Ruta de la plantilla Excel
@@ -162,7 +193,7 @@ try {
         $row++;
     }
 
-    $fechaReporte = date("d-m-Y");
+    $fechaReporte = date("m-d-Y");
 
     // Agregar totales de depósitos y retiros
     $sheet->setCellValue('C7', $fechaReporte);

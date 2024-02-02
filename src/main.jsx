@@ -12,6 +12,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home/Index";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
+import Legal from "./pages/Legal/Legal";
 import Dashboard from "./pages/User/Dashboard";
 import Retiros from "./pages/User/Retiros";
 import Depositos from "./pages/User/Depositos";
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
   {
     path: "/registro",
     element: <Register />,
+  },
+  {
+    path: "/legal",
+    element: <Legal />,
   },
   {
     path: "/user/dashboard",

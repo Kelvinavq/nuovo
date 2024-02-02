@@ -14,3 +14,7 @@ text-align: center;
 .footer img{
     max-width: 120px;
 }
+
+.footer small{
+    font-size: .6em;
+}
