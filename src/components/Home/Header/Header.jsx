@@ -1,12 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useContext } from "react";
 import device from "../../../assets/images/frame.png";
 import "./Style.css";
 import { Link } from "react-router-dom";
 import ParticlesBg from "particles-bg";
 
+import { LanguageContext } from "../../../Language/LanguageContext";
+import {Translation} from "../../../Language/Translation";
 
 const Header = () => {
-
+  const { language } = useContext(LanguageContext);
 
 
   return (
@@ -14,14 +16,13 @@ const Header = () => {
   <ParticlesBg num={100} type="cobweb" bg={true} color="#85ff2e"  />
       <div className="header">
         <div className="left">
-          <h2>Mové y usá tu dinero, como y cuando quieras!</h2>
+          <h2>{Translation[language].headerTitle}</h2>
           <p>
-            Traé tu dinero de otras billeteras, recibí pagos y transferilo desde
-            tu cuenta en EEUU en dólares conectada con el mundo.
+          {Translation[language].headerText}
           </p>
 
           <button>
-            <Link to="/registro">UNITE AHORA</Link>
+            <Link to="/registro">{Translation[language].headerButton}</Link>
           </button>
         </div>
 

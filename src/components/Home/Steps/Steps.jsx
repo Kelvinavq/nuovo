@@ -1,4 +1,5 @@
 import "./Style.css";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import registro from "../../../assets/icons/registro.png";
 import deposito from "../../../assets/icons/deposito.png";
@@ -7,7 +8,12 @@ import retiro from "../../../assets/icons/retiro.png";
 // icons
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 
+import { LanguageContext } from "../../../Language/LanguageContext";
+import { Translation } from "../../../Language/Translation";
+
 const Steps = () => {
+  const { language } = useContext(LanguageContext);
+
   return (
     <div className="container">
       <div className="steps">
@@ -17,10 +23,8 @@ const Steps = () => {
           </div>
 
           <div className="content">
-            <h2>Registrate</h2>
-            <p>
-            Tu puerta de entrada al mundo financiero digital. Registrate ahora para disfrutar de una experiencia bancaria moderna, segura y sin complicaciones. 
-            </p>
+            <h2>{Translation[language].step1Title}</h2>
+            <p>{Translation[language].step1Text}</p>
 
             <Link to="/registro">
               <ArrowRightAltIcon />
@@ -33,9 +37,10 @@ const Steps = () => {
           </div>
 
           <div className="content">
-            <h2>Depositá</h2>
+            <h2>{Translation[language].step2Title}</h2>
             <p>
-            Con <strong>Nuovo</strong>, depositar dinero es tan sencillo como un clic. Te ofrecemos diferentes opciones para gestionar tu dinero de manera efectiva y segura.
+              {Translation[language].step2Text} <strong>Nuovo</strong>,{" "}
+              {Translation[language].step2Text2}
             </p>
 
             <Link to="/registro">
@@ -49,10 +54,8 @@ const Steps = () => {
           </div>
 
           <div className="content">
-            <h2>Retirá</h2>
-            <p>
-            Tu dinero, tu elección! Retirá tu saldo de manera conveniente y segura. Sea cual sea tu necesidad, estamos aquí para hacer que acceder a tu dinero sea rápido y sin complicaciones
-            </p>
+            <h2>{Translation[language].step3Title}</h2>
+            <p>{Translation[language].step3Text}</p>
 
             <Link to="/registro">
               <ArrowRightAltIcon />

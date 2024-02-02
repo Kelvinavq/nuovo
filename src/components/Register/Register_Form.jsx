@@ -1,14 +1,19 @@
 import "./Style.css";
 import logotipo from "../../assets/images/nuovo.png";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import Swal from "sweetalert2";
 
+import { LanguageContext } from "../../Language/LanguageContext";
+import { TranslationRegister } from "../../Language/TranslationRegister";
+
 
 const Register_Form = () => {
+  const { language } = useContext(LanguageContext);
+
   // Estados para los campos del formulario
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -100,35 +105,35 @@ const Register_Form = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "El nombre debe tener al menos 6 caracteres",
+        text: TranslationRegister[language].swal1,
       });
       return false;
     } else if (!emailRegex.test(email)) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Ingrese un correo electrónico válido",
+        text: TranslationRegister[language].swal2,
       });
       return false;
     } else if (password.length < 8) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "La contraseña debe contener al menos 8 carácteres",
+        text: TranslationRegister[language].swal3,
       });
       return false;
     } else if (phoneNumber.length < 7 || phoneNumber.length > 14) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "El número telefónico contiene un formato incorrecto",
+        text: TranslationRegister[language].swal4,
       });
       return false;
     } else if (address.length < 12) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "La dirección debe contener al menos 12 carácteres",
+        text: TranslationRegister[language].swal5,
       });
       return false;
     }
@@ -151,15 +156,15 @@ const Register_Form = () => {
         <div>
           <div className="content">
             <img src={logotipo} alt="logotipo nuovotech" />
-            <p>Regístrate para comenzar</p>
+            <p>{TranslationRegister[language].title}</p>
           </div>
 
           <div className="inputs">
             <div className="grupo-input">
-              <label htmlFor="name">Nombre completo</label>
+              <label htmlFor="name">{TranslationRegister[language].label1}</label>
               <input
                 type="text"
-                placeholder="Nombre/s y Apellido/s"
+                placeholder={TranslationRegister[language].input1}
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -167,10 +172,10 @@ const Register_Form = () => {
             </div>
 
             <div className="grupo-input">
-              <label htmlFor="email">Correo electrónico</label>
+              <label htmlFor="email">{TranslationRegister[language].label2}</label>
               <input
                 type="email"
-                placeholder="Ingresa tu correo electrónico"
+                placeholder={TranslationRegister[language].input2}
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -178,10 +183,10 @@ const Register_Form = () => {
             </div>
 
             <div className="grupo-input">
-              <label htmlFor="password">Contraseña</label>
+              <label htmlFor="password">{TranslationRegister[language].label3}</label>
               <input
                 type="password"
-                placeholder="Ingresa tu contraseña"
+                placeholder={TranslationRegister[language].input3}
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -189,7 +194,7 @@ const Register_Form = () => {
             </div>
 
             <div className="grupo-input ">
-              <label htmlFor="phoneNumber">Teléfono</label>
+              <label htmlFor="phoneNumber">{TranslationRegister[language].label4}</label>
               <PhoneInput
                 id="phoneNumber"
                 country={"ar"}
@@ -199,10 +204,10 @@ const Register_Form = () => {
             </div>
 
             <div className="grupo-input">
-              <label htmlFor="address">Dirección</label>
+              <label htmlFor="address">{TranslationRegister[language].label5}</label>
               <input
                 type="text"
-                placeholder="Ingresa tu dirección"
+                placeholder={TranslationRegister[language].input5}
                 id="address"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
@@ -210,12 +215,12 @@ const Register_Form = () => {
             </div>
 
             <div className="submit">
-              <input type="submit" value="Crear Cuenta" />
+              <input type="submit" value={TranslationRegister[language].button} />
             </div>
 
             <div className="enlace">
               <p>
-                ¿Ya tienes una cuenta? <Link to="/login">Iniciar Sesión</Link>
+              {TranslationRegister[language].label6} <Link to="/login">{TranslationRegister[language].link}</Link>
               </p>
             </div>
           </div>

@@ -1,75 +1,86 @@
 import "./Style.css";
+import React, { useContext } from "react";
 
 // images
 import seguridad from "../../../assets/icons/seguridad.png";
 import transacciones_rapidas from "../../../assets/icons/transacciones_rapidas.png";
 import comisiones from "../../../assets/icons/comisiones.png";
 import atencion from "../../../assets/icons/atencion_personalizada.png";
-import logo from "../../../assets/images/nuovo.png"
+import logo from "../../../assets/images/nuovo.png";
 
+import { LanguageContext } from "../../../Language/LanguageContext";
+import { Translation } from "../../../Language/Translation";
 
 const Advantages = () => {
+  const { language } = useContext(LanguageContext);
+
   return (
     <div className="container">
+      <div className="advantages">
+        <div className="content">
+          <h2>{Translation[language].advantageTitle} </h2>
+          <img src={logo} alt="" />
+          <p>
+            {Translation[language].advantageText} <strong>Nuovo</strong>,{" "}
+            {Translation[language].advantageText2}
+          </p>
+        </div>
 
-        <div className="advantages">
+        <div className="cards">
+          <div className="card">
+            <div className="img">
+              <img src={seguridad} alt="seguridad integral icono" />
+            </div>
 
             <div className="content">
-                <h2>Explorá las ventajas que tenés con </h2>
-                <img src={logo} alt="" />
-                <p>Descubrí un mundo de posibilidades financieras con <strong>Nuovo</strong>, donde la innovación se encuentra con la comodidad. En nuestro espacio digital, podés depositar fondos de manera segura, retirarlos con facilidad y realizar transferencias fluidas a otros usuarios.</p>
+              <h2>{Translation[language].advantageCard1Title}</h2>
+              <p>
+                {Translation[language].advantageCard1Text1}{" "}
+                <strong>Nuovo</strong>{" "}
+                {Translation[language].advantageCard1Text2}
+              </p>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="img">
+              <img
+                src={transacciones_rapidas}
+                alt="transacciones rapidas icono"
+              />
             </div>
 
-            <div className="cards">
-                <div className="card">
-                    <div className="img">
-                        <img src={seguridad} alt="seguridad integral icono" />
-                    </div>
-
-                    <div className="content">
-                        <h2>Seguridad Integral</h2>
-                        <p>Depositá con confianza sabiendo que <strong>Nuovo</strong> prioriza la seguridad de tus fondos con las últimas medidas de protección.</p>
-                    </div>
-                </div>
-
-                <div className="card">
-                    <div className="img">
-                        <img src={transacciones_rapidas} alt="transacciones rapidas icono" />
-                    </div>
-
-                    <div className="content">
-                        <h2>Transacciones Rápidas</h2>
-                        <p>Experimentá la velocidad en tus transacciones: retirá fondos o realiza transferencias de manera rápida.</p>
-                    </div>
-                </div>
-
-                <div className="card">
-                    <div className="img">
-                        <img src={comisiones} alt="comisiones icono" />
-                    </div>
-
-                    <div className="content">
-                        <h2>Sin Comisiones Ocultas</h2>
-                        <p>Disfrutá de tus transacciones  sin preocupaciones, ya que no aplicamos comisiones ocultas.</p>
-                    </div>
-                </div>
-
-                <div className="card">
-                    <div className="img">
-                        <img src={atencion} alt="atencion icono" />
-                    </div>
-
-                    <div className="content">
-                        <h2>Atención Personalizada</h2>
-                        <p>Asistencia personalizada en todo momento, asegurando una experiencia tranquila y sin contratiempos.</p>
-                    </div>
-                </div>
+            <div className="content">
+              <h2>{Translation[language].advantageCard2Title}</h2>
+              <p>{Translation[language].advantageCard2Text}</p>
             </div>
-            
+          </div>
+
+          <div className="card">
+            <div className="img">
+              <img src={comisiones} alt="comisiones icono" />
+            </div>
+
+            <div className="content">
+              <h2>{Translation[language].advantageCard3Title}</h2>
+              <p>{Translation[language].advantageCard3Text}</p>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="img">
+              <img src={atencion} alt="atencion icono" />
+            </div>
+
+            <div className="content">
+              <h2>{Translation[language].advantageCard4Title}</h2>
+              <p>{Translation[language].advantageCard4Text}</p>
+            </div>
+          </div>
         </div>
-      
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Advantages
+export default Advantages;

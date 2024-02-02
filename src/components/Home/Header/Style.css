@@ -2,8 +2,6 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    position: relative;
-    /* background: #00ff001e; */
 }
 
 .header {
@@ -112,9 +110,10 @@
     place-items: center;
 }
 
-img {
+.header .right img {
   width: 100%;
   max-width: 720px;
+  
 }
 
 @media (max-width: 920px) {

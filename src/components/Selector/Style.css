@@ -1,0 +1,73 @@
+/* selector */
+
+.container .selector {
+  margin-right: 20px;
+  z-index: 9;
+}
+
+.dropdown {
+  position: relative;
+  perspective: 200px;
+}
+
+.dropdown .btnSelector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background: transparent;
+  border-radius: 8px;
+  border: 0;
+  cursor: pointer;
+}
+
+.dropdown > .btnSelector {
+  position: relative;
+  z-index: 2;
+  transition: 0.3s;
+}
+
+.menu {
+  position: absolute;
+  overflow: hidden;
+  width: 100%;
+  height: auto;
+  opacity: 0;
+  transform-origin: 100% 0%;
+  scale: 0;
+  visibility: hidden;
+  border-radius: 8px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  transition: 0.4s;
+}
+
+.dropdown.open .menu {
+  scale: 1;
+  right: 0;
+  top: 72px;
+  opacity: 1;
+  z-index: 999 !important;
+  visibility: visible;
+}
+
+.menu .btnSelector {
+  border: 0;
+  width: 100%;
+  height: 50px;
+  border-radius: 0;
+  border: none !important;
+}
+
+.menu .btnSelector:hover {
+  background: var(--green) !important;
+}
+.selector .btnSelector img {
+  width: 30px;
+}
+
+.selector {
+  display: flex;
+  gap: 15px;
+}

@@ -1,17 +1,21 @@
 import "./Style.css";
 import logotipo from "../../assets/images/nuovo.png";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
+import { LanguageContext } from "../../Language/LanguageContext";
+import { TranslationLogin } from "../../Language/TranslationLogin";
+
 const LoginForm = () => {
+  const { language } = useContext(LanguageContext);
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
   const [error, setError] = useState(null);
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,14 +58,13 @@ const LoginForm = () => {
 
         if (responseData.user_role === "admin") {
           window.location.href = "/admin/dashboard";
-          console.log(responseData)
+          console.log(responseData);
         } else {
-          console.log(responseData)
+          console.log(responseData);
 
           window.location.href = "/user/dashboard";
         }
       } else {
-        
         Swal.fire({
           icon: "error",
           title: "Error",
@@ -77,7 +80,7 @@ const LoginForm = () => {
       });
     }
   };
-  
+
   const validateForm = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const { email, password } = formData;
@@ -85,51 +88,51 @@ const LoginForm = () => {
     if (!emailRegex.test(email)) {
       Swal.fire({
         icon: "error",
-        title: "Error",
-        text: "Ingrese un correo electrónico válido",
+        title: TranslationLogin[language].swalError,
+        text: TranslationLogin[language].SwalMessage1,
       });
       return false;
     } else if (password.length < 8) {
       Swal.fire({
         icon: "error",
-        title: "Error",
-        text: "La contraseña debe contener al menos 8 carácteres",
+        title: TranslationLogin[language].swalError,
+        text: TranslationLogin[language].SwalMessage2,
       });
       return false;
     }
     return true;
   };
 
-
-
   return (
     <div className="login">
       <form onSubmit={handleLogin}>
         <div className="content">
           <img src={logotipo} alt="logotipo nuovotech" />
-          <h2>Iniciar Sesión</h2>
+          <h2>{TranslationLogin[language].title}</h2>
         </div>
 
         <div className="inputs">
           <div className="grupo-input">
-            <label htmlFor="email">Correo electrónico</label>
+            <label htmlFor="email">{TranslationLogin[language].label1}</label>
             <input
               type="email"
               name="email"
               id="email"
-              placeholder="Correo electrónico"
+              placeholder={TranslationLogin[language].input1}
               value={formData.email}
               onChange={handleChange}
             />
           </div>
 
           <div className="grupo-input">
-            <label htmlFor="password">Contraseña</label>
+            <label htmlFor="password">
+              {TranslationLogin[language].label2}
+            </label>
             <input
               type="password"
               name="password"
               id="password"
-              placeholder="Ingresa tu contraseña"
+              placeholder={TranslationLogin[language].input2}
               value={formData.password}
               onChange={handleChange}
             />
@@ -138,13 +141,16 @@ const LoginForm = () => {
           {error && <p className="error-message">{error}</p>}
 
           <div className="submit">
-            <Link to="/user/forgot-password">¿Olvidaste tu contraseña?</Link>
-            <input type="submit" value="Ingresar" />
+            <Link to="/user/forgot-password">
+              {TranslationLogin[language].link}
+            </Link>
+            <input type="submit" value={TranslationLogin[language].button} />
           </div>
 
           <div className="enlace">
             <p>
-              ¿Aún no tienes una cuenta? <Link to="/registro">Regístrate</Link>
+              {TranslationLogin[language].label3}{" "}
+              <Link to="/registro">{TranslationLogin[language].link2}</Link>
             </p>
           </div>
         </div>

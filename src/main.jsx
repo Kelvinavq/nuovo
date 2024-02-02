@@ -4,6 +4,9 @@ import ReactDOM from "react-dom/client";
 // configuration css
 import "./css/config.css";
 
+// idiomas
+import { LanguageContextProvider } from "./Language/LanguageContext";
+
 // routes import
 import { AuthProvider } from "./AuthProvider ";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -129,8 +132,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <AuthProvider>
+    <LanguageContextProvider>
       <RouterProvider router={router}></RouterProvider>
-    </AuthProvider>
+    </LanguageContextProvider>
   </React.StrictMode>
 );
