@@ -8,6 +8,7 @@ import VerificacionIcon from "../../../assets/icons/Verificacion.svg";
 import AjustesIcon from "../../../assets/icons/Ajustes.svg";
 import UserIcon from "../../../assets/icons/user-line.svg";
 import LogoutIcon from "../../../assets/icons/Logout.svg";
+import TransactionsIcon from "../../../assets/icons/transactions.svg";
 
 const Sidebar_a = () => {
   const location = useLocation();
@@ -79,6 +80,15 @@ const Sidebar_a = () => {
           <div className="icon">
             <Link to="/admin/usuarios">
               <img src={UserIcon} alt="" />
+            </Link>
+          </div>
+        </div>
+        <div
+          className={`item i-transacciones ${isActive("/admin/transacciones")}`}
+        >
+          <div className="icon">
+            <Link to="/admin/transacciones">
+              <img src={TransactionsIcon} alt="" />
             </Link>
           </div>
         </div>

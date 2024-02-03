@@ -36,6 +36,8 @@ import Bancos from "./pages/Admin/Bancos";
 import Plataformas from "./pages/Admin/Plataformas";
 import Movimientos from "./pages/User/Movimientos";
 import Movimientos_admin from "./pages/Admin/Movimientos_admin"
+import Transacciones from "./pages/Admin/Transacciones";
+
 // paths
 const router = createBrowserRouter([
   {
@@ -127,6 +129,10 @@ const router = createBrowserRouter([
   {
     path: "/admin/movimientos",
     element: <Movimientos_admin />,
+  },
+  {
+    path: "/admin/transacciones",
+    element: <Transacciones />,
   },
 ]);
 
