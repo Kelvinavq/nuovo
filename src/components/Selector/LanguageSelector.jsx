@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { LanguageContext } from "../../Language/LanguageContext";
 import {Translation} from "../../Language/Translation";
 
-import usaIcon from "../../assets/icons/usa.png";
+import inglesIcon from "../../assets/icons/ingles.png";
 import espanaIcon from "../../assets/icons/espana.png";
 import portugalIcon from "../../assets/icons/portugal.png";
 
@@ -11,7 +11,7 @@ import "./Style.css"
 
 const languageFlagMap = {
   es: espanaIcon,
-  en: usaIcon,
+  en: inglesIcon,
   pt: portugalIcon,
 };
 
@@ -77,7 +77,7 @@ const LanguageSelector = () => {
               <img src={espanaIcon} alt="" />
             </button>
             <button className="btnSelector" onClick={() => handleLanguageChange("en")}>
-              <img src={usaIcon} alt="" />
+              <img src={inglesIcon} alt="" />
             </button>
             <button className="btnSelector" onClick={() => handleLanguageChange("pt")}>
               <img src={portugalIcon} alt="" />

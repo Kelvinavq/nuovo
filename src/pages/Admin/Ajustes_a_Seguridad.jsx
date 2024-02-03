@@ -25,7 +25,7 @@ const Ajustes_a_Seguridad = () => {
             credentials: "include",
           }
         );
-
+        
         const responseData = await response.json();
 
         if (response.ok) {
