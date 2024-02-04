@@ -38,7 +38,7 @@ ORDER BY
     $depositRequests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($depositRequests as &$request) {
-        $request['request_date'] = date('d-m-Y', strtotime($request['request_date']));
+        $request['request_date'] = date('m-d-Y', strtotime($request['request_date']));
     }
 
     // Enviar la respuesta

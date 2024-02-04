@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 }
 
 // Obtener la lista de solicitudes de verificación
-$obtenerVerificacionesQuery = "SELECT uv.id, u.registrationTime, u.name, u.phoneNumber, u.email, u.address, DATE_FORMAT(uv.created_at, '%d-%m-%Y %H:%i:%s') AS fecha_solicitud, DATE_FORMAT(uv.updated_at, '%d-%m-%Y') AS fecha_registro, uv.status, uv.user_id, uv.dni_image, uv.selfie_with_dni_image, uv.dni_back FROM user_verification uv JOIN users u ON uv.user_id = u.id ORDER BY uv.created_at DESC";
+$obtenerVerificacionesQuery = "SELECT uv.id, u.registrationTime, u.name, u.phoneNumber, u.email, u.address, DATE_FORMAT(uv.created_at, '%m-%d-%Y %H:%i:%s') AS fecha_solicitud, DATE_FORMAT(uv.updated_at, '%m-%d-%Y') AS fecha_registro, uv.status, uv.user_id, uv.dni_image, uv.selfie_with_dni_image, uv.dni_back FROM user_verification uv JOIN users u ON uv.user_id = u.id ORDER BY uv.created_at DESC";
 
 
 

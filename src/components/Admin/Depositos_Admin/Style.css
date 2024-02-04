@@ -39,6 +39,7 @@
   }
   
   .depositos_a ul li {
+    width: 100%;
     list-style: none;
     display: flex;
     flex-direction: column;

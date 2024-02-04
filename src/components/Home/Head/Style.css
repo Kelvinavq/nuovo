@@ -83,6 +83,12 @@
   }
 }
 
+@media (max-width: 500px) {
+  .head .buttons button:nth-child(3) {
+    display: none;
+  }
+}
+
 @media (max-width: 440px) {
   .head .buttons button:last-child {
     padding: 8px 10px;
@@ -108,7 +114,7 @@
     max-width: 100px;
     cursor: pointer;
   }
-  .head .buttons button:nth-child(2) {
+  .head .buttons button:nth-child(3) {
     display: none;
   }
 }

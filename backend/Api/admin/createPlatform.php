@@ -15,8 +15,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $platformName = isset($data->platformName) ? htmlspecialchars(strip_tags($data->platformName)) : null;
 
 
-
-
     try {
         // Insertar la nueva plataforma en la tabla Platforms
 

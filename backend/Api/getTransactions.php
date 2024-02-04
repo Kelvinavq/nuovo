@@ -28,7 +28,7 @@ try {
 
     // Formatear la respuesta
     $formattedTransactions = array_map(function ($transaction) {
-        $formattedDate = date('d-m-Y', strtotime($transaction['transaction_date']));
+        $formattedDate = date('m-d-Y', strtotime($transaction['transaction_date']));
         $formattedTime = date('H:i:s', strtotime($transaction['transaction_time']));
         return array(
             'type' => $transaction['type'],

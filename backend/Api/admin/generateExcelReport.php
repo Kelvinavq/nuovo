@@ -27,7 +27,7 @@ try {
 
     // Consultar los datos necesarios para el informe
     $sqlTransactions = "SELECT
-    t.transaction_date,
+DATE_FORMAT(t.transaction_date, '%m-%d-%Y') AS formatted_transaction_date,
     t.transaction_time,
     t.amount,
     t.status,
@@ -117,7 +117,7 @@ ORDER BY
 
     // Insertar datos de transacciones desde la base de datos
     foreach ($dataFromDatabase as $rowData) {
-        $sheet->setCellValue('E' . $row, $rowData['transaction_date']);
+        $sheet->setCellValue('E' . $row, $rowData['formatted_transaction_date']);
         $sheet->setCellValue('F' . $row, $rowData['transaction_time']);
         $sheet->setCellValue('G' . $row, $rowData['client_name']);
 

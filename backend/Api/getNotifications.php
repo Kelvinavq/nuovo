@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
          // Formatear la fecha y hora en cada notificación
     foreach ($notifications as &$notification) {
-        $notification['created_at'] = date('d-m-Y H:i:s', strtotime($notification['created_at']));
+        $notification['created_at'] = date('m-d-Y H:i:s', strtotime($notification['created_at']));
     }
 
     // Devolver las notificaciones como respuesta JSON

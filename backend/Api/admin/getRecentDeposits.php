@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $recentDepositsQuery = "SELECT * FROM transactions WHERE type = 'deposit' ORDER BY id DESC LIMIT 3";
         $recentDepositsStmt = $conexion->query($recentDepositsQuery);
         $recentDeposits = $recentDepositsStmt->fetchAll(PDO::FETCH_ASSOC);
+        
 
         // Devolver los resultados como JSON
         echo json_encode($recentDeposits);

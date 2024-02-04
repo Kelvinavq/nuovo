@@ -93,7 +93,7 @@ const ListUsers = () => {
         <p>Email: ${usuario.email}</p>
         <p>Teléfono: +${usuario.phoneNumber} </p>
         <p>Dirección: ${usuario.address} </p>
-        <p>Fecha de Registro: ${usuario.registrationDate} </p>
+        <p>Fecha de Registro: ${usuario.formatted_registrationDate} </p>
         <p>Número de cuenta: ${usuario.bank_account}</p>
         <p>Routing Number (ACH): ${usuario.routing_number_ach} </p>
         <p>Routing Number (WIRE): ${usuario.routing_number_wire} </p>
@@ -172,7 +172,7 @@ const ListUsers = () => {
 
             <li>
               <h2>Fecha Registro</h2>
-              <span>{usuario.registrationDate}</span>
+              <span>{usuario.formatted_registrationDate}</span>
             </li>
 
             <li>
