@@ -19,7 +19,16 @@ const Retirar = () => {
   const [accountNumber, setAccountNumber] = useState("");
   const [iban, setIban] = useState("");
   const [aliasCbu, setAliasCbu] = useState("");
-  const [cbu, setCbu] = useState("");
+  const [cuitcuil, setCuitCuil] = useState("");
+  const [nombreCuenta, setNombreCuenta] = useState("");
+  const [methodArg, setmethodArg] = useState("");
+  const [numeroCuenta, setNumeroCuenta] = useState("");
+  const [beneficiary, setBeneficiary] = useState("");
+  const [bankNameEu, setBankNameEu] = useState("");
+  const [swiftBic, setSwiftBic] = useState("");
+  const [addressBankEu, setAddressBankEu] = useState("");
+  const [accountNumberEu, setAccountNumberEu] = useState("");
+  const [sortCodeEu, setSortCodeEu] = useState("");
 
   // Lógica para obtener el estado de verificación del usuario
   useEffect(() => {
@@ -206,6 +215,17 @@ const Retirar = () => {
                   />
                 </div>
 
+                <div className="grupo-input">
+                  <label htmlFor="beneficiary">Nombre del beneficiario</label>
+                  <input
+                    type="text"
+                    id="beneficiary"
+                    name="beneficiary"
+                    value={beneficiary}
+                    onChange={(e) => setBeneficiary(e.target.value)}
+                  />
+                </div>
+
                 <div className="grupo-input monto">
                   <label htmlFor="amount">Ingrese el monto a depositar</label>
                   <div className="input">
@@ -226,6 +246,61 @@ const Retirar = () => {
             {selectedRegion === "europa" && (
               <>
                 <div className="grupo-input">
+                  <label htmlFor="banknameeu">Nombre del banco</label>
+                  <input
+                    type="text"
+                    id="banknameeu"
+                    name="banknameeu"
+                    value={bankNameEu}
+                    onChange={(e) => setBankNameEu(e.target.value)}
+                  />
+                </div>
+
+                <div className="grupo-input">
+                  <label htmlFor="swiftbic">Código SWIFT / BIC</label>
+                  <input
+                    type="text"
+                    id="swiftbic"
+                    name="swiftbic"
+                    value={swiftBic}
+                    onChange={(e) => setSwiftBic(e.target.value)}
+                  />
+                </div>
+
+                <div className="grupo-input">
+                  <label htmlFor="addressbank">Dirección del banco</label>
+                  <input
+                    type="text"
+                    id="addressbank"
+                    name="addressbank"
+                    value={addressBankEu}
+                    onChange={(e) => setAddressBankEu(e.target.value)}
+                  />
+                </div>
+
+                <div className="grupo-input">
+                  <label htmlFor="accountnumber">Numero de cuenta</label>
+                  <input
+                    type="text"
+                    id="accountnumber"
+                    name="accountnumber"
+                    value={accountNumberEu}
+                    onChange={(e) => setAccountNumberEu(e.target.value)}
+                  />
+                </div>
+
+                <div className="grupo-input">
+                  <label htmlFor="sortcode">Código SORT</label>
+                  <input
+                    type="text"
+                    id="sortcode"
+                    name="sortcode"
+                    value={sortCodeEu}
+                    onChange={(e) => setSortCodeEu(e.target.value)}
+                  />
+                </div>
+
+                <div className="grupo-input">
                   <label htmlFor="iban">IBAN</label>
                   <input
                     type="text"
@@ -235,6 +310,7 @@ const Retirar = () => {
                     onChange={(e) => setIban(e.target.value)}
                   />
                 </div>
+
                 <div className="grupo-input monto">
                   <label htmlFor="amount">Ingrese el monto a depositar</label>
                   <div className="input">
@@ -256,34 +332,144 @@ const Retirar = () => {
       case "transferencia_nacional":
         return (
           <>
-            {/* Campos específicos para "Transferencia nacional (Arg)" */}
+            {/* Campos específicos para "Transferencia nacional" */}
             <div className="grupo-input">
-              <label htmlFor="alias">
-                Ingrese su alias o Número de cuenta nacional (CBU)
-              </label>
-              <input
-                type="text"
-                id="alias"
-                name="alias"
-                value={aliasCbu}
-                onChange={(e) => setAliasCbu(e.target.value)}
-              />
+              <label htmlFor="tipoPago">Selecciona el tipo de pago</label>
+              <select
+                name="tipoPago"
+                id="tipoPago"
+                onChange={(e) => setmethodArg(e.target.value)}
+              >
+                <option value="">Selecciona un método</option>
+                <option value="virtual">Banco Virtual</option>
+                <option value="fisico">Banco Físico</option>
+              </select>
             </div>
 
-            <div className="grupo-input monto">
-              <label htmlFor="amount">Ingrese el monto a depositar</label>
-              <div className="input">
-                <span>$</span>
-                <input
-                  type="text"
-                  id="amount"
-                  name="amount"
-                  value={amount}
-                  onChange={handleAmountChange}
-                />
-                <label htmlFor="">Min. 1 dólar</label>
-              </div>
-            </div>
+            {methodArg === "virtual" && (
+              <>
+                <div className="grupo-input">
+                  <label htmlFor="alias">
+                    Ingrese su alias o Número de cuenta nacional (CBU)
+                  </label>
+                  <input
+                    type="text"
+                    id="alias"
+                    name="alias"
+                    value={aliasCbu}
+                    onChange={(e) => setAliasCbu(e.target.value)}
+                  />
+                </div>
+
+                <div className="grupo-input">
+                  <label htmlFor="cuitcuil">Ingrese el CUIT/CUIL</label>
+                  <input
+                    type="text"
+                    id="cuitcuil"
+                    name="cuitcuil"
+                    value={cuitcuil}
+                    onChange={(e) => setCuitCuil(e.target.value)}
+                  />
+                </div>
+
+                <div className="grupo-input">
+                  <label htmlFor="nombrecuenta">
+                    Ingrese el nombre de la cuenta
+                  </label>
+                  <input
+                    type="text"
+                    id="nombrecuenta"
+                    name="nombrecuenta"
+                    value={nombreCuenta}
+                    onChange={(e) => setNombreCuenta(e.target.value)}
+                  />
+                </div>
+
+                <div className="grupo-input monto">
+                  <label htmlFor="amount">Ingrese el monto a depositar</label>
+                  <div className="input">
+                    <span>$</span>
+                    <input
+                      type="text"
+                      id="amount"
+                      name="amount"
+                      value={amount}
+                      onChange={handleAmountChange}
+                    />
+                    <label htmlFor="">Min. 1 dólar</label>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {methodArg === "fisico" && (
+              <>
+                <div className="grupo-input">
+                  <label htmlFor="alias">
+                    Ingrese su alias o Número de cuenta nacional (CBU)
+                  </label>
+                  <input
+                    type="text"
+                    id="alias"
+                    name="alias"
+                    value={aliasCbu}
+                    onChange={(e) => setAliasCbu(e.target.value)}
+                  />
+                </div>
+
+                <div className="grupo-input">
+                  <label htmlFor="numerocuenta">
+                    Ingrese el numero de caja de ahorros ó cuenta corriente
+                  </label>
+                  <input
+                    type="text"
+                    id="numerocuenta"
+                    name="numerocuenta"
+                    value={numeroCuenta}
+                    onChange={(e) => setNumeroCuenta(e.target.value)}
+                  />
+                </div>
+
+                <div className="grupo-input">
+                  <label htmlFor="cuitcuil">Ingrese el CUIT/CUIL</label>
+                  <input
+                    type="text"
+                    id="cuitcuil"
+                    name="cuitcuil"
+                    value={cuitcuil}
+                    onChange={(e) => setCuitCuil(e.target.value)}
+                  />
+                </div>
+
+                <div className="grupo-input">
+                  <label htmlFor="nombrecuenta">
+                    Ingrese el nombre de la cuenta
+                  </label>
+                  <input
+                    type="text"
+                    id="nombrecuenta"
+                    name="nombrecuenta"
+                    value={nombreCuenta}
+                    onChange={(e) => setNombreCuenta(e.target.value)}
+                  />
+                </div>
+
+                <div className="grupo-input monto">
+                  <label htmlFor="amount">Ingrese el monto a depositar</label>
+                  <div className="input">
+                    <span>$</span>
+                    <input
+                      type="text"
+                      id="amount"
+                      name="amount"
+                      value={amount}
+                      onChange={handleAmountChange}
+                    />
+                    <label htmlFor="">Min. 1 dólar</label>
+                  </div>
+                </div>
+              </>
+            )}
           </>
         );
       case "efectivo":
@@ -428,52 +614,73 @@ const Retirar = () => {
             routingNumberWire,
             addressBank,
             accountNumber,
+            beneficiary,
           };
         } else if (selectedRegion === "europa") {
           formData = {
             ...formData,
             selectedRegion,
+            bankNameEu,
+            swiftBic, 
+            addressBankEu,
+            accountNumberEu,
+            sortCodeEu,
             iban,
           };
         }
         break;
 
       case "transferencia_nacional":
-        formData = {
-          ...formData,
-          aliasCbu,
-        };
+        if (methodArg === "virtual") {
+          formData = {
+            ...formData,
+            methodArg,
+            aliasCbu,
+            cuitcuil,
+            nombreCuenta,
+          };
+        } else if (methodArg === "fisico") {
+          formData = {
+            ...formData,
+            methodArg,
+            aliasCbu,
+            numeroCuenta,
+            cuitcuil,
+            nombreCuenta,
+          };
+        }
+
         break;
 
       default:
         break;
     }
 
-    console.log(formData)
-
     try {
       // Enviar la solicitud al backend
-      const response = await fetch("http://localhost/nuovo/backend/Api/withdrawalRequests.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", 
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "http://localhost/nuovo/backend/Api/withdrawalRequests.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(formData),
+        }
+      );
 
       const responseData = await response.json();
       // Manejar la respuesta del backend
 
       if (response.ok) {
-      
         Swal.fire({
           icon: "success",
           title: "Éxito",
           text: responseData["message"],
-          didClose: () =>{
+          didClose: () => {
             window.location.reload();
-          }
+          },
         });
       } else {
         // Manejar el caso en que la respuesta no es exitosa

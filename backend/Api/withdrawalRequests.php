@@ -154,23 +154,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Agregar notificación
             $notificationMessage = "La transferencia se ha realizado correctamente";
-        } else if ($selectedMethod === 'transferencia_nacional') {
-            $aliasCbu = filter_var($data->aliasCbu, FILTER_SANITIZE_STRING);
+        } else if ($selectedMethod === 'transferencia_nacional' && isset($data->methodArg)) {
 
-            $insertWithdrawalRequest = "INSERT INTO withdrawal_requests (user_id, status, amount, request_date, request_time, updated_at, cbu, alias_cbu, completed_at, method) VALUES(:user_id, :status, :amount, :request_date, :request_time, :updated_at, :cbu, :alias_cbu, :completed_at, :method)";
 
-            $stmtWithdrawal = $conexion->prepare($insertWithdrawalRequest);
+            $methodArg = filter_var($data->methodArg, FILTER_SANITIZE_STRING);
 
-            $stmtWithdrawal->bindParam(':user_id', $userId, PDO::PARAM_INT);
-            $stmtWithdrawal->bindParam(':status', $status, PDO::PARAM_STR);
-            $stmtWithdrawal->bindParam(':amount', $amount, PDO::PARAM_STR);
-            $stmtWithdrawal->bindParam(':request_date', $requestDate, PDO::PARAM_STR);
-            $stmtWithdrawal->bindParam(':request_time', $requestTime, PDO::PARAM_STR);
-            $stmtWithdrawal->bindParam(':updated_at', $currentDateTime, PDO::PARAM_STR);
-            $stmtWithdrawal->bindParam(':cbu', $aliasCbu, PDO::PARAM_STR);
-            $stmtWithdrawal->bindParam(':alias_cbu', $aliasCbu, PDO::PARAM_STR);
-            $stmtWithdrawal->bindParam(':completed_at', $currentDateTime, PDO::PARAM_STR);
-            $stmtWithdrawal->bindParam(':method', $selectedMethod, PDO::PARAM_STR);
+            if ($methodArg === 'virtual') {
+
+                $aliasCbu = filter_var($data->aliasCbu, FILTER_SANITIZE_STRING);
+                $cuitcuil = filter_var($data->cuitcuil, FILTER_SANITIZE_STRING);
+                $nombreCuenta = filter_var($data->nombreCuenta, FILTER_SANITIZE_STRING);
+
+                $insertWithdrawalRequest = "INSERT INTO withdrawal_requests (user_id, status, amount, request_date, request_time, updated_at, cbu, alias_cbu, completed_at, method, method_arg, cuit_cuil, name_account_arg) VALUES(:user_id, :status, :amount, :request_date, :request_time, :updated_at, :cbu, :alias_cbu, :completed_at, :method, :method_arg, :cuit_cuil, :name_account_arg)";
+
+                $stmtWithdrawal = $conexion->prepare($insertWithdrawalRequest);
+
+                $stmtWithdrawal->bindParam(':user_id', $userId, PDO::PARAM_INT);
+                $stmtWithdrawal->bindParam(':status', $status, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':amount', $amount, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':request_date', $requestDate, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':request_time', $requestTime, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':updated_at', $currentDateTime, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':cbu', $aliasCbu, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':alias_cbu', $aliasCbu, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':completed_at', $currentDateTime, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':method', $selectedMethod, PDO::PARAM_STR);
+
+                $stmtWithdrawal->bindParam(':method_arg', $methodArg, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':cuit_cuil', $cuitcuil, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':name_account_arg', $nombreCuenta, PDO::PARAM_STR);
+            } else if ($methodArg === 'fisico') {
+
+                $aliasCbu = filter_var($data->aliasCbu, FILTER_SANITIZE_STRING);
+                $cuitcuil = filter_var($data->cuitcuil, FILTER_SANITIZE_STRING);
+                $nombreCuenta = filter_var($data->nombreCuenta, FILTER_SANITIZE_STRING);
+                $numeroCuenta = filter_var($data->numeroCuenta, FILTER_SANITIZE_STRING);
+
+                $insertWithdrawalRequest = "INSERT INTO withdrawal_requests (user_id, status, amount, request_date, request_time, updated_at, cbu, alias_cbu, completed_at, method, method_arg, num_cuenta_arg, cuit_cuil, name_account_arg) VALUES(:user_id, :status, :amount, :request_date, :request_time, :updated_at, :cbu, :alias_cbu, :completed_at, :method, :method_arg, :num_cuenta_arg, :cuit_cuil, :name_account_arg)";
+
+                $stmtWithdrawal = $conexion->prepare($insertWithdrawalRequest);
+
+                $stmtWithdrawal->bindParam(':user_id', $userId, PDO::PARAM_INT);
+                $stmtWithdrawal->bindParam(':status', $status, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':amount', $amount, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':request_date', $requestDate, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':request_time', $requestTime, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':updated_at', $currentDateTime, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':cbu', $aliasCbu, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':alias_cbu', $aliasCbu, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':completed_at', $currentDateTime, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':method', $selectedMethod, PDO::PARAM_STR);
+
+                $stmtWithdrawal->bindParam(':method_arg', $methodArg, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':num_cuenta_arg', $numeroCuenta, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':cuit_cuil', $cuitcuil, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':name_account_arg', $nombreCuenta, PDO::PARAM_STR);
+            }
         } else if ($selectedMethod === 'efectivo') {
 
             $insertWithdrawalRequest = "INSERT INTO withdrawal_requests (user_id, status, amount, request_date, request_time, updated_at, completed_at, method) VALUES(:user_id, :status, :amount, :request_date, :request_time, :updated_at, :completed_at, :method)";
@@ -192,9 +231,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($selectedRegion === 'europa') {
 
                 $iban = filter_var($data->iban, FILTER_SANITIZE_STRING);
+                $bankNameEu = filter_var($data->bankNameEu, FILTER_SANITIZE_STRING);
+                $swiftBic = filter_var($data->swiftBic, FILTER_SANITIZE_STRING);
+                $addressBankEu = filter_var($data->iban, FILTER_SANITIZE_STRING);
+                $accountNumberEu = filter_var($data->accountNumberEu, FILTER_SANITIZE_STRING);
+                $sortCodeEu = filter_var($data->sortCodeEu, FILTER_SANITIZE_STRING);
 
 
-                $insertWithdrawalRequest = "INSERT INTO withdrawal_requests (user_id, status, amount, request_date, request_time, updated_at, completed_at, iban, method, region) VALUES(:user_id, :status, :amount, :request_date, :request_time, :updated_at, :completed_at, :iban, :method, :region)";
+                $insertWithdrawalRequest = "INSERT INTO withdrawal_requests (user_id, status, amount, request_date, request_time, updated_at, completed_at, iban, method, region, bank_name_eu, swift_bic_eu, address_bank_eu, account_number_eu, sort_code_eu) VALUES(:user_id, :status, :amount, :request_date, :request_time, :updated_at, :completed_at, :iban, :method, :region,:bank_name_eu, :swift_bic_eu, :address_bank_eu, :account_number_eu, :sort_code_eu)";
 
                 $stmtWithdrawal = $conexion->prepare($insertWithdrawalRequest);
 
@@ -208,6 +252,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmtWithdrawal->bindParam(':iban', $iban, PDO::PARAM_STR);
                 $stmtWithdrawal->bindParam(':method', $selectedMethod, PDO::PARAM_STR);
                 $stmtWithdrawal->bindParam(':region', $selectedRegion, PDO::PARAM_STR);
+
+                $stmtWithdrawal->bindParam(':bank_name_eu', $bankNameEu, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':swift_bic_eu', $swiftBic, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':address_bank_eu', $addressBankEu, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':account_number_eu', $accountNumberEu, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':sort_code_eu', $sortCodeEu, PDO::PARAM_STR);
+
             } else if ($selectedRegion === 'usa') {
 
                 $nameBank = filter_var($data->nameBank, FILTER_SANITIZE_STRING);
@@ -215,8 +266,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $routingNumberWire = filter_var($data->routingNumberWire, FILTER_SANITIZE_STRING);
                 $addressBank = filter_var($data->addressBank, FILTER_SANITIZE_STRING);
                 $accountNumber = filter_var($data->accountNumber, FILTER_SANITIZE_STRING);
+                $beneficiary = filter_var($data->beneficiary, FILTER_SANITIZE_STRING);
 
-                $insertWithdrawalRequest = "INSERT INTO withdrawal_requests (user_id, status, amount, request_date, request_time, updated_at, bank_name, routing_number_ach, routing_number_wire, bank_address, account_number, completed_at, method, region) VALUES(:user_id, :status, :amount, :request_date, :request_time, :updated_at, :name_bank, :routing_number_ach, :routing_number_wire, :bank_address, :account_number, :completed_at, :method, :region)";
+                $insertWithdrawalRequest = "INSERT INTO withdrawal_requests (user_id, status, amount, request_date, request_time, updated_at, bank_name, routing_number_ach, routing_number_wire, bank_address, account_number, completed_at, method, region, beneficiary) VALUES(:user_id, :status, :amount, :request_date, :request_time, :updated_at, :name_bank, :routing_number_ach, :routing_number_wire, :bank_address, :account_number, :completed_at, :method, :region, :beneficiary)";
 
                 $stmtWithdrawal = $conexion->prepare($insertWithdrawalRequest);
 
@@ -234,6 +286,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmtWithdrawal->bindParam(':completed_at', $currentDateTime, PDO::PARAM_STR);
                 $stmtWithdrawal->bindParam(':method', $selectedMethod, PDO::PARAM_STR);
                 $stmtWithdrawal->bindParam(':region', $selectedRegion, PDO::PARAM_STR);
+                $stmtWithdrawal->bindParam(':beneficiary', $beneficiary, PDO::PARAM_STR);
             }
         }
 
