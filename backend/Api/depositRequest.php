@@ -23,29 +23,34 @@ if (!isset($_SESSION['user_id'])) {
 $userName = $_SESSION['user_name'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Obtener datos del cuerpo de la solicitud
-    $data = json_decode(file_get_contents("php://input"));
-
     // Validar y escapar los datos para prevenir SQL injection
-    $paymentMethod = filter_var($data->payment_method, FILTER_SANITIZE_STRING);
-    $amount = filter_var($data->amount);
-    $referenceNumber = filter_var($data->reference_number, FILTER_SANITIZE_STRING);
+    $paymentMethod = filter_input(INPUT_POST, 'payment_method', FILTER_SANITIZE_STRING);
+    $amount = filter_input(INPUT_POST, 'amount');
+    $referenceNumber = filter_input(INPUT_POST, 'reference_number', FILTER_SANITIZE_STRING);
 
     // Obtener el tipo de plataforma seleccionada si existe
-    $platformType = property_exists($data, 'selected_platform') ? filter_var($data->selected_platform, FILTER_SANITIZE_STRING) :  $paymentMethod;
+    $platformType = isset($_POST['selected_platform']) ? filter_input(INPUT_POST, 'selected_platform', FILTER_SANITIZE_STRING) :  $paymentMethod;
+
+    // Obtener el archivo de comprobante de pago (si se proporciona)
+    $voucherImg = isset($_FILES['payment_proof']) ? $_FILES['payment_proof'] : null;
+    $fecha = new DateTime();
 
     // Iniciar transacción
     $conexion->beginTransaction();
 
     try {
+        // Generar un nombre único para la imagen
+        $voucherImgName = $voucherImg ? uniqid('payment_proof_') . '_' . $voucherImg['name'] : null;
+        $voucherImgPath = $voucherImg ? "../../src/assets/vouchers/" . $voucherImgName : null;
+
         // Insertar la solicitud de depósito en la tabla deposit_requests
         $userId = $_SESSION['user_id'];
         $currentDateTime = date('Y-m-d H:i:s');
         $requestDate = date('Y-m-d');
         $requestTime = date('H:i:s');
 
-        $insertDepositRequest = "INSERT INTO deposit_requests (user_id, payment_method, amount, status, request_date, request_time, reference_number, platform_type, updated_at) 
-        VALUES (:user_id, :payment_method, :amount, 'pending', :request_date, :request_time, :reference_number, :platform_type, :updated_at)";
+        $insertDepositRequest = "INSERT INTO deposit_requests (user_id, payment_method, amount, status, request_date, request_time, reference_number, platform_type, updated_at, voucher_img) 
+        VALUES (:user_id, :payment_method, :amount, 'pending', :request_date, :request_time, :reference_number, :platform_type, :updated_at, :voucher_img)";
 
         $stmtDeposit = $conexion->prepare($insertDepositRequest);
         $stmtDeposit->bindParam(':user_id', $userId, PDO::PARAM_INT);
@@ -56,6 +61,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtDeposit->bindParam(':reference_number', $referenceNumber, PDO::PARAM_STR);
         $stmtDeposit->bindParam(':platform_type', $platformType, PDO::PARAM_STR);
         $stmtDeposit->bindParam(':updated_at', $currentDateTime, PDO::PARAM_STR);
+        $stmtDeposit->bindParam(':voucher_img', $voucherImgName, PDO::PARAM_STR);
+
+        // Mover el archivo si se proporciona
+        if ($voucherImg) {
+            move_uploaded_file($voucherImg['tmp_name'], $voucherImgPath);
+        }
 
         $stmtDeposit->execute();
 
@@ -78,7 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtTransaction->bindParam(':platform_type', $platformType, PDO::PARAM_STR);
         $stmtTransaction->bindParam(':deposit_request_id', $depositRequestId, PDO::PARAM_INT);
 
-
         if ($stmtTransaction->execute()) {
             // Agregar notificación
             $notificationMessage = "Solictud de depósito enviada correctamente";
@@ -91,7 +101,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmtInsertNotification->bindParam(':content', $notificationMessage);
             $stmtInsertNotification->bindParam(':admin_message', $notificationMessageAdmin);
             $stmtInsertNotification->execute();
-
 
             // Enviar notificación a Pusher
             include("../pusher.php");
@@ -142,9 +151,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $conexion->rollBack();
 
             http_response_code(500); // Internal Server Error
-            echo json_encode(array("error" => "Error al procesar la solicitud de depósito.", "details" => $e->getMessage()));
+            echo json_encode(array("error" => "Error al procesar la solicitud de depósito."));
         }
-
 
         // Confirmar la transacción
         $conexion->commit();
@@ -162,3 +170,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Cerrar la conexión después de usarla
 $conexion = null;
+?>

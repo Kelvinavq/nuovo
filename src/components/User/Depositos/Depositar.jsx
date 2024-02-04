@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Style.css";
 import Saldo from "../Saldo/Saldo";
 import Swal from "sweetalert2";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 
 const Depositar = () => {
   const [isUserVerified, setIsUserVerified] = useState(false);
@@ -15,6 +16,7 @@ const Depositar = () => {
   const [bankInfo, setBankInfo] = useState(null);
   const [platformInfo, setPlatformInfo] = useState(null);
   const [selectedPlatformInfo, setSelectedPlatformInfo] = useState(null);
+  const [paymentProof, setPaymentProof] = useState(null);
 
   // obtener id del usuario
   useEffect(() => {
@@ -172,6 +174,16 @@ const Depositar = () => {
     return formattedValue;
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setPaymentProof(file);
+
+    if (file) {
+      const fileName = file.name;
+      document.getElementById("nombreImagen").innerText = fileName;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -185,33 +197,33 @@ const Depositar = () => {
       });
       return;
     }
-  
+
+    const formData = new FormData();
+    formData.append("payment_method", paymentMethod);
+    formData.append("user_id", userId);
+    formData.append("amount", amount);
+    formData.append("reference_number", referenceNumber);
+
+    if (["bank", "platform"].includes(paymentMethod)) {
+      formData.append("payment_proof", paymentProof);
+    }
+
+    // Agregar el campo selected_platform si el paymentMethod es "platform"
+    if (paymentMethod === "platform") {
+      formData.append(
+        "selected_platform",
+        selectedPlatform?.platformName || ""
+      );
+    }
 
     // Lógica para enviar la solicitud al backend según el método de pago seleccionado
     try {
-      const requestBody = {
-        payment_method: paymentMethod,
-        user_id: userId,
-        amount: amount,
-        reference_number: referenceNumber,
-      };
-
-      // Agregar el campo selected_platform si el paymentMethod es "platform"
-      if (paymentMethod === "platform") {
-        requestBody.selected_platform = selectedPlatform['platformName'];
-      }
-
-      console.log(requestBody)
-
       const response = await fetch(
         "http://localhost/nuovo/backend/Api/depositRequest.php",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
           credentials: "include",
-          body: JSON.stringify(requestBody),
+          body: formData,
         }
       );
 
@@ -317,6 +329,22 @@ const Depositar = () => {
                       onChange={handleReferenceNumberChange}
                     />
                   </div>
+
+                  <div className="grupo-input">
+                    <label htmlFor="">Cargar Comprobante de Pago</label>
+
+                    <label htmlFor="paymentProof" className="file">
+                      <UploadFileIcon />
+                    </label>
+                    <p id="nombreImagen"></p>
+                    <input
+                      type="file"
+                      id="paymentProof"
+                      name="paymentProof"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                    />
+                  </div>
                 </>
               )}
 
@@ -381,6 +409,22 @@ const Depositar = () => {
                       onChange={(e) => setReferenceNumber(e.target.value)}
                     />
                   </div>
+
+                  <div className="grupo-input">
+                    <label htmlFor="">Cargar Comprobante de Pago</label>
+
+                    <label htmlFor="paymentProof" className="file">
+                      <UploadFileIcon />
+                    </label>
+                    <p id="nombreImagen"></p>
+                    <input
+                      type="file"
+                      id="paymentProof"
+                      name="paymentProof"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                    />
+                  </div>
                 </>
               )}
 
@@ -404,7 +448,11 @@ const Depositar = () => {
               )}
 
               <div className="grupo-submit">
-                <input className="btns" type="submit" value="Enviar Solicitud" />
+                <input
+                  className="btns"
+                  type="submit"
+                  value="Enviar Solicitud"
+                />
               </div>
             </form>
           </div>

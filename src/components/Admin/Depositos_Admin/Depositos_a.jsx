@@ -84,7 +84,7 @@ const Depositos_a = () => {
           <p><strong>Usuario:</strong> ${solicitud.user_name}</p>
           <p><strong>Estatus:</strong> ${solicitud.status}</p>
           <p><strong>Numero de transaccion:</strong> ${solicitud.reference_number || "No aplica"}</p>
-          <p></p>
+          <img src="http://localhost/nuovo/src/assets/vouchers/${depositDetails.voucher_img}" alt="" />
         `,
         confirmButtonText: "Marcar como Completado",
         cancelButtonText: "Denegar Operación",

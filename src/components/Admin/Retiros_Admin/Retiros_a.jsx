@@ -86,9 +86,25 @@ const Retiros_a = () => {
       `;
         break;
       case "transferencia_nacional":
-        modalContent += `
-        <p><strong>Alias / CBU:</strong> ${withdrawalRequest.alias_cbu}</p>
-      `;
+        modalContent +=
+        withdrawalRequest.method_arg === "virtual"
+          ? `
+          <h4>Tipo de Pago<h4>
+          <span>${withdrawalRequest.method_arg}<span>
+          <p>Alias / CBU: ${withdrawalRequest.alias_cbu}</p>
+          <p>CUIT / CUIL: ${withdrawalRequest.cuit_cuil}</p>
+          <p>Nombre de la cuenta: ${withdrawalRequest.name_account_arg}</p>
+          <p></p>
+          ` : `
+          <h4>Tipo de Pago<h4>
+          <span>${withdrawalRequest.method_arg}<span>
+          <p>Alias / CBU: ${withdrawalRequest.alias_cbu}</p>
+          <p>CUIT / CUIL: ${withdrawalRequest.cuit_cuil}</p>
+          <p>Nombre de la cuenta: ${withdrawalRequest.name_account_arg}</p>
+          <p>Caja de ahorros / cuenta corriente: ${withdrawalRequest.num_cuenta_arg}</p>
+          <p></p>
+          `;
+  
         break;
       case "transferencia_externa":
         modalContent +=
@@ -99,9 +115,17 @@ const Retiros_a = () => {
             <p><strong>Routing Number (WIRE):</strong> ${withdrawalRequest.routing_number_wire}</p>
             <p><strong>Dirección del Banco:</strong> ${withdrawalRequest.bank_address}</p>
             <p><strong>Número de Cuenta:</strong> ${withdrawalRequest.account_number}</p>
+            <p><strong>Beneficiario:</strong> ${withdrawalRequest.beneficiary}</p>
+            <p></p>
         `
             : `
+          <p><strong>Nombre del banco:</strong> ${withdrawalRequest.bank_name_eu}</p>
+          <p><strong>SWIFT/BIC:</strong> ${withdrawalRequest.swift_bic_eu}</p>
+          <p><strong>Dirección del banco:</strong> ${withdrawalRequest.address_bank_eu}</p>
+          <p><strong>Numero de cuenta:</strong> ${withdrawalRequest.account_number_eu}</p>
+          <p><strong>Sort code:</strong> ${withdrawalRequest.sort_code_eu}</p>
           <p><strong>IBAN:</strong> ${withdrawalRequest.iban}</p>
+          <p></p>
         `;
         break;
       default:

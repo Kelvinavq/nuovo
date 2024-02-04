@@ -9,7 +9,7 @@ const Retirar = () => {
   const [selectedMethod, setSelectedMethod] = useState("");
   const [amount, setAmount] = useState("");
   const [emailSuggestions, setEmailSuggestions] = useState([]);
-  const [allEmails, setAllEmails] = useState([]);
+  // const [allEmails, setAllEmails] = useState([]);
   const [email, setEmail] = useState("");
 
   const [nameBank, setNameBank] = useState("");
@@ -50,38 +50,38 @@ const Retirar = () => {
     checkVerification();
   }, []);
 
-  useEffect(() => {
-    const fetchAllEmails = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost/nuovo/backend/Api/getAllEmails.php",
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
+  // useEffect(() => {
+  //   const fetchAllEmails = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         "http://localhost/nuovo/backend/Api/getAllEmails.php",
+  //         {
+  //           method: "GET",
+  //           credentials: "include",
+  //         }
+  //       );
 
-        if (response.ok) {
-          const data = await response.json();
-          setAllEmails(data.emails);
-        } else {
-          console.error("Error al obtener la lista de correos electrónicos");
-        }
-      } catch (error) {
-        console.error(
-          "Error al obtener la lista de correos electrónicos:",
-          error
-        );
-      }
-    };
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         setAllEmails(data.emails);
+  //       } else {
+  //         console.error("Error al obtener la lista de correos electrónicos");
+  //       }
+  //     } catch (error) {
+  //       console.error(
+  //         "Error al obtener la lista de correos electrónicos:",
+  //         error
+  //       );
+  //     }
+  //   };
 
-    fetchAllEmails();
-  }, []);
+  //   fetchAllEmails();
+  // }, []);
 
-  const handleEmailSelection = (selectedEmail) => {
-    setEmail(selectedEmail);
-    setEmailSuggestions([]);
-  };
+  // const handleEmailSelection = (selectedEmail) => {
+  //   setEmail(selectedEmail);
+  //   setEmailSuggestions([]);
+  // };
 
   const renderSpecificFields = () => {
     switch (selectedMethod) {
@@ -98,31 +98,10 @@ const Retirar = () => {
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
-                  // Lógica para buscar coincidencias y actualizar la lista de sugerencias
-                  const input = e.target.value.toLowerCase();
-                  const suggestions = allEmails
-                    .filter((user) => user.email.toLowerCase().includes(input))
-                    .map((user) => user.email);
-                  setEmailSuggestions(suggestions);
                 }}
               />
             </div>
 
-            {/* Mostrar sugerencias de correo electrónico */}
-            {emailSuggestions.length > 0 && (
-              <div className="suggestions">
-                <ul>
-                  {emailSuggestions.map((suggestion) => (
-                    <li
-                      key={suggestion}
-                      onClick={() => handleEmailSelection(suggestion)}
-                    >
-                      {suggestion}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
 
             <div className="grupo-input monto">
               <label htmlFor="amount">Ingrese el monto a depositar</label>
