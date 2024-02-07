@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import Button_a from "../../components/Admin/Sidebar_Admin/Button_a";
 import Sidebar_a from "../../components/Admin/Sidebar_Admin/Sidebar_a";
+import ListTransactions from "../../components/Admin/Transacciones_Admin/ListTransactions";
 
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -72,12 +73,12 @@ const Transacciones = () => {
   }
 
   return (
-  <div className="usuarios_a">
+  <div className="transacciones">
       <Sidebar_a />
       <Button_a />
 
       <main>
-        transacciones
+        <ListTransactions/>
       </main>
     </div>
   )
