@@ -5,24 +5,6 @@ include '../cors.php';
 // Obtener conexión a la base de datos
 $conexion = obtenerConexion();
 
-// Crear tabla de usuarios si no existe
-$crearTablaUsuarios = "
-CREATE TABLE IF NOT EXISTS users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    phoneNumber VARCHAR(20),
-    address VARCHAR(255),
-    profile_picture VARCHAR(255),
-    registrationTime TIME,
-    registrationDate DATE,
-    role ENUM('user', 'admin') DEFAULT 'user'
-)";
-
-$conexion->exec($crearTablaUsuarios);
-
-// Resto del código para manejar operaciones relacionadas con usuarios
 
 // Manejar solicitud POST para el registro de usuarios
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

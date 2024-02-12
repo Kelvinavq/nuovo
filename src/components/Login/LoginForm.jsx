@@ -141,7 +141,7 @@ const LoginForm = () => {
           {error && <p className="error-message">{error}</p>}
 
           <div className="submit">
-            <Link to="/user/forgot-password">
+            <Link to="/reset-password">
               {TranslationLogin[language].link}
             </Link>
             <input type="submit" value={TranslationLogin[language].button} />

@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 // Contraseña incorrecta
                 http_response_code(401); // Unauthorized
-                echo json_encode(array("error" => "Contraseña incorrecta."));
+                echo json_encode(array("error" => "Contraseña incorrecta." ));
             }
         } else {
             // Usuario no encontrado
