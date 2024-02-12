@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./Style.css";
 import Swal from "sweetalert2";
-import Enlaces_a from "./Enlaces_a";
+import Enlaces from "./Enlaces";
 
-const Plataformas_a = () => {
+const Plataformas_u = () => {
   const [selectedPlatform, setSelectedPlatform] = useState("");
   const [email, setEmail] = useState("");
   const [customFields, setCustomFields] = useState([]);
@@ -12,31 +12,29 @@ const Plataformas_a = () => {
   const [platformName, setPlatformName] = useState("");
 
   const [platforms, setPlatforms] = useState([]);
+  const UserId = localStorage.getItem("user_id");
 
   useEffect(() => {
     // Lógica para recuperar las plataformas existentes
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://localhost/nuovo/backend/Api/admin/getPlatforms.php"
+          `http://localhost/nuovo/backend/Api/getPlatformsSettings.php?user_id=${UserId}`
         );
         const data = await response.json();
-
+  
         if (response.ok) {
           setPlatforms(data.platforms);
         } else {
-          console.error(
-            "Error al obtener la lista de plataformas:",
-            data.error
-          );
+          console.error("Error al obtener la lista de plataformas:", data.error);
         }
       } catch (error) {
         console.error("Error al procesar la solicitud:", error.message);
       }
     };
-
+  
     fetchData();
-  }, []);
+  }, [UserId]); 
 
   const handleAddField = () => {
     if (customFields.length < 10) {
@@ -68,13 +66,14 @@ const Plataformas_a = () => {
 
         // Lógica para manejar la plataforma "otra" con campos personalizados
         const response = await fetch(
-          "http://localhost/nuovo/backend/Api/admin/createPlatform.php",
+          "http://localhost/nuovo/backend/Api/createPlatform.php",
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
+              userid: UserId,
               platformType: selectedPlatform,
               customFields: customFields,
               customPlatformName: platformName,
@@ -89,6 +88,9 @@ const Plataformas_a = () => {
             icon: "success",
             title: "Éxito",
             text: data.message,
+            didClose: () => {
+              window.location.reload();
+            },
           });
           console.log("Plataforma 'otra' creada con éxito:", data.message);
         } else {
@@ -117,13 +119,14 @@ const Plataformas_a = () => {
         }
 
         const response = await fetch(
-          "http://localhost/nuovo/backend/Api/admin/createPlatform.php",
+          "http://localhost/nuovo/backend/Api/createPlatform.php",
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
+              userid: UserId,
               platformType: selectedPlatform,
               platformName:
                 selectedPlatform !== "otra" ? selectedPlatform : null,
@@ -140,6 +143,9 @@ const Plataformas_a = () => {
             icon: "success",
             title: "Éxito",
             text: data.message,
+            didClose: () => {
+              window.location.reload();
+            },
           });
           console.log("Plataforma creada con éxito:", data.message);
         } else {
@@ -207,7 +213,7 @@ const Plataformas_a = () => {
       // Consultar customFields asociados a la plataforma "otra"
       try {
         const response = await fetch(
-          `http://localhost/nuovo/backend/Api/admin/getCustomFields.php?platformId=${platform.id}`
+          `http://localhost/nuovo/backend/Api/getCustomFields.php?platformId=${platform.id}`
         );
 
         const data = await response.json();
@@ -232,7 +238,9 @@ const Plataformas_a = () => {
           ? `
           <div class="custom-field">
           <label>Nombre de la plataforma</label>
-            <input type="text" id="platformName" value="${platform.platformName}" class="swal2-input" placeholder="Nombre de la plataforma" required>
+            <input type="text" id="platformName" value="${
+              platform.platformName
+            }" class="swal2-input" placeholder="Nombre de la plataforma" required>
           </div>
           
         ${customFields
@@ -308,7 +316,7 @@ const Plataformas_a = () => {
       if (result.isDenied) {
         try {
           const response = await fetch(
-            `http://localhost/nuovo/backend/Api/admin/deletePlatform.php?id=${platform.id}`,
+            `http://localhost/nuovo/backend/Api/deletePlatform.php?id=${platform.id}`,
             {
               method: "GET",
             }
@@ -351,7 +359,7 @@ const Plataformas_a = () => {
         try {
           // Enviar datos al backend para la actualización
           const response = await fetch(
-            "http://localhost/nuovo/backend/Api/admin/updatePlatform.php",
+            "http://localhost/nuovo/backend/Api/updatePlatform.php",
             {
               method: "POST",
               headers: {
@@ -399,7 +407,7 @@ const Plataformas_a = () => {
   };
 
   return (
-    <div className="plataforma_a">
+    <div>
       <div className="content">
         <div className="title">
           <h2>Plataformas</h2>
@@ -515,18 +523,22 @@ const Plataformas_a = () => {
             ))}
 
             <div className="buttons">
-            {customFields.length < 10 && (
-                <button className="btns agregar" onClick={handleAddField}>Agregar campo</button>
-            )}
-            <button className="btns" onClick={handleSavePlatform}>Guardar</button>
+              {customFields.length < 10 && (
+                <button className="btns agregar" onClick={handleAddField}>
+                  Agregar campo
+                </button>
+              )}
+              <button className="btns" onClick={handleSavePlatform}>
+                Guardar
+              </button>
             </div>
-           
           </div>
         </div>
 
-        <Enlaces_a />
+        <Enlaces />
 
         <h3>Lista de Plataformas</h3>
+
         <div className="lista_plataformas">
           {platforms.map((platform) => (
             <div key={platform.id}>
@@ -576,4 +588,4 @@ const Plataformas_a = () => {
   );
 };
 
-export default Plataformas_a;
+export default Plataformas_u;

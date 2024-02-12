@@ -15,7 +15,7 @@ const CallToAction = () => {
         <img src={logotipo} alt="logotipo nuovotech" />
 
         <p>
-          {Translation[language].ctaText1} <strong>Nuovo </strong>!
+          {Translation[language].ctaText1} <strong>Nuovo </strong>
           {Translation[language].ctaText2} <strong>Nuovo </strong>{" "}
           {Translation[language].ctaText3}
         </p>

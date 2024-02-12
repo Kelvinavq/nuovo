@@ -1,7 +1,7 @@
 <?php
 // Configuración de CORS
-include '../../cors.php';
-include '../../Config/config.php';
+include '../cors.php';
+include '../Config/config.php';
 
 $conexion = obtenerConexion();
 
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     try {
         // Consulta para eliminar la plataforma por su ID
-        $deletePlatformQuery = "UPDATE platforms SET status = 'inactive' WHERE id = :id";
+        $deletePlatformQuery = "UPDATE platforms_user SET status = 'inactive' WHERE id = :id";
         $deleteStmt = $conexion->prepare($deletePlatformQuery);
         $deleteStmt->bindParam(':id', $platformId);
 

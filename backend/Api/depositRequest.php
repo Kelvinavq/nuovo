@@ -31,6 +31,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Obtener el tipo de plataforma seleccionada si existe
     $platformType = isset($_POST['selected_platform']) ? filter_input(INPUT_POST, 'selected_platform', FILTER_SANITIZE_STRING) :  $paymentMethod;
 
+    $id_platform_user = isset($_POST['id_platform_user']) ? filter_input(INPUT_POST, 'id_platform_user', FILTER_SANITIZE_STRING) :  null;
+
+    // si existe la plataforma
+    if ($id_platform_user != null) {
+        $query = "SELECT * FROM platforms_user WHERE id = :id_platform_user";
+        $stmt = $conexion->prepare($query);
+        $stmt->bindParam(':id_platform_user', $id_platform_user, PDO::PARAM_INT);
+        $stmt->execute();
+        $plataformaUser = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($plataformaUser['type'] === "yes") {
+            $is_perzonalizable = "yes";
+        }else{
+            $is_perzonalizable = "no";
+        }
+    }
+
+  
+
+
     // Obtener el archivo de comprobante de pago (si se proporciona)
     $voucherImg = isset($_FILES['payment_proof']) ? $_FILES['payment_proof'] : null;
     $fecha = new DateTime();
@@ -39,6 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conexion->beginTransaction();
 
     try {
+
+
         // Generar un nombre único para la imagen
         $voucherImgName = $voucherImg ? uniqid('payment_proof_') . '_' . $voucherImg['name'] : null;
         $voucherImgPath = $voucherImg ? "../../src/assets/vouchers/" . $voucherImgName : null;
@@ -49,8 +70,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $requestDate = date('Y-m-d');
         $requestTime = date('H:i:s');
 
-        $insertDepositRequest = "INSERT INTO deposit_requests (user_id, payment_method, amount, status, request_date, request_time, reference_number, platform_type, updated_at, voucher_img) 
-        VALUES (:user_id, :payment_method, :amount, 'pending', :request_date, :request_time, :reference_number, :platform_type, :updated_at, :voucher_img)";
+        $insertDepositRequest = "INSERT INTO deposit_requests (user_id, payment_method, amount, status, request_date, request_time, reference_number, platform_type, updated_at, voucher_img,id_platform_user, platformName_user, platformEmail_user, is_personalizable) 
+        VALUES (:user_id, :payment_method, :amount, 'pending', :request_date, :request_time, :reference_number, :platform_type, :updated_at, :voucher_img, :id_platform_user, :platformName_user, :platformEmail_user, :is_personalizable)";
 
         $stmtDeposit = $conexion->prepare($insertDepositRequest);
         $stmtDeposit->bindParam(':user_id', $userId, PDO::PARAM_INT);
@@ -62,6 +83,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtDeposit->bindParam(':platform_type', $platformType, PDO::PARAM_STR);
         $stmtDeposit->bindParam(':updated_at', $currentDateTime, PDO::PARAM_STR);
         $stmtDeposit->bindParam(':voucher_img', $voucherImgName, PDO::PARAM_STR);
+        $stmtDeposit->bindParam(':id_platform_user', $id_platform_user, PDO::PARAM_STR);
+        $stmtDeposit->bindParam(':platformName_user', $plataformaUser['platformName'], PDO::PARAM_STR);
+        $stmtDeposit->bindParam(':platformEmail_user', $plataformaUser['email'], PDO::PARAM_STR);
+        $stmtDeposit->bindParam(':is_personalizable', $is_perzonalizable, PDO::PARAM_STR);
 
         // Mover el archivo si se proporciona
         if ($voucherImg) {
@@ -145,7 +170,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 http_response_code(500);
                 echo json_encode(array("error" => "Error al enviar correo electronico"));
             }
-
         } else {
             // Revertir la transacción en caso de error
             $conexion->rollBack();
@@ -170,4 +194,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Cerrar la conexión después de usarla
 $conexion = null;
-?>

@@ -110,3 +110,33 @@
     text-shadow: 2px 1px #00000054;
     cursor: pointer;
 }
+
+.depositar .plataforma{
+    max-width: 440px;
+    padding: 10px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    background: var(--blue);
+}
+
+.depositar .plataforma p{
+    margin: 10px 0;
+}
+
+.depositar .plataforma .grupo div{
+    display: flex;
+    align-items: center;
+}
+.depositar .plataforma .grupo div button{
+    background: none;
+    border: none;
+    text-align: center;
+    cursor: pointer;
+    color: var(--green);
+}
+
+.depositar .plataforma .grupo div button svg{
+    font-size: 1em;
+    color: var(--green);
+}

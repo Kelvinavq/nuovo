@@ -3,6 +3,7 @@ import "./Style.css";
 import Saldo from "../Saldo/Saldo";
 import Swal from "sweetalert2";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 const Depositar = () => {
   const [isUserVerified, setIsUserVerified] = useState(false);
@@ -17,6 +18,9 @@ const Depositar = () => {
   const [platformInfo, setPlatformInfo] = useState(null);
   const [selectedPlatformInfo, setSelectedPlatformInfo] = useState(null);
   const [paymentProof, setPaymentProof] = useState(null);
+  const [platformSelected, setPlatformSelected] = useState();
+  const [platformsUser, setPlatformsUser] = useState([]);
+  const UserId = localStorage.getItem("user_id");
 
   // obtener id del usuario
   useEffect(() => {
@@ -97,6 +101,43 @@ const Depositar = () => {
     if (e.target.value === "bank") {
       // Llamar a la función handleBankSelect automáticamente
       handleBankSelect();
+    } else if (e.target.value === "platform") {
+      handlePlatformUser();
+    }
+  };
+
+  const handlePlatformUser = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/nuovo/backend/Api/getPlatformUser.php?userId=${UserId}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+
+        if (data.length === 0) {
+          Swal.fire({
+            icon: "warning",
+            title: "No tienes plataformas registradas",
+            text: "Para poder realizar un depósito debes registrar al menos una plataforma",
+            didClose: () => {
+              window.location = "/user/ajustes/plataformas";
+            },
+          });
+        } else {
+          setPlatformsUser(data);
+        }
+      } else {
+        console.error("Error al obtener la listra de plataformas del usuario");
+      }
+    } catch (error) {
+      console.error(
+        "Error al obtener la listra de plataformas del usuario:",
+        error
+      );
     }
   };
 
@@ -127,7 +168,6 @@ const Depositar = () => {
     }
   };
 
-  // En la función handlePlatformSelect
   const handlePlatformSelect = async (e) => {
     const platformId = e.target.value;
 
@@ -214,6 +254,7 @@ const Depositar = () => {
         "selected_platform",
         selectedPlatform?.platformName || ""
       );
+      formData.append("id_platform_user", platformSelected);
     }
 
     // Lógica para enviar la solicitud al backend según el método de pago seleccionado
@@ -254,6 +295,33 @@ const Depositar = () => {
         text: "Error inesperado al enviar la solicitud de depósito",
       });
     }
+  };
+
+  const CopiarAlPortapapeles = ({ texto }) => {
+    const [copiado, setCopiado] = useState(false);
+
+    const copiarAlPortapapeles = (e) => {
+      e.preventDefault();
+
+      navigator.clipboard.writeText(texto);
+      setCopiado(true);
+
+      setTimeout(() => {
+        setCopiado(false);
+      }, 3000);
+    };
+
+    return (
+      <button onClick={copiarAlPortapapeles}>
+        {copiado ? (
+          <span>
+            Copiado <ContentCopyIcon />
+          </span>
+        ) : (
+          <ContentCopyIcon />
+        )}
+      </button>
+    );
   };
 
   return (
@@ -352,7 +420,7 @@ const Depositar = () => {
                 <>
                   <div className="grupo-input">
                     <label htmlFor="selectedPlatform">
-                      Seleccione la plataforma
+                      Seleccione su medio de pago
                     </label>
                     <select
                       name="selectedPlatform"
@@ -368,13 +436,50 @@ const Depositar = () => {
                     </select>
                   </div>
                   <br />
+
                   {selectedPlatformInfo && (
                     <div className="mensaje-plataforma">
-                      Envía el dinero a la siguiente dirección:{" "}
-                      {selectedPlatformInfo.value}
+                      {selectedPlatformInfo.platformType === "otra" ? (
+                        // Si el tipo de plataforma es "otra", mostrar campos personalizados
+                        <div className="plataforma">
+                          <p>Envía el dinero a la siguiente plataforma:</p>
+                          <h3>{selectedPlatformInfo.platformName}</h3>
+
+                          {selectedPlatformInfo.customFields && (
+                            <div>
+                              {selectedPlatformInfo.customFields.map(
+                                (field, index) => (
+                                  <div className="grupo">
+                                    <p>{field.fieldName}:</p>
+                                    <div key={index}>
+                                      <p>{field.fieldValue}</p>
+                                      <CopiarAlPortapapeles
+                                        texto={field.fieldValue}
+                                      />
+                                    </div>
+                                  </div>
+                                )
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        // Si el tipo de plataforma no es "otra", mostrar nombre y valor del campo
+                        <div className="plataforma">
+                          <p>Envía el dinero a la siguiente plataforma:</p>
+                          <div className="grupo">
+                            <h3>{selectedPlatformInfo.platformName}</h3>
+                            <div>
+                              <p>{selectedPlatformInfo.email}</p>
+                              <CopiarAlPortapapeles
+                                texto={selectedPlatformInfo.email}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
-
                   <div className="grupo-input monto">
                     <label htmlFor="amount">Ingrese el monto a depositar</label>
                     <div className="input">
@@ -390,13 +495,6 @@ const Depositar = () => {
                     </div>
                   </div>
 
-                  {selectedPlatform && (
-                    <>
-                      {/* Mostrar información detallada de la plataforma seleccionada */}
-                      {/* Lógica para mostrar información de la plataforma desde el backend */}
-                    </>
-                  )}
-
                   <div className="grupo-input">
                     <label htmlFor="referenceNumber">
                       Número de referencia
@@ -408,6 +506,29 @@ const Depositar = () => {
                       value={referenceNumber}
                       onChange={(e) => setReferenceNumber(e.target.value)}
                     />
+                  </div>
+
+                  <div className="grupo-input">
+                    <label htmlFor="platformSelected">
+                      Seleccione desde donde realizará el pago
+                    </label>
+                    <select
+                      name="platformSelected"
+                      id="platformSelected"
+                      value={platformSelected}
+                      onChange={(e) => setPlatformSelected(e.target.value)}
+                    >
+                      <option value="">Seleccionar plataforma</option>
+
+                      {platformsUser.map((platformsUsers) => (
+                        <option
+                          key={platformsUsers.id}
+                          value={platformsUsers.id}
+                        >
+                          {platformsUsers.platformName}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div className="grupo-input">

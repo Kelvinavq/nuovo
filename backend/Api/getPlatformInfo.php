@@ -30,15 +30,33 @@ if (!$platformId) {
 }
 
 try {
-    // Consultar la base de datos para obtener la información detallada de la plataforma
-    $query = "SELECT * FROM platforms WHERE id = :platformId";
+    // Consultar la base de datos para obtener la información detallada de la plataforma con sus campos personalizados
+    $query = "SELECT p.*, c.fieldName, c.fieldValue FROM platforms p
+              LEFT JOIN customFields c ON p.id = c.platformId
+              WHERE p.id = :platformId";
     $stmt = $conexion->prepare($query);
     $stmt->bindParam(':platformId', $platformId, PDO::PARAM_INT);
     $stmt->execute();
 
-    $platformInfo = $stmt->fetch(PDO::FETCH_ASSOC);
+    $platformInfo = array();
 
-    if ($platformInfo) {
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        // Agrupar la información de la plataforma y sus campos personalizados
+        $platformInfo['id'] = $row['id'];
+        $platformInfo['platformType'] = $row['platformType'];
+        $platformInfo['platformName'] = $row['platformName'];
+        $platformInfo['email'] = $row['email'];
+
+        // Verificar si hay campos personalizados y agregarlos al resultado
+        if ($row['fieldName'] !== null && $row['fieldValue'] !== null) {
+            $platformInfo['customFields'][] = array(
+                'fieldName' => $row['fieldName'],
+                'fieldValue' => $row['fieldValue']
+            );
+        }
+    }
+
+    if (!empty($platformInfo)) {
         http_response_code(200); // OK
         echo json_encode($platformInfo);
     } else {

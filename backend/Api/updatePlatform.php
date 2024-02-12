@@ -1,7 +1,7 @@
 <?php
 // Configuración de CORS
-include '../../cors.php';
-include '../../Config/config.php';
+include '../cors.php';
+include '../Config/config.php';
 
 $conexion = obtenerConexion();
 
@@ -25,13 +25,13 @@ try {
                     $conexion->beginTransaction();
 
                     // Eliminar customFields existentes para la plataforma
-                    $sqlDelete = "DELETE FROM customfields WHERE platformId = :platformId";
+                    $sqlDelete = "DELETE FROM customfields_user WHERE platformId = :platformId";
                     $stmtDelete = $conexion->prepare($sqlDelete);
                     $stmtDelete->bindParam(':platformId', $platformId, PDO::PARAM_INT);
                     $stmtDelete->execute();
 
                     // Insertar los nuevos customFields
-                    $sqlInsert = "INSERT INTO customfields (platformId, fieldName, fieldValue) VALUES (:platformId, :fieldName, :fieldValue)";
+                    $sqlInsert = "INSERT INTO customfields_user (platformId, fieldName, fieldValue) VALUES (:platformId, :fieldName, :fieldValue)";
                     $stmtInsert = $conexion->prepare($sqlInsert);
 
                     foreach ($customFields as $customField) {
@@ -59,7 +59,7 @@ try {
             if (isset($data->platformEmail)) {
                 $email = $data->platformEmail;
 
-                $sql = "UPDATE platforms SET platformName = :platformName, email = :email WHERE id = :platformId";
+                $sql = "UPDATE platforms_user SET platformName = :platformName, email = :email WHERE id = :platformId";
                 $stmt = $conexion->prepare($sql);
                 $stmt->bindParam(':platformName', $platformName, PDO::PARAM_STR);
                 $stmt->bindParam(':email', $email, PDO::PARAM_STR);
@@ -67,7 +67,7 @@ try {
                 $stmt->execute();
             } else {
                 // Si no hay correo, solo actualiza platformName
-                $sql = "UPDATE platforms SET platformName = :platformName WHERE id = :platformId";
+                $sql = "UPDATE platforms_user SET platformName = :platformName WHERE id = :platformId";
                 $stmt = $conexion->prepare($sql);
                 $stmt->bindParam(':platformName', $platformName, PDO::PARAM_STR);
                 $stmt->bindParam(':platformId', $platformId, PDO::PARAM_INT);

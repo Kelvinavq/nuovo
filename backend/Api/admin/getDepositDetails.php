@@ -32,23 +32,33 @@ if ($depositRequestId === null) {
 try {
     // Obtener detalles específicos del depósito según su ID
     $query = "SELECT
-                dr.*,
-                u.name AS user_name,
-                ba.account_number,
-                ba.bank_id,
-                b.account_name,
-                b.routing_number_ach,
-                b.routing_number_wire
-            FROM
-                deposit_requests dr
-            LEFT JOIN
-                users u ON dr.user_id = u.id
-            LEFT JOIN
-                bank_account ba ON dr.user_id = ba.user_id
-            LEFT JOIN
-                banks b ON ba.bank_id = b.id
-            WHERE
-                dr.id = :depositRequestId";
+    dr.*,
+    u.name AS user_name,
+    ba.account_number,
+    ba.bank_id,
+    b.account_name,
+    b.routing_number_ach,
+    b.routing_number_wire,
+    pu.platformType AS user_platform_type,
+    pu.platformName AS user_platform_name,
+    GROUP_CONCAT(DISTINCT cf.fieldName, ' : ', cf.fieldValue SEPARATOR ' , ') AS custom_fields
+FROM
+    deposit_requests dr
+LEFT JOIN
+    users u ON dr.user_id = u.id
+LEFT JOIN
+    bank_account ba ON dr.user_id = ba.user_id
+LEFT JOIN
+    banks b ON ba.bank_id = b.id
+LEFT JOIN
+    platforms_user pu ON u.id = pu.user_id
+LEFT JOIN
+    customfields_user cf ON pu.id = cf.platformId
+WHERE
+    dr.id = :depositRequestId
+GROUP BY
+    dr.id";
+
 
     $stmt = $conexion->prepare($query);
     $stmt->bindParam(':depositRequestId', $depositRequestId, PDO::PARAM_INT);
@@ -66,4 +76,3 @@ try {
 
 // Cerrar la conexión después de usarla
 $conexion = null;
-?>

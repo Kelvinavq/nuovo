@@ -15,7 +15,7 @@ if (!isset($_SESSION['user_id'])) {
 
 try {
     // Consultar la base de datos para obtener la lista de plataformas
-    $query = "SELECT * FROM platforms";
+    $query = "SELECT * FROM platforms WHERE status = 'active'";
     $stmt = $conexion->prepare($query);
     $stmt->execute();
 

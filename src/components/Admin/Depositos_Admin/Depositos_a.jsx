@@ -52,7 +52,7 @@ const Depositos_a = () => {
           credentials: "include",
         }
       );
-  
+
       if (!response.ok) {
         console.error("Error al obtener detalles del depósito");
         Swal.fire({
@@ -62,30 +62,59 @@ const Depositos_a = () => {
         });
         return;
       }
-  
+
       const depositDetails = await response.json();
-  
+
       // Mostrar el modal de SweetAlert2 con la información de la solicitud y los nuevos detalles
       const isPending = solicitud.status === "pending";
-  
+
+      let htmlContent = `
+      <span>Información bancaria del usuario</span>
+      <p><strong>Banco:</strong> ${depositDetails.account_name}</p>
+      <p><strong>R.N (ACH):</strong> ${depositDetails.routing_number_ach}</p>
+      <p><strong>R.N (WIRE):</strong> ${depositDetails.routing_number_wire}</p>
+      <p><strong>Número de cuenta:</strong> ${depositDetails.account_number}</p>
+
+      <span>Detalles del depósito</span>
+      <p><strong>Método:</strong> ${solicitud.platform_type}</p>
+      <p><strong>Fecha y Hora:</strong> ${solicitud.request_date} ${
+        solicitud.request_time
+      }</p>
+      <p><strong>Monto:</strong> $${solicitud.amount}</p>
+      <p><strong>Usuario:</strong> ${solicitud.user_name}</p>
+      <p><strong>Estatus:</strong> ${solicitud.status}</p>
+      <p><strong>Numero de referencia de la transacción:</strong> ${
+        solicitud.reference_number || "No aplica"
+      }</p>
+      <img src="http://localhost/nuovo/src/assets/vouchers/${
+        depositDetails.voucher_img
+      }" alt="" />
+      `;
+
+      // Agregar el campo platformEmail_user si no es null
+      if (depositDetails.platformEmail_user !== null) {
+        htmlContent += `
+        <p><strong>Plataforma emisora:</strong>  ${depositDetails.platformName_user}</p>
+        <p><strong>Email de la Plataforma:</strong> ${depositDetails.platformEmail_user}</p>
+      <p></p>
+        
+        `;
+      }
+
+      // Agregar custom_fields si no está vacío
+      if (depositDetails.is_personalizable === "yes" &&  depositDetails.platformEmail_user === null) {
+        htmlContent += `
+        <p><strong>Plataforma emisora (Personalizada):</strong>  ${depositDetails.user_platform_name}</p>
+
+        <p><strong>Datos personalizados:</strong> ${depositDetails.custom_fields}</p>
+      <p></p>
+        
+        `;
+      }
+
       Swal.fire({
         title: `Detalles de la Solicitud - ${solicitud.platform_type}`,
-        html: `
-          <span>Información bancaria del usuario</span>
-          <p><strong>Banco:</strong> ${depositDetails.account_name}</p>
-          <p><strong>R.N (ACH):</strong> ${depositDetails.routing_number_ach}</p>
-          <p><strong>R.N (WIRE):</strong> ${depositDetails.routing_number_wire}</p>
-          <p><strong>Número de cuenta:</strong> ${depositDetails.account_number}</p>
-  
-          <span>Detalles del depósito</span>
-          <p><strong>Tipo:</strong> ${solicitud.platform_type}</p>
-          <p><strong>Fecha y Hora:</strong> ${solicitud.request_date} ${solicitud.request_time}</p>
-          <p><strong>Monto:</strong> $${solicitud.amount}</p>
-          <p><strong>Usuario:</strong> ${solicitud.user_name}</p>
-          <p><strong>Estatus:</strong> ${solicitud.status}</p>
-          <p><strong>Numero de transaccion:</strong> ${solicitud.reference_number || "No aplica"}</p>
-          <img src="http://localhost/nuovo/src/assets/vouchers/${depositDetails.voucher_img}" alt="" />
-        `,
+        html: htmlContent,
         confirmButtonText: "Marcar como Completado",
         cancelButtonText: "Denegar Operación",
         confirmButtonColor: "#28a745",
@@ -153,7 +182,7 @@ const Depositos_a = () => {
                   )
                     .map((reasonCheckbox) => reasonCheckbox.value)
                     .join(", ");
-  
+
                   // Lógica para denegar la solicitud con motivos
                   denyRequest(solicitud.id, denialReasons);
                 }
@@ -171,7 +200,6 @@ const Depositos_a = () => {
       });
     }
   };
-  
 
   const denyRequest = async (depositRequestId, denialReasons) => {
     try {
@@ -246,7 +274,6 @@ const Depositos_a = () => {
     }
   };
 
-
   return (
     <div className="depositos_admin">
       <div className="title">
@@ -257,43 +284,43 @@ const Depositos_a = () => {
         <p>No hay solicitudes de depósito.</p>
       ) : (
         <div className="lista_depositos">
-        {depositRequests.map((solicitud, index) => (
-          <ul key={index} onClick={() => handleItemClick(solicitud)}>
-            <li>
-              <div className="icono">
-                <AddOutlinedIcon />
-              </div>
-            </li>
+          {depositRequests.map((solicitud, index) => (
+            <ul key={index} onClick={() => handleItemClick(solicitud)}>
+              <li>
+                <div className="icono">
+                  <AddOutlinedIcon />
+                </div>
+              </li>
 
-            <li>
-              <h2>Depositar</h2>
-              <span>{solicitud.platform_type}</span>
-            </li>
+              <li>
+                <h2>Depositar</h2>
+                <span>{solicitud.platform_type}</span>
+              </li>
 
-            <li>
-              <h2>Fecha</h2>
-              <span>
-                {solicitud.request_date} {solicitud.request_time}
-              </span>
-            </li>
+              <li>
+                <h2>Fecha</h2>
+                <span>
+                  {solicitud.request_date} {solicitud.request_time}
+                </span>
+              </li>
 
-            <li className="monto">
-              <h2>Monto</h2>
-              <span>${solicitud.amount}</span>
-            </li>
+              <li className="monto">
+                <h2>Monto</h2>
+                <span>${solicitud.amount}</span>
+              </li>
 
-            <li>
-              <h2>Usuario</h2>
-              <span>{solicitud.user_name}</span>
-            </li>
+              <li>
+                <h2>Usuario</h2>
+                <span>{solicitud.user_name}</span>
+              </li>
 
-            <li className={`estatus ${solicitud.status}`}>
-              <h2>Estatus</h2>
-              <span>{solicitud.status}</span>
-            </li>
-          </ul>
-        ))}
-      </div>
+              <li className={`estatus ${solicitud.status}`}>
+                <h2>Estatus</h2>
+                <span>{solicitud.status}</span>
+              </li>
+            </ul>
+          ))}
+        </div>
       )}
     </div>
   );

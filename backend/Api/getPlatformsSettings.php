@@ -1,21 +1,28 @@
 <?php
 // Configuración de CORS
-include '../../cors.php';
-include '../../Config/config.php';
+include '../Config/config.php';
+include '../cors.php';
+
+
 
 $conexion = obtenerConexion();
 try {
-
+    
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        $userId = isset($_GET['user_id']) ? $_GET['user_id'] : null;
+
         // Consulta para obtener las plataformas y sus campos personalizados
-        $sql = "SELECT p.id, p.platformType, p.platformName, p.email, GROUP_CONCAT(cf.fieldName, ':', cf.fieldValue) AS customFields
-                FROM platforms p
-                LEFT JOIN customfields cf ON p.id = cf.platformId
-                WHERE p.status = 'active'
+        $sql = "SELECT p.id, p.platformType, p.platformName, p.email, GROUP_CONCAT(cf.fieldName, ':', cf.fieldValue) AS customFields_user
+                FROM platforms_user p
+                LEFT JOIN customFields_user cf ON p.id = cf.platformId
+                 WHERE p.user_id = :user_id
+                 AND p.status = 'active'
                 GROUP BY p.id";
 
-        $stmt = $conexion->query($sql);
-        
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+
         $plataformas = array();
 
         while ($fila = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -51,4 +58,3 @@ try {
 
 // Cerrar la conexión
 $conexion = null;
-?>

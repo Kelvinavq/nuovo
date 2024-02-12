@@ -131,11 +131,11 @@ export const Translation = {
 
     advantageCard3Title: "No Hidden Commissions",
     advantageCard3Text:
-      "Enjoy your transactions without worry, as we do not apply hidden commissions.",
+      "Enjoy your transactions without worry, as. We do not apply hidden commissions.",
 
     advantageCard4Title: "Personalized Care",
     advantageCard4Text:
-      "Personalized assistance at all times, ensuring a quiet and timeless experience.",
+      "Personalized assistance at all times, ensuring smooth and effective experience.",
 
     // ******************* advantages ***************************
 
@@ -198,7 +198,7 @@ export const Translation = {
     advantageTitle: "Explore as vantagens que você tem com",
     advantageText: "Descubra um mundo de possibilidades financeiras com  ",
     advantageText2:
-      "Onde a inovação se encontra com a comodidade. No nosso espaço digital, você pode depositar fundos de forma segura, retirá-los com facilidade e realizar transferências fluidas para outros usuários.",
+      "onde a inovação se encontra com a comodidade. No nosso espaço digital, você pode depositar fundos de forma segura, retirá-los com facilidade e realizar transferências fluidas para outros usuários.",
 
     advantageCard1Title: "Segurança Integral",
     advantageCard1Text1: "Deposite com confiança sabendo que",
@@ -225,9 +225,9 @@ export const Translation = {
     ctaText2:
       "Registe-se hoje mesmo para descobrir a conveniência de gerenciar seu dinheiro de forma inteligente. Desde depósitos sem complicações até serviços personalizados,",
     ctaText3:
-      "Oferece uma experiência financeira moderna e segura. Não perca a oportunidade de assumir o controle do seu futuro financeiro! Clique aqui para começar agora.",
+      "Oferece uma experiência financeira moderna e segura. Não perca a oportunidade de assumir o controle do seu futuro financeiro! clique aqui para começar agora.",
 
-    ctaButton: "Junte-se agora",
+    ctaButton: "UNIÃO agora",
 
     // ******************* Call TO Action ***************************
 

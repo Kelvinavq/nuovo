@@ -87,7 +87,9 @@ const ListUsers = () => {
 
   const mostrarDetallesUsuario = (usuario) => {
     // Crear el contenido HTML para la ventana modal
-    const modalContent = `
+
+
+    let modalContent = `
       <div>
         <h2>${usuario.name}</h2>
         <p>Email: ${usuario.email}</p>
@@ -100,10 +102,17 @@ const ListUsers = () => {
         <p>Dirección del banco: ${usuario.bank_address} </p>
         <p>Nombre de la cuenta: ${usuario.account_name} </p>
         <p></p>
-
-
       </div>
     `;
+
+    if (usuario.email_platform !== null) {
+      modalContent += `
+      <h4>Plataforma registrada según la búsqueda</h4>
+      <p>Correo electrónico de plataforma: ${usuario.email_platform}</p>
+      <p></p>
+      `;
+    }
+    
 
     Swal.fire({
       title: "Detalles del Usuario",

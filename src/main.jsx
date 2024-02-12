@@ -22,6 +22,7 @@ import Depositos from "./pages/User/Depositos";
 import Perfil from "./pages/User/Ajustes_Perfil";
 import Ajustes_Verificacion from "./pages/User/Ajustes_Verificacion";
 import Ajustes_Seguridad from "./pages/User/Ajustes_Seguridad";
+import Ajustes_Plataformas from "./pages/User/Ajustes_Plataformas";
 
 // admin
 import Dashboard_a from "./pages/Admin/Dashboard_a";
@@ -79,6 +80,10 @@ const router = createBrowserRouter([
   {
     path: "/user/ajustes/seguridad",
     element: <Ajustes_Seguridad />,
+  },
+  {
+    path: "/user/ajustes/plataformas",
+    element: <Ajustes_Plataformas />,
   },
   {
     path: "/user/movimientos",

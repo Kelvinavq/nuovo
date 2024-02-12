@@ -20,6 +20,9 @@ const Enlaces = () => {
         <div className={`item ${isActive("/user/ajustes/seguridad")}`}>
           <Link to="/user/ajustes/seguridad">Seguridad</Link>
         </div>
+        <div className={`item ${isActive("/user/ajustes/plataformas")}`}>
+          <Link to="/user/ajustes/plataformas">Plataformas</Link>
+        </div>
         
       </div>
     </div>
