@@ -88,8 +88,16 @@ if ($stmtUserInfo->rowCount() > 0) {
             $userEmail = $_SESSION['user_email'];
 
             // Enviar notificación por correo electrónico
+            if ($selectedLanguage == "en") {
+                $subjectMessage = "Profile Photo";
+            } elseif ($selectedLanguage == "pt") {
+                $subjectMessage = "Nuovo - Foto de Perfil";
+            } else {
+                $subjectMessage = "Nuovo - Foto de Perfil";
+            }
+
             $to = $userEmail;
-            $subject = 'Nuovo - Foto de Perfil';
+            $subject = $subjectMessage;
             $message = $notificationMessage;
 
             $headers = 'From: nuovo@gmail.com' . "\r\n" .

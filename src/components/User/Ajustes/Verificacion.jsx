@@ -66,7 +66,7 @@ const Verificacion = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Debes seleccionar las tres imágenes",
+        text: Translation[language].swalMessageImages,
       });
       return;
     }

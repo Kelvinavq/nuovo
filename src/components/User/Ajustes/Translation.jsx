@@ -29,6 +29,8 @@ export const Translation = {
     text5:
       "Por favor, verifique y suba ambas fotografias nuevamente siguiendo las instrucciones correspondientes",
 
+      swalMessageImages :"Debes seleccionar las tres imágenes", 
+
     swalMessage3:
       "Por favor, asegúrate de que la foto del selfie sea clara y legible. Todos los detalles, incluyendo el rostro y cualquier información adicional requerida, deben ser fácilmente distinguibles. Evita sombras, desenfoques o reflejos que puedan afectar la calidad de la imagen.",
 

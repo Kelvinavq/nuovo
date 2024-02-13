@@ -18,6 +18,8 @@ if (!isset($_SESSION['user_id'])) {
     echo json_encode(array("error" => "Usuario no autenticado."));
     exit();
 }
+$selectedLanguage = isset($_COOKIE['selectedLanguage']) ? $_COOKIE['selectedLanguage'] : 'es';
+
 
 // Obtener el ID del usuario
 $userId = $_SESSION['user_id'];
@@ -73,7 +75,16 @@ if ($stmtCheck->rowCount() > 0) {
 
         if ($stmtUpdate->execute()) {
             // Agregar notificación
-            $notificationMessage = "Tu solicitud de verificación ha sido recibida. Está pendiente de revisión.";
+
+            if ($selectedLanguage == "en") {
+                $notificationMessage = "Your verification request has been received. It's pending review.";
+            } elseif ($selectedLanguage == "pt") {
+                $notificationMessage = "O seu pedido de verificação foi recebido. Está pendente de revisão.";
+            } else {
+                $notificationMessage = "Tu solicitud de verificación ha sido recibida. Está pendiente de revisión.";
+            }
+
+
             $notificationMessageAdmin = "El usuario " . $userName . " ha enviado una nueva solicitud de verificación.";
 
             // Insertar la notificación en la base de datos
@@ -90,7 +101,7 @@ if ($stmtCheck->rowCount() > 0) {
             include("../emailConfig.php");
 
             $data = [
-                'message' => "Tu solicitud de verificación ha sido recibida. Está pendiente de revisión.",
+                'message' => $notificationMessage,
                 'status' => 'unread',
                 'type' => 'verification_pending',
                 'user_id' => $userId
@@ -100,9 +111,20 @@ if ($stmtCheck->rowCount() > 0) {
             $userEmail = $_SESSION['user_email'];
 
             // Enviar notificación por correo electrónico
+            if ($selectedLanguage == "en") {
+                $subjectMessage = "Nuovo - Verification";
+                $emailMessage = "Your verification request has been received. It's pending review. You will be notified by this means when your account is verified";
+            } elseif ($selectedLanguage == "pt") {
+                $subjectMessage = "Nuovo - Verificación";
+                $emailMessage = "O seu pedido de verificação foi recebido. Está pendente de revisão. Você será notificado quando sua conta for verificada.";
+            } else {
+                $subjectMessage = "Nuovo - Verificación";
+                $emailMessage = "Su solicitud de verificación ha sido recibida. Está pendiente de revisión. Será notificado por este medio cuando su cuenta se encuentre verificada";
+            }
+
             $to = $userEmail;
-            $subject = 'Nuovo - Verificación';
-            $message = 'Su solicitud de verificación ha sido recibida. Está pendiente de revisión. Será notificado por este medio cuando su cuenta se encuentre verificada';
+            $subject = $subjectMessage;
+            $message = $emailMessage;
 
             $headers = 'From: nuovo@gmail.com' . "\r\n" .
                 'Reply-To: nuovo@gmail.com' . "\r\n" .
@@ -157,7 +179,14 @@ if ($stmtCheck->rowCount() > 0) {
             // Inserción en la base de datos exitosa
 
             // Agregar notificación
-            $notificationMessage = "Tu solicitud de verificación ha sido recibida. Está pendiente de revisión.";
+            if ($selectedLanguage == "en") {
+                $notificationMessage = "Your verification request has been received. It's pending review.";
+            } elseif ($selectedLanguage == "pt") {
+                $notificationMessage = "O seu pedido de verificação foi recebido. Está pendente de revisão.";
+            } else {
+                $notificationMessage = "Tu solicitud de verificación ha sido recibida. Está pendiente de revisión.";
+            }
+
             $notificationMessageAdmin = "El usuario " . $userName . " ha enviado una nueva solicitud de verificación.";
 
             // Insertar la notificación en la base de datos
@@ -174,7 +203,7 @@ if ($stmtCheck->rowCount() > 0) {
             include("../emailConfig.php");
 
             $data = [
-                'message' => "Tu solicitud de verificación ha sido recibida. Está pendiente de revisión.",
+                'message' => $notificationMessage,
                 'status' => 'unread',
                 'type' => 'verification_pending',
                 'user_id' => $userId
@@ -184,9 +213,20 @@ if ($stmtCheck->rowCount() > 0) {
             $userEmail = $_SESSION['user_email'];
 
             // Enviar notificación por correo electrónico
+            if ($selectedLanguage == "en") {
+                $subjectMessage = "Nuovo - Verification";
+                $emailMessage = "Your verification request has been received. It's pending review. You will be notified by this means when your account is verified";
+            } elseif ($selectedLanguage == "pt") {
+                $subjectMessage = "Nuovo - Verificación";
+                $emailMessage = "O seu pedido de verificação foi recebido. Está pendente de revisão. Você será notificado quando sua conta for verificada.";
+            } else {
+                $subjectMessage = "Nuovo - Verificación";
+                $emailMessage = "Su solicitud de verificación ha sido recibida. Está pendiente de revisión. Será notificado por este medio cuando su cuenta se encuentre verificada";
+            }
+
             $to = $userEmail;
-            $subject = 'Nuovo - Verificación';
-            $message = 'Su solicitud de verificación ha sido recibida. Está pendiente de revisión. Será notificado por este medio cuando su cuenta se encuentre verificada';
+            $subject = $subjectMessage;
+            $message = $emailMessage;
 
             $headers = 'From: nuovo@gmail.com' . "\r\n" .
                 'Reply-To: nuovo@gmail.com' . "\r\n" .
@@ -214,8 +254,21 @@ if ($stmtCheck->rowCount() > 0) {
                 echo json_encode(array("error" => "Error al enviar correo electronico"));
             }
 
-            http_response_code(200);
-            echo json_encode(array("message" => "Imágenes subidas y registradas correctamente."));
+         
+            if ($selectedLanguage == "en") {
+                http_response_code(200);
+                echo json_encode(array("message" => "Images uploaded and recorded correctly."));
+    
+            } elseif ($selectedLanguage == "pt") {
+                http_response_code(200);
+                echo json_encode(array("message" => "Imagens carregadas e registradas corretamente."));
+    
+            } else {
+                http_response_code(200);
+                echo json_encode(array("message" => "Imágenes subidas y registradas correctamente."));
+    
+            }
+
         } else {
             // Error al insertar en la base de datos
             http_response_code(500); // Internal Server Error

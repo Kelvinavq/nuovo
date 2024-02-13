@@ -9,7 +9,7 @@ import { TranslationResetPassword } from "../../Language/TranslationResetPasswor
 
 const Reset_Password = () => {
   const { language } = useContext(LanguageContext);
-  const [email, setEmail] = useState(null);
+  const [email, setEmail] = useState("");
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -36,6 +36,7 @@ const Reset_Password = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include',
         body: JSON.stringify({ email }),
       });
 

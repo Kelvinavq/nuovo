@@ -12,6 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
+$selectedLanguage = isset($_COOKIE['selectedLanguage']) ? $_COOKIE['selectedLanguage'] : 'es';
+
+
 // Obtener datos del formulario
 $data = json_decode(file_get_contents("php://input"));
 $email = htmlspecialchars(strip_tags($data->email));
@@ -46,10 +49,22 @@ if (!$insertStmt->execute()) {
 
 include("../emailConfig.php");
 
+if ($selectedLanguage == "en") {
+    $subjectMessage = "Password Reset - NUOVO";
+    $emailMessage = "To reset your password, click the following link:";
+} elseif ($selectedLanguage == "pt") {
+    $subjectMessage = "Restauração de senha - NUOVO";
+    $emailMessage = "Para restaurar sua senha, clique no seguinte link:";
+} else {
+    $subjectMessage = "Restablecimiento de Contraseña - NUOVO";
+    $emailMessage = "Para restablecer su contraseña, haga clic en el siguiente enlace:";
+}
+
+
 // Enviar notificación por correo electrónico
 $to = $user['email'];
-$subject = 'Restablecimiento de Contraseña - NUOVO';
-$message = 'Para restablecer su contraseña, haga clic en el siguiente enlace: ' . 
+$subject = $subjectMessage;
+$message = $emailMessage . 
            'http://localhost:5173/reset-password-page?token=' . $token;
 
 $headers = 'From: ' . $adminEmail . "\r\n" .
@@ -58,7 +73,7 @@ $headers = 'From: ' . $adminEmail . "\r\n" .
 
 if (mail($to, $subject, $message, $headers)) {
     http_response_code(200);
-    echo json_encode(array("message" => "Se ha enviado un enlace de restablecimiento de contraseña a su correo electrónico."));
+    echo json_encode(array("message" => "Se ha enviado un enlace de restablecimiento de contraseña a su correo electrónico." . $selectedLanguage));
 } else {
     http_response_code(500);
     echo json_encode(array("error" => "Error al enviar correo electrónico"));

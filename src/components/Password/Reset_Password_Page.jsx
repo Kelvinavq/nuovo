@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import "./Style.css";
 
 import { LanguageContext } from "../../Language/LanguageContext";
-import { TranslationLogin } from "../../Language/TranslationLogin";
+import { TranslationResetPassword } from "../../Language/TranslationResetPassword";
 
 const Reset_Password_Page = () => {
   const { language } = useContext(LanguageContext);
@@ -23,8 +23,8 @@ const Reset_Password_Page = () => {
     if (!token) {
         Swal.fire({
             icon: "warning",
-            title:"No existe un token de verificacion",
-            text: "Por favor use un link válido y sin modificarlo",
+            title: TranslationResetPassword[language].swalTitle1,
+            text: TranslationResetPassword[language].SwalMessage5,
             didClose: () =>{
                 window.location = "/login"
             }
@@ -52,7 +52,7 @@ const Reset_Password_Page = () => {
       } else {
         Swal.fire({
             icon: "warning",
-            title:"Token de verificacion inválido o vencido",
+            title: TranslationResetPassword[language].swalTitle2,
             didClose: () =>{
                 window.location = "/login"
             }
@@ -80,7 +80,7 @@ const Reset_Password_Page = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "La contraseña debe tener al menos 8 caracteres",
+        text: TranslationResetPassword[language].SwalMessage6,
       });
       return;
     }
@@ -89,7 +89,7 @@ const Reset_Password_Page = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Las contraseñas no coinciden",
+        text: TranslationResetPassword[language].SwalMessage7,
       });
       return;
     }
@@ -121,7 +121,7 @@ const Reset_Password_Page = () => {
         Swal.fire({
           icon: "success",
           title: "Éxito",
-          text: "Contraseña restablecida con éxito. Redirigiendo a la página de inicio de sesión...",
+          text: TranslationResetPassword[language].SwalMessage8,
           timer: 3000,
           didClose: () =>{
             window.location = "/login"
@@ -134,7 +134,7 @@ const Reset_Password_Page = () => {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: "Error al restablecer la contraseña",
+          text: TranslationResetPassword[language].SwalMessage9,
         });
       }
     } catch (error) {
@@ -152,40 +152,40 @@ const Reset_Password_Page = () => {
       <form onSubmit={handleSubmit}>
         <div className="content">
           <img src={logotipo} alt="logotipo nuovotech" />
-          <h2>Ingrese su nueva contraseña</h2>
+          <h2>{TranslationResetPassword[language].title2}</h2>
         </div>
 
         <div className="inputs">
           <div className="grupo-input">
-            <label htmlFor="password">Ingrese su contraseña</label>
+            <label htmlFor="password">{TranslationResetPassword[language].label2}</label>
             <input
               type="password"
               name="password"
               id="password"
-              placeholder="Contraseña"
+              placeholder={TranslationResetPassword[language].place1}
               value={password}
               onChange={handlePasswordChange}
             />
           </div>
           <div className="grupo-input">
-            <label htmlFor="confirmPassword">Confirme su contraseña</label>
+            <label htmlFor="confirmPassword">{TranslationResetPassword[language].label3}</label>
             <input
               type="password"
               name="confirmPassword"
               id="confirmPassword"
-              placeholder="Confirmar contraseña"
+              placeholder={TranslationResetPassword[language].place2}
               value={confirmPassword}
               onChange={handleConfirmPasswordChange}
             />
           </div>
 
           <div className="submit">
-            <input type="submit" value="Restablecer" />
+            <input type="submit" value={TranslationResetPassword[language].button2} />
           </div>
 
           <div className="enlace">
             <p>
-              <Link to="/login">Atrás</Link>
+              <Link to="/login">{TranslationResetPassword[language].link}</Link>
             </p>
           </div>
         </div>

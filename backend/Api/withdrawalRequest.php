@@ -56,7 +56,7 @@ try {
 
     // Validar que el usuario tenga suficiente saldo
     if ($amount > floatval($userBalance['balance'])) {
-        echo json_encode(["error" => "Saldo insuficiente para realizar el retiro"]);
+        echo json_encode(["error" => "Saldo insuficiente para realizar el retiros"]);
         http_response_code(400);
         exit();
     }

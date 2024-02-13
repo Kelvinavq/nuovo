@@ -36,10 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // $notificationMessageAdmin = "El usuario " . $userName . " Ha realizado una solicitud de retiro";
 
     if ($selectedLanguage == "en") {
+        $subjectMessage = "Nuovo - withdrawal request";
         $notificationMessage = "Correctly submitted withdrawal request";
     } elseif ($selectedLanguage == "pt") {
+        $subjectMessage = "Nuovo - Pedido de retirada";
         $notificationMessage = "Solicitação de retirada enviada corretamente";
     } else {
+        $subjectMessage = "Nuovo - solicitud de retiro";
         $notificationMessage = "Solicitud de retiro enviada correctamente";
     }
 
@@ -420,7 +423,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Enviar notificación por correo electrónico
             include("../emailConfig.php");
             $toUser = $userEmail;
-            $subjectUser = 'Nuovo - Retiro';
+            $subjectUser = $subjectMessage;
             $messageUser = $notificationMessage;
 
             $headersUser = 'From: ' . $adminEmail . "\r\n" .

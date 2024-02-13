@@ -11,6 +11,7 @@ $conexion = obtenerConexion();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Obtener datos del cuerpo de la solicitud
     $data = json_decode(file_get_contents("php://input"));
+    $selectedLanguage = isset($_COOKIE['selectedLanguage']) ? $_COOKIE['selectedLanguage'] : 'es';
 
     // Validar y escapar los datos para prevenir SQL injection
     $userId = $_SESSION['user_id'];
@@ -47,7 +48,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $user = $stmtUserInfo->fetch(PDO::FETCH_ASSOC);
                     $userName = $user['name'];
                     $userEmail = $user['email'];
-                    $content = "¡La contraseña se ha actualizado con éxito!";
+
+                    if ($selectedLanguage == "en") {
+                        $content = "Password has been successfully updated!";
+                    } elseif ($selectedLanguage == "pt") {
+                        $content = "A senha foi atualizada com sucesso!";
+                    } else {
+                        $content = "¡La contraseña se ha actualizado con éxito!";
+                    }
+                  
 
                     // Insertar la notificación en la base de datos
                     $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, content, status, type) VALUES (:userId, :content, 'unread', 'password_update')";
@@ -59,10 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // Enviar notificación a Pusher
                     include("../pusher.php");
                     include("../emailConfig.php");
-                    $notificationData = array('message' => '¡La contraseña de se ha actualizado con éxito!');
+                    $notificationData = array('message' => $content);
 
                     $data = [
-                        'message' => "¡La contraseña de se ha actualizado con éxito!",
+                        'message' => $content,
                         'status' => 'unread',
                         'type' => 'password_update',
                         'user_id' => $userId
@@ -71,9 +80,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $pusher->trigger('notifications-channel', 'evento', $data);
 
                     // Enviar notificación por correo electrónico
+
+                    if ($selectedLanguage == "en") {
+                        $subjectMessage = "Password Update";
+                        $emailMessage = "Your login password to NUOVO has been successfully updated";
+                    } elseif ($selectedLanguage == "pt") {
+                        $subjectMessage = "Atualização de senha";
+                        $emailMessage = "Sua senha de acesso a NOVO foi atualizada com sucesso";
+                    } else {
+                        $subjectMessage = "Actualización de Contraseña";
+                        $emailMessage = "Su contraseña de acceso a NUOVO se ha actualizado con éxito";
+                    }
+
                     $to = $userEmail;
-                    $subject = 'Actualización de Contraseña';
-                    $message = 'Su contraseña de acceso a NUOVO se ha actualizado con éxito';
+                    $subject = $subjectMessage;
+                    $message = $emailMessage;
 
                     $headers = 'From: ' . $adminEmail . "\r\n" .
                     'Reply-To: ' . $adminEmail . "\r\n" .

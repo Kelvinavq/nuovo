@@ -6,6 +6,7 @@ const ResetPassword = () => {
   return (
     <div>
       <Reset_Password/>
+      <Footer/>
     </div>
   )
 }
