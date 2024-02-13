@@ -58,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     // Enviar notificación a Pusher
                     include("../pusher.php");
+                    include("../emailConfig.php");
                     $notificationData = array('message' => '¡La contraseña de se ha actualizado con éxito!');
 
                     $data = [

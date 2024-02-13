@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./Style.css";
 import Saldo from "../Saldo/Saldo";
 import Swal from "sweetalert2";
 
+import { LanguageContext } from "../../../Language/LanguageContext";
+import { Translation } from "./Translation";
+
 const Retirar = () => {
+  const { language } = useContext(LanguageContext);
+
   const [isUserVerified, setIsUserVerified] = useState(false);
   const [selectedRegion, setSelectedRegion] = useState("");
   const [selectedMethod, setSelectedMethod] = useState("");
@@ -90,7 +95,7 @@ const Retirar = () => {
           <>
             {/* Campos específicos para "Transferencia entre usuarios" */}
             <div className="grupo-input">
-              <label htmlFor="email">Correo electrónico destino</label>
+              <label htmlFor="email">{Translation[language].label1}</label>
               <input
                 type="email"
                 id="email"
@@ -104,7 +109,7 @@ const Retirar = () => {
 
 
             <div className="grupo-input monto">
-              <label htmlFor="amount">Ingrese el monto a depositar</label>
+              <label htmlFor="amount">{Translation[language].label2}</label>
               <div className="input">
                 <span>$</span>
                 <input
@@ -114,7 +119,7 @@ const Retirar = () => {
                   value={amount}
                   onChange={handleAmountChange}
                 />
-                <label htmlFor="">Min. 1 dólar</label>
+                <label htmlFor="">Min. 1 USD</label>
               </div>
             </div>
           </>
@@ -124,15 +129,15 @@ const Retirar = () => {
           <>
             {/* Campos específicos para "Transferencia externa" */}
             <div className="grupo-input">
-              <label htmlFor="region">Selecciona la región</label>
+              <label htmlFor="region">{Translation[language].label3}</label>
               <select
                 name="region"
                 id="region"
                 onChange={(e) => setSelectedRegion(e.target.value)}
               >
-                <option value="">Selecciona una región</option>
-                <option value="usa">USA</option>
-                <option value="europa">Europa</option>
+                <option value="">{Translation[language].option6}</option>
+                <option value="usa">{Translation[language].option7}</option>
+                <option value="europa">{Translation[language].option8}</option>
               </select>
             </div>
 
@@ -140,7 +145,7 @@ const Retirar = () => {
             {selectedRegion === "usa" && (
               <>
                 <div className="grupo-input">
-                  <label htmlFor="name_bank">Nombre del banco</label>
+                  <label htmlFor="name_bank">{Translation[language].label4}</label>
                   <input
                     type="text"
                     id="name_bank"
@@ -150,7 +155,7 @@ const Retirar = () => {
                   />
                 </div>
                 <div className="grupo-input">
-                  <label htmlFor="routingNumberAch">Routing Number (ACH)</label>
+                  <label htmlFor="routingNumberAch">{Translation[language].label5}</label>
                   <input
                     type="text"
                     id="routingNumberAch"
@@ -162,7 +167,7 @@ const Retirar = () => {
 
                 <div className="grupo-input">
                   <label htmlFor="routingNumberWire">
-                    Routing Number (WIRE)
+                  {Translation[language].label6}
                   </label>
                   <input
                     type="text"
@@ -174,7 +179,7 @@ const Retirar = () => {
                 </div>
 
                 <div className="grupo-input">
-                  <label htmlFor="address_bank">Dirección del banco</label>
+                  <label htmlFor="address_bank">{Translation[language].label7}</label>
                   <input
                     type="text"
                     id="address_bank"
@@ -184,7 +189,7 @@ const Retirar = () => {
                   />
                 </div>
                 <div className="grupo-input">
-                  <label htmlFor="accountNumber">Número de cuenta</label>
+                  <label htmlFor="accountNumber">{Translation[language].label8}</label>
                   <input
                     type="text"
                     id="accountNumber"
@@ -195,7 +200,7 @@ const Retirar = () => {
                 </div>
 
                 <div className="grupo-input">
-                  <label htmlFor="beneficiary">Nombre del beneficiario</label>
+                  <label htmlFor="beneficiary">{Translation[language].label9}</label>
                   <input
                     type="text"
                     id="beneficiary"
@@ -206,7 +211,7 @@ const Retirar = () => {
                 </div>
 
                 <div className="grupo-input monto">
-                  <label htmlFor="amount">Ingrese el monto a depositar</label>
+                  <label htmlFor="amount">{Translation[language].label10}</label>
                   <div className="input">
                     <span>$</span>
                     <input
@@ -216,7 +221,7 @@ const Retirar = () => {
                       value={amount}
                       onChange={handleAmountChange}
                     />
-                    <label htmlFor="">Min. 1 dólar</label>
+                    <label htmlFor="">Min. 1 USD</label>
                   </div>
                 </div>
               </>
@@ -225,7 +230,7 @@ const Retirar = () => {
             {selectedRegion === "europa" && (
               <>
                 <div className="grupo-input">
-                  <label htmlFor="banknameeu">Nombre del banco</label>
+                  <label htmlFor="banknameeu">{Translation[language].label11}</label>
                   <input
                     type="text"
                     id="banknameeu"
@@ -236,7 +241,7 @@ const Retirar = () => {
                 </div>
 
                 <div className="grupo-input">
-                  <label htmlFor="swiftbic">Código SWIFT / BIC</label>
+                  <label htmlFor="swiftbic">{Translation[language].label12}</label>
                   <input
                     type="text"
                     id="swiftbic"
@@ -247,7 +252,7 @@ const Retirar = () => {
                 </div>
 
                 <div className="grupo-input">
-                  <label htmlFor="addressbank">Dirección del banco</label>
+                  <label htmlFor="addressbank">{Translation[language].label13}</label>
                   <input
                     type="text"
                     id="addressbank"
@@ -258,7 +263,7 @@ const Retirar = () => {
                 </div>
 
                 <div className="grupo-input">
-                  <label htmlFor="accountnumber">Numero de cuenta</label>
+                  <label htmlFor="accountnumber">{Translation[language].label14}</label>
                   <input
                     type="text"
                     id="accountnumber"
@@ -269,7 +274,7 @@ const Retirar = () => {
                 </div>
 
                 <div className="grupo-input">
-                  <label htmlFor="sortcode">Código SORT</label>
+                  <label htmlFor="sortcode">{Translation[language].label15}</label>
                   <input
                     type="text"
                     id="sortcode"
@@ -280,7 +285,7 @@ const Retirar = () => {
                 </div>
 
                 <div className="grupo-input">
-                  <label htmlFor="iban">IBAN</label>
+                  <label htmlFor="iban">{Translation[language].label16}</label>
                   <input
                     type="text"
                     id="iban"
@@ -291,7 +296,7 @@ const Retirar = () => {
                 </div>
 
                 <div className="grupo-input monto">
-                  <label htmlFor="amount">Ingrese el monto a depositar</label>
+                  <label htmlFor="amount">{Translation[language].label17}</label>
                   <div className="input">
                     <span>$</span>
                     <input
@@ -301,7 +306,7 @@ const Retirar = () => {
                       value={amount}
                       onChange={handleAmountChange}
                     />
-                    <label htmlFor="">Min. 1 dólar</label>
+                    <label htmlFor="">Min. 1 USD</label>
                   </div>
                 </div>
               </>
@@ -313,15 +318,15 @@ const Retirar = () => {
           <>
             {/* Campos específicos para "Transferencia nacional" */}
             <div className="grupo-input">
-              <label htmlFor="tipoPago">Selecciona el tipo de pago</label>
+              <label htmlFor="tipoPago">{Translation[language].label8}</label>
               <select
                 name="tipoPago"
                 id="tipoPago"
                 onChange={(e) => setmethodArg(e.target.value)}
               >
-                <option value="">Selecciona un método</option>
-                <option value="virtual">Banco Virtual</option>
-                <option value="fisico">Banco Físico</option>
+                <option value="">{Translation[language].option9}</option>
+                <option value="virtual">{Translation[language].option10}</option>
+                <option value="fisico">{Translation[language].option11}</option>
               </select>
             </div>
 
@@ -329,7 +334,7 @@ const Retirar = () => {
               <>
                 <div className="grupo-input">
                   <label htmlFor="alias">
-                    Ingrese su alias o Número de cuenta nacional (CBU)
+                  {Translation[language].label18}
                   </label>
                   <input
                     type="text"
@@ -341,7 +346,7 @@ const Retirar = () => {
                 </div>
 
                 <div className="grupo-input">
-                  <label htmlFor="cuitcuil">Ingrese el CUIT/CUIL</label>
+                  <label htmlFor="cuitcuil">{Translation[language].label19}</label>
                   <input
                     type="text"
                     id="cuitcuil"
@@ -353,7 +358,7 @@ const Retirar = () => {
 
                 <div className="grupo-input">
                   <label htmlFor="nombrecuenta">
-                    Ingrese el nombre de la cuenta
+                  {Translation[language].label20}
                   </label>
                   <input
                     type="text"
@@ -365,7 +370,7 @@ const Retirar = () => {
                 </div>
 
                 <div className="grupo-input monto">
-                  <label htmlFor="amount">Ingrese el monto a depositar</label>
+                  <label htmlFor="amount">{Translation[language].label21}</label>
                   <div className="input">
                     <span>$</span>
                     <input
@@ -385,7 +390,7 @@ const Retirar = () => {
               <>
                 <div className="grupo-input">
                   <label htmlFor="alias">
-                    Ingrese su alias o Número de cuenta nacional (CBU)
+                  {Translation[language].label22}
                   </label>
                   <input
                     type="text"
@@ -398,7 +403,7 @@ const Retirar = () => {
 
                 <div className="grupo-input">
                   <label htmlFor="numerocuenta">
-                    Ingrese el numero de caja de ahorros ó cuenta corriente
+                  {Translation[language].label23}
                   </label>
                   <input
                     type="text"
@@ -410,7 +415,7 @@ const Retirar = () => {
                 </div>
 
                 <div className="grupo-input">
-                  <label htmlFor="cuitcuil">Ingrese el CUIT/CUIL</label>
+                  <label htmlFor="cuitcuil">{Translation[language].label24}</label>
                   <input
                     type="text"
                     id="cuitcuil"
@@ -422,7 +427,7 @@ const Retirar = () => {
 
                 <div className="grupo-input">
                   <label htmlFor="nombrecuenta">
-                    Ingrese el nombre de la cuenta
+                  {Translation[language].label25}
                   </label>
                   <input
                     type="text"
@@ -434,7 +439,7 @@ const Retirar = () => {
                 </div>
 
                 <div className="grupo-input monto">
-                  <label htmlFor="amount">Ingrese el monto a depositar</label>
+                  <label htmlFor="amount">{Translation[language].label26}</label>
                   <div className="input">
                     <span>$</span>
                     <input
@@ -444,7 +449,7 @@ const Retirar = () => {
                       value={amount}
                       onChange={handleAmountChange}
                     />
-                    <label htmlFor="">Min. 1 dólar</label>
+                    <label htmlFor="">Min. 1 USD</label>
                   </div>
                 </div>
               </>
@@ -456,7 +461,7 @@ const Retirar = () => {
           <>
             {/* Campos específicos para "Efectivo" */}
             <div className="grupo-input monto">
-              <label htmlFor="amount">Ingrese el monto a depositar</label>
+              <label htmlFor="amount">{Translation[language].label27}</label>
               <div className="input">
                 <span>$</span>
                 <input
@@ -508,7 +513,7 @@ const Retirar = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Por favor, complete todos los campos obligatorios.",
+        text: Translation[language].messageEmpty,
       });
       return;
     }
@@ -527,7 +532,7 @@ const Retirar = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Por favor, complete todos los campos obligatorios.",
+        text: Translation[language].messageEmpty,
       });
       return;
     }
@@ -541,7 +546,7 @@ const Retirar = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Por favor, complete todos los campos obligatorios.",
+        text: Translation[language].messageEmpty,
       });
       return;
     }
@@ -554,7 +559,7 @@ const Retirar = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Por favor, complete todos los campos obligatorios.",
+        text: Translation[language].messageEmpty,
       });
       return;
     }
@@ -565,7 +570,7 @@ const Retirar = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "El monto debe ser de al menos 1 dólar",
+        text: Translation[language].messageEmpty,
       });
       return;
     }
@@ -685,14 +690,14 @@ const Retirar = () => {
       <Saldo />
 
       <div className="content">
-        <h2>Retirar</h2>
+        <h2>{Translation[language].title}</h2>
 
         {isUserVerified === "approved" ? (
           <div className="form">
             <form onSubmit={handleSubmit}>
               <div className="grupo-input">
                 <label htmlFor="paymentMethod">
-                  Seleccione el medio de pago
+                {Translation[language].label1}
                 </label>
                 <select
                   name="paymentMethod"
@@ -700,31 +705,30 @@ const Retirar = () => {
                   value={selectedMethod}
                   onChange={(e) => setSelectedMethod(e.target.value)}
                 >
-                  <option value="">Seleccionar método de retiro</option>
+                  <option value="">{Translation[language].option1}</option>
                   <option value="transferencia_entre_usuarios">
-                    Transferencia entre usuarios
+                  {Translation[language].option2}
                   </option>
                   <option value="transferencia_externa">
-                    Transferencia externa
+                  {Translation[language].option3}
                   </option>
                   <option value="transferencia_nacional">
-                    Transferencia nacional (Arg)
+                  {Translation[language].option4}
                   </option>
-                  <option value="efectivo">Efectivo</option>
+                  <option value="efectivo">{Translation[language].option5}</option>
                 </select>
               </div>
 
               {renderSpecificFields()}
 
               <div className="grupo-submit">
-                <input className="btns" type="submit" value="Enviar" />
+                <input className="btns" type="submit" value={Translation[language].button1} />
               </div>
             </form>
           </div>
         ) : (
           <p>
-            Debe verificar su cuenta antes de realizar un retiro. Puede
-            encontrar información sobre cómo hacerlo en su perfil.
+            {Translation[language].text1}
           </p>
         )}
       </div>

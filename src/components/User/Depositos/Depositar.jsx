@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./Style.css";
 import Saldo from "../Saldo/Saldo";
 import Swal from "sweetalert2";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { LanguageContext } from "../../../Language/LanguageContext";
+import { Translation } from "./Translation";
 
 const Depositar = () => {
+  const { language } = useContext(LanguageContext);
+
   const [isUserVerified, setIsUserVerified] = useState(false);
   const [userId, setUserId] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
@@ -121,8 +125,8 @@ const Depositar = () => {
         if (data.length === 0) {
           Swal.fire({
             icon: "warning",
-            title: "No tienes plataformas registradas",
-            text: "Para poder realizar un depósito debes registrar al menos una plataforma",
+            title: Translation[language].swalTitle1,
+            text: Translation[language].swalText1,
             didClose: () => {
               window.location = "/user/ajustes/plataformas";
             },
@@ -283,8 +287,7 @@ const Depositar = () => {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text:
-            data.error || "Hubo un error al procesar la solicitud de depósito",
+          text: Translation[language].swalText2,
         });
       }
     } catch (error) {
@@ -292,7 +295,7 @@ const Depositar = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Error inesperado al enviar la solicitud de depósito",
+        text: Translation[language].swalText3,
       });
     }
   };
@@ -329,14 +332,14 @@ const Depositar = () => {
       <Saldo />
 
       <div className="content">
-        <h2>Depositar</h2>
+        <h2>{Translation[language].title}</h2>
 
         {isUserVerified === "approved" ? (
           <div className="form">
             <form onSubmit={handleSubmit}>
               <div className="grupo-input">
                 <label htmlFor="paymentMethod">
-                  Seleccione el método de pago
+                  {Translation[language].label1}
                 </label>
                 <select
                   name="paymentMethod"
@@ -344,10 +347,12 @@ const Depositar = () => {
                   value={paymentMethod}
                   onChange={handlePaymentMethodChange}
                 >
-                  <option value="">Seleccionar método de depósito</option>
-                  <option value="bank">Bancos</option>
-                  <option value="platform">Plataformas</option>
-                  <option value="cash">Efectivo</option>
+                  <option value="">{Translation[language].option1}</option>
+                  <option value="bank">{Translation[language].option2}</option>
+                  <option value="platform">
+                    {Translation[language].option3}
+                  </option>
+                  <option value="cash">{Translation[language].option4}</option>
                 </select>
               </div>
 
@@ -356,22 +361,35 @@ const Depositar = () => {
                   <div className="instrucciones">
                     {bankInfo && (
                       <>
-                        <p>Account Name: {bankInfo.account_name}</p>
                         <p>
-                          Routing Number (ACH): {bankInfo.routing_number_ach}
+                          {Translation[language].text1} {bankInfo.account_name}
                         </p>
                         <p>
-                          Routing Number (Wire): {bankInfo.routing_number_wire}
+                          {Translation[language].text2}{" "}
+                          {bankInfo.routing_number_ach}
                         </p>
-                        <p>Bank Address: {bankInfo.bank_address}</p>
-                        <p>Account Number: {bankInfo.account_number}</p>
-                        <p>Ref: {bankInfo.ref}</p>
+                        <p>
+                          {Translation[language].text3}{" "}
+                          {bankInfo.routing_number_wire}
+                        </p>
+                        <p>
+                          {Translation[language].text4} {bankInfo.bank_address}
+                        </p>
+                        <p>
+                          {Translation[language].text5}{" "}
+                          {bankInfo.account_number}
+                        </p>
+                        <p>
+                          {Translation[language].text6} {bankInfo.ref}
+                        </p>
                       </>
                     )}
                   </div>
 
                   <div className="grupo-input monto">
-                    <label htmlFor="amount">Ingrese el monto a depositar</label>
+                    <label htmlFor="amount">
+                      {Translation[language].label2}
+                    </label>
                     <div className="input">
                       <span>$</span>
                       <input
@@ -381,13 +399,13 @@ const Depositar = () => {
                         value={amount}
                         onChange={handleAmountChange}
                       />
-                      <label htmlFor="">Min. 1 dólar</label>
+                      <label htmlFor="">Min. 1 USD</label>
                     </div>
                   </div>
 
                   <div className="grupo-input">
                     <label htmlFor="referenceNumber">
-                      Número de Referencia
+                      {Translation[language].label3}
                     </label>
                     <input
                       type="text"
@@ -399,7 +417,7 @@ const Depositar = () => {
                   </div>
 
                   <div className="grupo-input">
-                    <label htmlFor="">Cargar Comprobante de Pago</label>
+                    <label htmlFor="">{Translation[language].label4}</label>
 
                     <label htmlFor="paymentProof" className="file">
                       <UploadFileIcon />
@@ -420,14 +438,14 @@ const Depositar = () => {
                 <>
                   <div className="grupo-input">
                     <label htmlFor="selectedPlatform">
-                      Seleccione su medio de pago
+                      {Translation[language].label5}
                     </label>
                     <select
                       name="selectedPlatform"
                       id="selectedPlatform"
                       onChange={handlePlatformSelect}
                     >
-                      <option value="">Seleccionar plataforma</option>
+                      <option value="">{Translation[language].option5}</option>
                       {platforms.map((platform) => (
                         <option key={platform.id} value={platform.id}>
                           {platform.platformName}
@@ -442,7 +460,7 @@ const Depositar = () => {
                       {selectedPlatformInfo.platformType === "otra" ? (
                         // Si el tipo de plataforma es "otra", mostrar campos personalizados
                         <div className="plataforma">
-                          <p>Envía el dinero a la siguiente plataforma:</p>
+                          <p>{Translation[language].text7}</p>
                           <h3>{selectedPlatformInfo.platformName}</h3>
 
                           {selectedPlatformInfo.customFields && (
@@ -466,7 +484,7 @@ const Depositar = () => {
                       ) : (
                         // Si el tipo de plataforma no es "otra", mostrar nombre y valor del campo
                         <div className="plataforma">
-                          <p>Envía el dinero a la siguiente plataforma:</p>
+                          <p>{Translation[language].text8}</p>
                           <div className="grupo">
                             <h3>{selectedPlatformInfo.platformName}</h3>
                             <div>
@@ -481,7 +499,9 @@ const Depositar = () => {
                     </div>
                   )}
                   <div className="grupo-input monto">
-                    <label htmlFor="amount">Ingrese el monto a depositar</label>
+                    <label htmlFor="amount">
+                      {Translation[language].label6}
+                    </label>
                     <div className="input">
                       <span>$</span>
                       <input
@@ -491,13 +511,13 @@ const Depositar = () => {
                         value={amount}
                         onChange={handleAmountChange}
                       />
-                      <label htmlFor="">Min. 1 dólar</label>
+                      <label htmlFor="">Min. 1 USD</label>
                     </div>
                   </div>
 
                   <div className="grupo-input">
                     <label htmlFor="referenceNumber">
-                      Número de referencia
+                      {Translation[language].label7}
                     </label>
                     <input
                       type="text"
@@ -510,7 +530,7 @@ const Depositar = () => {
 
                   <div className="grupo-input">
                     <label htmlFor="platformSelected">
-                      Seleccione desde donde realizará el pago
+                      {Translation[language].label8}
                     </label>
                     <select
                       name="platformSelected"
@@ -518,7 +538,7 @@ const Depositar = () => {
                       value={platformSelected}
                       onChange={(e) => setPlatformSelected(e.target.value)}
                     >
-                      <option value="">Seleccionar plataforma</option>
+                      <option value="">{Translation[language].option6}</option>
 
                       {platformsUser.map((platformsUsers) => (
                         <option
@@ -532,7 +552,7 @@ const Depositar = () => {
                   </div>
 
                   <div className="grupo-input">
-                    <label htmlFor="">Cargar Comprobante de Pago</label>
+                    <label htmlFor="">{Translation[language].label9}</label>
 
                     <label htmlFor="paymentProof" className="file">
                       <UploadFileIcon />
@@ -552,7 +572,9 @@ const Depositar = () => {
               {paymentMethod === "cash" && (
                 <>
                   <div className="grupo-input monto">
-                    <label htmlFor="amount">Ingrese el monto a depositar</label>
+                    <label htmlFor="amount">
+                      {Translation[language].label10}
+                    </label>
                     <div className="input">
                       <span>$</span>
                       <input
@@ -562,7 +584,7 @@ const Depositar = () => {
                         value={amount}
                         onChange={handleAmountChange}
                       />
-                      <label htmlFor="">Min. 1 dólar</label>
+                      <label htmlFor="">Min. 1 USD</label>
                     </div>
                   </div>
                 </>
@@ -572,16 +594,13 @@ const Depositar = () => {
                 <input
                   className="btns"
                   type="submit"
-                  value="Enviar Solicitud"
+                  value={Translation[language].button}
                 />
               </div>
             </form>
           </div>
         ) : (
-          <p>
-            Debe verificar su cuenta antes de realizar un depósito. Puede
-            encontrar información sobre cómo hacerlo en Ajustes - Verificación.
-          </p>
+          <p>{Translation[language].text9}</p>
         )}
       </div>
     </div>

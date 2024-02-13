@@ -13,6 +13,7 @@ if (!isset($_SESSION['user_id'])) {
     echo json_encode(array("error" => "Usuario no autenticado."));
     exit();
 }
+$selectedLanguage = isset($_COOKIE['selectedLanguage']) ? $_COOKIE['selectedLanguage'] : 'es';
 
 $userId = $_SESSION['user_id'];
 
@@ -55,7 +56,16 @@ if ($stmtUserInfo->rowCount() > 0) {
         if ($stmtUpdatePicture->execute()) {
 
             // Agregar notificación
-            $notificationMessage = "Foto de perfil actualizada correctamente";
+           
+
+            if ($selectedLanguage == "en") {
+                $notificationMessage = "Correctly updated profile photo";
+            } elseif ($selectedLanguage == "pt") {
+                $notificationMessage = "Foto de perfil atualizada corretamente";
+            } else {
+                $notificationMessage = "Foto de perfil actualizada correctamente";
+            }
+
 
             // Insertar la notificación en la base de datos
             $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, content, status, type) VALUES (:userId, :content, 'unread', 'profile_update')";
@@ -68,7 +78,7 @@ if ($stmtUserInfo->rowCount() > 0) {
             include("../pusher.php");
 
             $data = [
-                'message' => "Foto de perfil actualizada correctamente",
+                'message' => $notificationMessage,
                 'status' => 'unread',
                 'type' => 'profile_update',
                 'user_id' => $userId
@@ -80,7 +90,7 @@ if ($stmtUserInfo->rowCount() > 0) {
             // Enviar notificación por correo electrónico
             $to = $userEmail;
             $subject = 'Nuovo - Foto de Perfil';
-            $message = 'Su foto de perfil ha sido actualizada correctamente';
+            $message = $notificationMessage;
 
             $headers = 'From: nuovo@gmail.com' . "\r\n" .
                 'Reply-To: nuovo@gmail.com' . "\r\n" .
@@ -94,10 +104,24 @@ if ($stmtUserInfo->rowCount() > 0) {
 
 
             http_response_code(200);
-            echo json_encode(array("message" => "Foto de perfil actualizada correctamente."));
+            echo json_encode(array("message" =>$notificationMessage));
+
+            
         } else {
-            http_response_code(500); // Internal Server Error
-            echo json_encode(array("error" => "Error al actualizar la foto de perfil en la base de datos."));
+
+
+            if ($selectedLanguage == "en") {
+                http_response_code(500); 
+                echo json_encode(array("error" => "Error while updating the profile photo in the database."));
+            } elseif ($selectedLanguage == "pt") {
+                http_response_code(500); 
+                echo json_encode(array("error" => "Erro ao atualizar a foto de perfil no banco de dados."));
+            } else {
+                http_response_code(500); 
+                echo json_encode(array("error" => "Error al actualizar la foto de perfil en la base de datos."));
+            }
+
+            
         }
     } else {
         http_response_code(500); // Internal Server Error

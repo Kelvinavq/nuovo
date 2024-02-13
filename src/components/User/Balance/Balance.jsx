@@ -1,9 +1,14 @@
 import "./Style.css";
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 
+import { LanguageContext } from "../../../Language/LanguageContext";
+import { Translation } from "./Translation";
+
 const Balance = () => {
+  const { language } = useContext(LanguageContext);
+
   const [showBalance, setShowBalance] = useState(true);
   const [balance, setBalance] = useState(null);
 
@@ -44,13 +49,13 @@ const Balance = () => {
     <div className="balance">
       <div className="balance">
         <div className="title">
-          <h2>Dashboard</h2>
+          <h2>{Translation[language].title}</h2>
         </div>
 
         <div className="card">
           <div className="content">
             <div className="text">
-              <p>Balance</p>
+              <p>{Translation[language].text1}</p>
               <button onClick={toggleBalanceVisibility}>
           <RemoveRedEyeOutlinedIcon />
         </button>
@@ -58,12 +63,12 @@ const Balance = () => {
 
             <div className="saldo">
               <span>
-                <strong>$</strong> {formatBalance(balance !== null ? balance : "Cargando...")} <small>USD</small>
+                <strong>$</strong> {formatBalance(balance !== null ? balance : Translation[language].text2)} <small>USD</small>
               </span>
             </div>
 
             <div className="enlace">
-              <Link to="/user/movimientos">Ver todos los movimientos</Link>
+              <Link to="/user/movimientos">{Translation[language].link}</Link>
             </div>
           </div>
         </div>

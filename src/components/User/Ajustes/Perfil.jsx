@@ -1,11 +1,17 @@
 import Saldo from "../Saldo/Saldo";
 import Enlaces from "./Enlaces";
 import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Swal from "sweetalert2";
 import Pusher from 'pusher-js';
 
+import { LanguageContext } from "../../../Language/LanguageContext";
+import { Translation } from "./Translation";
+
+
 const Perfil = () => {
+  const { language } = useContext(LanguageContext);
+
   const [userData, setUserData] = useState({});
   const [newProfilePicture, setNewProfilePicture] = useState(null);
 
@@ -35,7 +41,7 @@ const Perfil = () => {
       Swal.fire({
         title: "Error",
         icon: "error",
-        text: "Por favor, selecciona un archivo de imagen válido (png, jpg, jpeg).",
+        text: Translation[language].swalMessage1,
       });
       return;
     }
@@ -44,11 +50,11 @@ const Perfil = () => {
 
     // Mostrar la ventana de Swal al seleccionar una imagen
     Swal.fire({
-      title: "¿Estás seguro de actualizar tu foto de perfil?",
+      title: Translation[language].swalTitle1,
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "Sí, actualizar",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: Translation[language].swalButton1,
+      cancelButtonText:  Translation[language].swalButton2,
     }).then((result) => {
       if (result.isConfirmed) {
         // Crear un objeto FormData y agregar la nueva imagen
@@ -72,7 +78,7 @@ const Perfil = () => {
             // Restablecer el estado de la nueva imagen
             setNewProfilePicture(null);
 
-            Swal.fire("¡Foto de perfil actualizada!", "", "success");
+            Swal.fire( Translation[language].swalMessage2, "", "success");
             refreshPage();
           })
           .catch((error) =>
@@ -110,7 +116,7 @@ const Perfil = () => {
       <Saldo />
 
       <div className="content">
-        <h2>Ajustes</h2>
+        <h2>{Translation[language].title}</h2>
         {notifications.map((notification, index) => (
                     <li key={index}>{notification.message}</li>
                 ))}

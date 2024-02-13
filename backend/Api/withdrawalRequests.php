@@ -20,6 +20,8 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+$selectedLanguage = isset($_COOKIE['selectedLanguage']) ? $_COOKIE['selectedLanguage'] : 'es';
+
 $userName = $_SESSION['user_name'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -30,8 +32,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $selectedMethod = filter_var($data->selectedMethod, FILTER_SANITIZE_STRING);
     $amount = filter_var($data->amount, FILTER_SANITIZE_STRING);
     // Agregar notificación
-    $notificationMessage = "Solicitud de retiro enviada correctamente";
+    // $notificationMessage = "Solicitud de retiro enviada correctamente";
+    // $notificationMessageAdmin = "El usuario " . $userName . " Ha realizado una solicitud de retiro";
+
+    if ($selectedLanguage == "en") {
+        $notificationMessage = "Correctly submitted withdrawal request";
+    } elseif ($selectedLanguage == "pt") {
+        $notificationMessage = "Solicitação de retirada enviada corretamente";
+    } else {
+        $notificationMessage = "Solicitud de retiro enviada correctamente";
+    }
+
     $notificationMessageAdmin = "El usuario " . $userName . " Ha realizado una solicitud de retiro";
+
+
 
     // Limpiar y formatear el monto para convertirlo a valor numérico
     $amount = str_replace(',', '', $amount); // Eliminar comas
@@ -63,24 +77,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Verificar si el usuario destinatario está verificado
             if ($recipientData['status'] !== 'approved') {
-                http_response_code(400); // Bad Request
-                echo json_encode(array("error" => "El usuario destinatario no está verificado."));
-                exit();
+
+
+                if ($selectedLanguage == "en") {
+                    http_response_code(400); // Bad Request
+                    echo json_encode(array("error" => "The target user is not verified."));
+                    exit();
+                } elseif ($selectedLanguage == "pt") {
+                    http_response_code(400); // Bad Request
+                    echo json_encode(array("error" => "O usuário destinatário não foi verificado."));
+                    exit();
+                } else {
+                    http_response_code(400); // Bad Request
+                    echo json_encode(array("error" => "El usuario destinatario no está verificado."));
+                    exit();
+                }
             }
 
             // Validar si se está enviando al email del usuario actual
             if ($recipientEmail === $_SESSION['user_email']) {
                 http_response_code(400); // Bad Request
-                echo json_encode(array("error" => "No puedes transferirte a ti mismo."));
-                exit();
+
+                if ($selectedLanguage == "en") {
+                    echo json_encode(array("error" => "You can't transfer yourself."));
+                    exit();
+                } elseif ($selectedLanguage == "pt") {
+                    echo json_encode(array("error" => "Você não pode se transferir para si mesmo."));
+                    exit();
+                } else {
+                    echo json_encode(array("error" => "No puedes transferirte a ti mismo. "));
+                    exit();
+                }
             }
 
             $status = "approved";
             $notificationMessageAdmin = "El usuario " . $userName . " Ha realizado una transferencia a " . $recipientEmail;
         } else {
-            http_response_code(400); // Bad Request
-            echo json_encode(array("error" => "El usuario destinatario no está registrado o no se encuentra verificado."));
-            exit();
+
+
+            if ($selectedLanguage == "en") {
+                http_response_code(400); // Bad Request
+                echo json_encode(array("error" => "The target user is not registered or not verified."));
+                exit();
+            } elseif ($selectedLanguage == "pt") {
+                http_response_code(400); // Bad Request
+                echo json_encode(array("error" => "O usuário destinatário não está registrado ou não está verificado."));
+                exit();
+            } else {
+                http_response_code(400); // Bad Request
+                echo json_encode(array("error" => "El usuario destinatario no está registrado o no se encuentra verificado."));
+                exit();
+            }
         }
     }
 
@@ -100,16 +147,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Verificar si el usuario tiene fondos suficientes
         if ($senderBalance < $amount) {
             // Fondos insuficientes, devolver un mensaje de error
-            http_response_code(400); // Bad Request
-            echo json_encode(array("error" => "Fondos insuficientes para realizar la transacción."));
-            exit();
+
+            if ($selectedLanguage == "en") {
+                http_response_code(400);
+                echo json_encode(array("error" => "Insufficient funds to carry out the transaction."));
+                exit();
+            } elseif ($selectedLanguage == "pt") {
+                http_response_code(400);
+                echo json_encode(array("error" => "Fundos insuficientes para realizar a transação."));
+                exit();
+            } else {
+                http_response_code(400);
+                echo json_encode(array("error" => "Fondos insuficientes para realizar la transacción."));
+                exit();
+            }
         }
     } else {
         // Manejar el caso en que no se encuentre el saldo del usuario remitente
         // Devolver un mensaje de error
-        http_response_code(500); // Internal Server Error
-        echo json_encode(array("error" => "Error al procesar la solicitud de retiro. No se encontró el saldo del usuario remitente."));
-        exit();
+
+
+        if ($selectedLanguage == "en") {
+            http_response_code(500);
+            echo json_encode(array("error" => "Error processing withdrawal request. The sending user's balance was not found."));
+            exit();
+        } elseif ($selectedLanguage == "pt") {
+            http_response_code(500);
+            echo json_encode(array("error" => "Erro ao processar o pedido de retirada. Não foi encontrado o saldo do usuário remetente."));
+            exit();
+        } else {
+            http_response_code(500);
+            echo json_encode(array("error" => "Error al procesar la solicitud de retiro. No se encontró el saldo del usuario remitente."));
+            exit();
+        }
     }
 
     // Restar el monto del retiro al saldo del usuario remitente
@@ -153,7 +223,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmtWithdrawal->bindParam(':recipient_user_id', $recipientUserId, PDO::PARAM_STR);
 
             // Agregar notificación
-            $notificationMessage = "La transferencia se ha realizado correctamente";
+
+
+            if ($selectedLanguage == "en") {
+                $notificationMessage = "The transfer has been performed correctly";
+            } elseif ($selectedLanguage == "pt") {
+                $notificationMessage = "A transferência foi realizada corretamente";
+            } else {
+                $notificationMessage = "La transferencia se ha realizado correctamente";
+            }
         } else if ($selectedMethod === 'transferencia_nacional' && isset($data->methodArg)) {
 
 
@@ -258,7 +336,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmtWithdrawal->bindParam(':address_bank_eu', $addressBankEu, PDO::PARAM_STR);
                 $stmtWithdrawal->bindParam(':account_number_eu', $accountNumberEu, PDO::PARAM_STR);
                 $stmtWithdrawal->bindParam(':sort_code_eu', $sortCodeEu, PDO::PARAM_STR);
-
             } else if ($selectedRegion === 'usa') {
 
                 $nameBank = filter_var($data->nameBank, FILTER_SANITIZE_STRING);
@@ -352,8 +429,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (mail($toUser, $subjectUser, $messageUser, $headersUser)) {
             } else {
-                http_response_code(500);
-                echo json_encode(array("error" => "Error al enviar correo electronico"));
+
+                if ($selectedLanguage == "en") {
+                    http_response_code(500);
+                    echo json_encode(array("error" => "Error sending email"));
+                } elseif ($selectedLanguage == "pt") {
+                    http_response_code(500);
+                    echo json_encode(array("error" => "Erro ao enviar e-mail"));
+                } else {
+                    http_response_code(500);
+                    echo json_encode(array("error" => "Error al enviar correo electronico"));
+                }
             }
 
             // admin
@@ -367,21 +453,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (mail($toAdmin, $subjectAdmin, $messageAdmin, $headersAdmin)) {
             } else {
-                http_response_code(500);
-                echo json_encode(array("error" => "Error al enviar correo electronico"));
+                if ($selectedLanguage == "en") {
+                    http_response_code(500);
+                    echo json_encode(array("error" => "Error sending email"));
+                } elseif ($selectedLanguage == "pt") {
+                    http_response_code(500);
+                    echo json_encode(array("error" => "Erro ao enviar e-mail"));
+                } else {
+                    http_response_code(500);
+                    echo json_encode(array("error" => "Error al enviar correo electronico"));
+                }
             }
 
             // Confirmar la transacción
             $conexion->commit();
 
-            http_response_code(201); // Created
-            echo json_encode(array("message" => "Solicitud de retiro enviada con éxito."));
+
+
+            if ($selectedLanguage == "en") {
+                http_response_code(201);
+                echo json_encode(array("message" => "Withdrawal request successfully submitted."));
+            } elseif ($selectedLanguage == "pt") {
+                http_response_code(201);
+                echo json_encode(array("message" => "Pedido de retirada enviado com êxito."));
+            } else {
+                http_response_code(201);
+                echo json_encode(array("message" => "Solicitud de retiro enviada con éxito."));
+            }
         } else {
             // Revertir la transacción en caso de error
             $conexion->rollBack();
             error_log($e->getMessage());
-            http_response_code(500); // Internal Server Error
-            echo json_encode(array("error" => "Error al procesar la solicitud de retiro.", "details" => $e->getMessage()));
+
+
+
+            if ($selectedLanguage == "en") {
+                http_response_code(500);
+                echo json_encode(array("error" => "Error processing withdrawal request.", "details" => $e->getMessage()));
+            } elseif ($selectedLanguage == "pt") {
+                http_response_code(500);
+                echo json_encode(array("error" => "Erro ao processar o pedido de retirada.", "details" => $e->getMessage()));
+            } else {
+                http_response_code(500);
+                echo json_encode(array("error" => "Error al procesar la solicitud de retiro.", "details" => $e->getMessage()));
+            }
         }
 
 
@@ -411,8 +526,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Revertir la transacción en caso de error
         $conexion->rollBack();
         error_log($e->getMessage());
-        http_response_code(500); // Internal Server Error
-        echo json_encode(array("error" => "Error al procesar la solicitud de retiro.", "details" => $e->getMessage()));
+ 
+
+        if ($selectedLanguage == "en") {
+            http_response_code(500); 
+            echo json_encode(array("error" => "Error processing withdrawal request.", "details" => $e->getMessage()));
+        } elseif ($selectedLanguage == "pt") {
+            http_response_code(500); 
+            echo json_encode(array("error" => "Erro ao processar o pedido de retirada.", "details" => $e->getMessage()));
+        } else {
+            http_response_code(500); 
+            echo json_encode(array("error" => "Error al procesar la solicitud de retiro.", "details" => $e->getMessage()));
+        }
     }
 }
 

@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useContext} from "react";
 import "./Style.css";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import HorizontalRuleOutlinedIcon from '@mui/icons-material/HorizontalRuleOutlined';
 
+import { LanguageContext } from "../../../Language/LanguageContext";
+import { Translation } from "./Translation";
+
 const Recents = () => {
+  const { language } = useContext(LanguageContext);
+
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
@@ -32,7 +37,7 @@ const Recents = () => {
   return (
     <div className="recents">
       <div className="title">
-        <h2>Transacciones Recientes</h2>
+        <h2>{Translation[language].title}</h2>
       </div>
 
  {transactions.map((transaction, index) => (
@@ -48,7 +53,7 @@ const Recents = () => {
               </div>
 
               <div className="detalle">
-                <span>{transaction.type === 'deposit' ? 'Depositar Fondos -' + " " + transaction.platform_type : 'Retirar Fondos'}</span>
+                <span>{transaction.type === 'deposit' ? Translation[language].transaction1 + " - " + transaction.platform_type : Translation[language].transaction2}</span>
                 <small>{transaction.transaction_time}</small>
               </div>
             </div>
@@ -57,7 +62,7 @@ const Recents = () => {
                 <span>
                   {transaction.amount} <small>USD</small>
                 </span>
-                <p className={transaction.status === 'completed' ? 'completed' : 'pending'}>{transaction.status === 'completed' ? 'Completada' : 'Pendiente'}</p>
+                <p className={transaction.status === 'completed' ? 'completed' : 'pending'}>{transaction.status === 'completed' ? Translation[language].status1 : Translation[language].status2}</p>
               </div>
             </div>
           </div>

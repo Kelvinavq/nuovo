@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Swal from "sweetalert2";
 import Enlaces from "./Enlaces";
 import Saldo from "../Saldo/Saldo";
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 
+import { LanguageContext } from "../../../Language/LanguageContext";
+import { Translation } from "./Translation";
+
+
 const Seguridad = () => {
+  const { language } = useContext(LanguageContext);
+
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -34,7 +40,7 @@ const Seguridad = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Las contraseñas deben tener al menos 8 caracteres",
+        text: Translation[language].swalMessage6,
       });
       return;
     }
@@ -44,7 +50,7 @@ const Seguridad = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Las contraseñas nuevas no coinciden",
+        text: Translation[language].swalMessage7,
       });
       return;
     }
@@ -69,15 +75,15 @@ const Seguridad = () => {
       const data = await response.json();
 
       if (response.ok) {
-        console.log(data);
+        // console.log(data);
         // Procesar la respuesta exitosa
         Swal.fire({
           icon: "success",
           title: "Éxito",
-          text: data.message,
+          text: Translation[language].swalMessage8,
           timer: 5000,
           didClose: () => {
-            // window.location.reload();
+            window.location.reload();
           },
         });
 
@@ -86,11 +92,11 @@ const Seguridad = () => {
           // Puedes personalizar la notificación según tus necesidades
           Swal.fire({
             icon: "success",
-            title: "Contraseña actualizada",
-            text: "Tu contraseña ha sido actualizada con éxito.",
+            title: Translation[language].swalMessage9,
+            text: Translation[language].swalMessage8,
             timer: 5000,
             didClose: () => {
-              // window.location.reload();
+              window.location.reload();
             },
           });
         }
@@ -101,7 +107,7 @@ const Seguridad = () => {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: data.error || "Hubo un error al actualizar la contraseña",
+          text: Translation[language].swalMessage10,
         });
       }
     } catch (error) {
@@ -109,7 +115,7 @@ const Seguridad = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Error inesperado al actualizar la contraseña",
+        text: Translation[language].swalMessage11,
       });
     }
   };
@@ -118,11 +124,11 @@ const Seguridad = () => {
     <div className="ajustes_seguridad">
       <Saldo />
       <div className="content">
-        <h2>Ajustes</h2>
+        <h2>{Translation[language].titleSeguridad}</h2>
         <Enlaces />
         <div className="text">
-          <p>Actualización de contraseña</p>
-          <button onClick={openPasswordModal}>Actualizar contraseña</button>
+          <p>{Translation[language].text10}</p>
+          <button onClick={openPasswordModal}>{Translation[language].button2}</button>
         </div>
       </div>
       {isModalOpen && (
@@ -132,18 +138,17 @@ const Seguridad = () => {
             <div className="message">
               <div className="icon">
                 <ErrorOutlineOutlinedIcon />
-                <span>Proteja su cuenta</span>
+                <span>{Translation[language].span4}</span>
               </div>
 
               <div className="text">
                 <p>
-                  Nunca utilice una contraseña utilizada anteriormente o una
-                  contraseña que utiliza en otro servicio
+                {Translation[language].text11}
                 </p>
               </div>
             </div>
             <div className="grupo-input">
-              <label htmlFor="currentPassword">Contraseña Actual:</label>
+              <label htmlFor="currentPassword">{Translation[language].label4}</label>
               <input
                 type="password"
                 id="currentPassword"
@@ -152,7 +157,7 @@ const Seguridad = () => {
               />
             </div>
             <div className="grupo-input">
-              <label htmlFor="newPassword">Nueva Contraseña:</label>
+              <label htmlFor="newPassword">{Translation[language].label5}</label>
               <input
                 type="password"
                 id="newPassword"
@@ -161,7 +166,7 @@ const Seguridad = () => {
               />
             </div>
             <div className="grupo-input">
-              <label htmlFor="confirmPassword">Confirmar Contraseña:</label>
+              <label htmlFor="confirmPassword">{Translation[language].label6}</label>
               <input
                 type="password"
                 id="confirmPassword"
@@ -170,8 +175,8 @@ const Seguridad = () => {
               />
             </div>
             <div className="button-group">
-              <button onClick={handleUpdatePassword}>Actualizar</button>
-              <button onClick={closePasswordModal}>Cancelar</button>
+              <button onClick={handleUpdatePassword}>{Translation[language].button3}</button>
+              <button onClick={closePasswordModal}>{Translation[language].button4}</button>
             </div>
           </div>
         </div>

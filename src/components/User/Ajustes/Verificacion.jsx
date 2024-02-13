@@ -1,7 +1,7 @@
 import Saldo from "../Saldo/Saldo";
 import Enlaces from "./Enlaces";
 import "./Style.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect , useContext} from "react";
 
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import DangerousOutlinedIcon from "@mui/icons-material/DangerousOutlined";
@@ -12,9 +12,15 @@ import ImgSelfie from "../../../assets/images/selfie.jpg";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
+import { LanguageContext } from "../../../Language/LanguageContext";
+import { Translation } from "./Translation";
+
 const MySwal = withReactContent(Swal);
 
 const Verificacion = () => {
+  const { language } = useContext(LanguageContext);
+
+
   const openModal = (modalConfig) => {
     MySwal.fire({
       text: modalConfig.text,
@@ -136,7 +142,7 @@ const Verificacion = () => {
       <Saldo />
 
       <div className="content">
-        <h2>Verificación de Identidad</h2>
+        <h2>{Translation[language].titleVerificacion}</h2>
 
         <Enlaces />
 
@@ -144,13 +150,12 @@ const Verificacion = () => {
           <div className={`estatus active ${verificationStatus}`}>
             <div className="danger">
               <DangerousOutlinedIcon />
-              <span>Su cuenta está en proceso de verificación</span>
+              <span>{Translation[language].span1}</span>
             </div>
 
             <div className="text">
               <p>
-                La solicitud de verificación de su cuenta está en proceso. Le
-                notificaremos una vez se complete.
+              {Translation[language].text1}
               </p>
             </div>
           </div>
@@ -159,7 +164,7 @@ const Verificacion = () => {
         {verificationStatus === "approved" && (
           <div className="verificado active ">
             <VerifiedIcon />
-            <p>SU CUENTA ESTÁ VERIFICADA.</p>
+            <p>{Translation[language].text2}</p>
           </div>
         )}
 
@@ -167,19 +172,17 @@ const Verificacion = () => {
           <div className="estatus active">
             <div className="danger">
               <DangerousOutlinedIcon />
-              <span>Su solicitud de verificación ha sido denegada</span>
+              <span>{Translation[language].span2}</span>
             </div>
 
             <div className="text">
               <p>
-                Lamentablemente, su solicitud de verificación ha sido denegada.
-                Si tiene alguna pregunta, no dude en contactarnos.
+              {Translation[language].text3}
               </p>
-              <p>El motivo por el cual su solicitud ha sido denegada es:</p>
+              <p>{Translation[language].text4}</p>
               <p>{content}</p>
               <p>
-                Por favor, verifique y suba ambas fotografias nuevamente
-                siguiendo las instrucciones correspondientes
+              {Translation[language].text5}
               </p>
             </div>
             <div className="fotosVerificacion">
@@ -190,12 +193,12 @@ const Verificacion = () => {
                     htmlFor="selfie"
                     onClick={() =>
                       openModal({
-                        text: "Por favor, asegúrate de que la foto del selfie sea clara y legible. Todos los detalles, incluyendo el rostro y cualquier información adicional requerida, deben ser fácilmente distinguibles. Evita sombras, desenfoques o reflejos que puedan afectar la calidad de la imagen.",
+                        text: Translation[language].swalMessage3,
                         imageUrl: ImgSelfie,
                       })
                     }
                   >
-                    Subir Foto Selfie
+                    {Translation[language].label1}
                   </label>
                   <input
                     type="file"
@@ -214,12 +217,12 @@ const Verificacion = () => {
                     htmlFor="dni"
                     onClick={() =>
                       openModal({
-                        text: "Por favor, asegúrate de que la foto del DNI sea clara y legible. Todos los detalles, incluyendo el nombre, la fecha de nacimiento y la fotografía, deben ser fácilmente distinguibles. Evita sombras, desenfoques o reflejos que puedan afectar la calidad de la imagen.",
+                        text: Translation[language].swalMessage4,
                         imageUrl: imgDni,
                       })
                     }
                   >
-                    Subir Foto DNI
+                    {Translation[language].label2}
                   </label>
                   <input
                     type="file"
@@ -238,12 +241,12 @@ const Verificacion = () => {
                     htmlFor="dniBack"
                     onClick={() =>
                       openModal({
-                        text: "Por favor, asegúrate de que la foto del dorso del DNI sea clara y legible. Todos los detalles deben ser fácilmente distinguibles. Evita sombras, desenfoques o reflejos que puedan afectar la calidad de la imagen.",
+                        text: Translation[language].swalMessage5,
                         imageUrl: imgDni,
                       })
                     }
                   >
-                    Subir Foto Dorso DNI
+                   {Translation[language].label3}
                   </label>
                   <input
                     type="file"
@@ -257,7 +260,7 @@ const Verificacion = () => {
 
               {dniFront && dniBack && dniSelfie && (
                 <button className="btnVerificacion" onClick={handleUpload}>
-                  Enviar Verificación
+                  {Translation[language].button1}
                 </button>
               )}
 
@@ -265,7 +268,7 @@ const Verificacion = () => {
                 <div className="previews">
                   {dniFront && (
                     <div className="preview">
-                      <p>Previsualización del Selfie con el DNI:</p>
+                      <p>{Translation[language].text6}</p>
                       <img
                         src={URL.createObjectURL(dniFront)}
                         alt="DNI Preview"
@@ -275,7 +278,7 @@ const Verificacion = () => {
               
                   {dniSelfie && (
                     <div className="preview">
-                      <p>Previsualización del DNI:</p>
+                      <p>{Translation[language].text7}</p>
                       <img
                         src={URL.createObjectURL(dniSelfie)}
                         alt="Selfie Preview"
@@ -284,7 +287,7 @@ const Verificacion = () => {
                   )}
                       {dniBack && (
                     <div className="preview">
-                      <p>Previsualización del Dorso del DNI:</p>
+                      <p>{Translation[language].text8}</p>
                       <img
                         src={URL.createObjectURL(dniBack)}
                         alt="DNI Back Preview"
@@ -301,13 +304,12 @@ const Verificacion = () => {
           <div className="estatus active">
             <div className="danger">
               <DangerousOutlinedIcon />
-              <span>Su cuenta no se encuentra verificada</span>
+              <span>{Translation[language].span3}</span>
             </div>
 
             <div className="text">
               <p>
-                Para verificar su cuenta debe subir una foto de su documento de
-                identidad legible y una foto selfie con el mismo.
+              {Translation[language].text9}
                 <ErrorOutlineOutlinedIcon />
               </p>
             </div>
@@ -320,12 +322,12 @@ const Verificacion = () => {
                     htmlFor="selfie"
                     onClick={() =>
                       openModal({
-                        text: "Por favor, asegúrate de que la foto del selfie sea clara y legible. Todos los detalles, incluyendo el rostro y cualquier información adicional requerida, deben ser fácilmente distinguibles. Evita sombras, desenfoques o reflejos que puedan afectar la calidad de la imagen.",
+                        text: Translation[language].swalMessage3,
                         imageUrl: ImgSelfie,
                       })
                     }
                   >
-                    Subir Foto Selfie
+                     {Translation[language].label1}
                   </label>
                   <input
                     type="file"
@@ -344,12 +346,12 @@ const Verificacion = () => {
                     htmlFor="dni"
                     onClick={() =>
                       openModal({
-                        text: "Por favor, asegúrate de que la foto del DNI sea clara y legible. Todos los detalles, incluyendo el nombre, la fecha de nacimiento y la fotografía, deben ser fácilmente distinguibles. Evita sombras, desenfoques o reflejos que puedan afectar la calidad de la imagen.",
+                        text: Translation[language].swalMessage4,
                         imageUrl: imgDni,
                       })
                     }
                   >
-                    Subir Foto DNI
+                    {Translation[language].label2}
                   </label>
                   <input
                     type="file"
@@ -368,12 +370,12 @@ const Verificacion = () => {
                     htmlFor="dniBack"
                     onClick={() =>
                       openModal({
-                        text: "Por favor, asegúrate de que la foto del dorso del DNI sea clara y legible. Todos los detalles deben ser fácilmente distinguibles. Evita sombras, desenfoques o reflejos que puedan afectar la calidad de la imagen.",
+                        text: Translation[language].swalMessage5,
                         imageUrl: imgDni,
                       })
                     }
                   >
-                    Subir Foto Dorso DNI
+                   {Translation[language].label3}
                   </label>
                   <input
                     type="file"
@@ -387,7 +389,7 @@ const Verificacion = () => {
 
               {dniFront && dniBack && dniSelfie && (
                 <button className="btnVerificacion" onClick={handleUpload}>
-                  Enviar Verificación
+                  {Translation[language].button1}
                 </button>
               )}
 
@@ -395,7 +397,7 @@ const Verificacion = () => {
                 <div className="previews">
                   {dniFront && (
                     <div className="preview">
-                      <p>Previsualización del Selfie con el DNI:</p>
+                      <p>{Translation[language].text6}</p>
                       <img
                         src={URL.createObjectURL(dniFront)}
                         alt="DNI Preview"
@@ -405,7 +407,7 @@ const Verificacion = () => {
               
                   {dniSelfie && (
                     <div className="preview">
-                      <p>Previsualización del DNI:</p>
+                      <p>{Translation[language].text7}</p>
                       <img
                         src={URL.createObjectURL(dniSelfie)}
                         alt="Selfie Preview"
@@ -414,7 +416,7 @@ const Verificacion = () => {
                   )}
                       {dniBack && (
                     <div className="preview">
-                      <p>Previsualización del Dorso del DNI:</p>
+                      <p>{Translation[language].text8}</p>
                       <img
                         src={URL.createObjectURL(dniBack)}
                         alt="DNI Back Preview"

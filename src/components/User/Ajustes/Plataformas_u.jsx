@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./Style.css";
 import Swal from "sweetalert2";
 import Enlaces from "./Enlaces";
 
+import { LanguageContext } from "../../../Language/LanguageContext";
+import { Translation } from "./Translation";
+
 const Plataformas_u = () => {
+  const { language } = useContext(LanguageContext);
+
   const [selectedPlatform, setSelectedPlatform] = useState("");
   const [email, setEmail] = useState("");
   const [customFields, setCustomFields] = useState([]);
@@ -59,7 +64,7 @@ const Plataformas_u = () => {
           Swal.fire({
             icon: "error",
             title: "Error",
-            text: "Por favor, complete todos los campos requeridos.",
+            text: Translation[language].swalMessage12,
           });
           return;
         }
@@ -87,7 +92,7 @@ const Plataformas_u = () => {
           Swal.fire({
             icon: "success",
             title: "Éxito",
-            text: data.message,
+            text: Translation[language].swalMessage13,
             didClose: () => {
               window.location.reload();
             },
@@ -97,7 +102,7 @@ const Plataformas_u = () => {
           Swal.fire({
             icon: "error",
             title: "Error",
-            text: data.error,
+            text: Translation[language].swalMessage14,
           });
           console.error("Error al crear plataforma 'otra':", data.error);
         }
@@ -112,7 +117,7 @@ const Plataformas_u = () => {
             Swal.fire({
               icon: "error",
               title: "Error",
-              text: "Por favor, complete el campo de correo electrónico.",
+              text: Translation[language].swalMessage15,
             });
             return;
           }
@@ -142,7 +147,7 @@ const Plataformas_u = () => {
           Swal.fire({
             icon: "success",
             title: "Éxito",
-            text: data.message,
+            text: Translation[language].swalMessage13,
             didClose: () => {
               window.location.reload();
             },
@@ -152,7 +157,7 @@ const Plataformas_u = () => {
           Swal.fire({
             icon: "error",
             title: "Error",
-            text: data.error,
+            text: Translation[language].swalMessage14,
           });
           console.error("Error al crear plataforma:", data.error);
         }
@@ -161,7 +166,7 @@ const Plataformas_u = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Error al procesar la solicitud.",
+        text: Translation[language].swalMessage16,
       });
       console.error("Error al procesar la solicitud:", error.message);
     }
@@ -231,16 +236,16 @@ const Plataformas_u = () => {
     }
 
     Swal.fire({
-      title: "Editar Plataforma",
+      title: Translation[language].swalTitle2,
       html: `
       ${
         platform.platformType === "otra"
           ? `
           <div class="custom-field">
-          <label>Nombre de la plataforma</label>
+          <label>${Translation[language].label10}</label>
             <input type="text" id="platformName" value="${
               platform.platformName
-            }" class="swal2-input" placeholder="Nombre de la plataforma" required>
+            }" class="swal2-input" placeholder=${Translation[language].label10} required>
           </div>
           
         ${customFields
@@ -248,10 +253,10 @@ const Plataformas_u = () => {
             (field, index) => `
             <div class="custom-field">
             <label>Campo ${field.fieldName}</label>
-              <input type="text" class="swal2-input" placeholder="Nombre del campo" id="swal2-input-${index}" value="${field.fieldName}" required>
+              <input type="text" class="swal2-input" placeholder=${Translation[language].place2} id="swal2-input-${index}" value="${field.fieldName}" required>
 
             <label>Valor ${field.fieldName}</label>
-              <input type="text" class="swal2-input" placeholder="Valor del campo" id="swal2-value-${index}" value="${field.fieldValue}" required>
+              <input type="text" class="swal2-input" placeholder=${Translation[language].place3}id="swal2-value-${index}" value="${field.fieldValue}" required>
             </div>
             
           `
@@ -259,25 +264,25 @@ const Plataformas_u = () => {
           .join("")}
       `
           : `
-          <label htmlFor="platformName">Nombre de la plataforma</label>
+          <label htmlFor="platformName">${Translation[language].label10}</label>
           <br>
           <br>
-          <input type="text" id="platformName" value="${platform.platformName}" class="swal2-input" placeholder="Nombre de la plataforma" required>
+          <input type="text" id="platformName" value="${platform.platformName}" class="swal2-input" placeholder=${Translation[language].label10} required>
           <br>
           <br>
-          <label htmlFor="platformEmail">Email</label>
+          <label htmlFor="platformEmail">${Translation[language].label11}</label>
           <br>
           <br>
-          <input type="text" id="platformEmail" value="${platform.email}" class="swal2-input" placeholder="Valor" required>
+          <input type="text" id="platformEmail" value="${platform.email}" class="swal2-input" placeholder=${Translation[language].label11} required>
       `
       }
     `,
       focusConfirm: false,
       showCancelButton: true,
       showDenyButton: true,
-      confirmButtonText: "Guardar",
-      cancelButtonText: "Cancelar",
-      denyButtonText: `Eliminar`,
+      confirmButtonText: Translation[language].button11,
+      cancelButtonText: Translation[language].button12,
+      denyButtonText: Translation[language].button13,
       customClass: "swalPlataforma",
       preConfirm: () => {
         // Lógica para obtener los nuevos valores de la plataforma
@@ -326,7 +331,7 @@ const Plataformas_u = () => {
 
           if (response.ok) {
             Swal.fire({
-              title: "Plataforma eliminada con éxito",
+              title: Translation[language].swalTitle3,
               icon: "success",
               timer: 2000,
             });
@@ -336,8 +341,8 @@ const Plataformas_u = () => {
             );
           } else {
             Swal.fire({
-              title: "Error al eliminar la plataforma",
-              text: "Recargue la página e intente nuevamente",
+              title: Translation[language].swalTitle4,
+              text: Translation[language].swalMessage17,
               icon: "error",
               timer: 2000,
             });
@@ -348,8 +353,8 @@ const Plataformas_u = () => {
           }
         } catch (error) {
           Swal.fire({
-            title: "Error al eliminar la plataforma",
-            text: "Recargue la página e intente nuevamente",
+            title: Translation[language].swalTitle4,
+              text: Translation[language].swalMessage17,
             icon: "error",
             timer: 2000,
           });
@@ -374,7 +379,7 @@ const Plataformas_u = () => {
 
           if (response.ok) {
             Swal.fire({
-              title: "Plataforma actualizada con éxito",
+              title: Translation[language].swalMessage18,
               icon: "success",
               timer: 2000,
               didClose: () => {
@@ -383,8 +388,8 @@ const Plataformas_u = () => {
             });
           } else {
             Swal.fire({
-              title: "Error al actualizar la plataforma",
-              text: "Recargue la página e intente nuevamente",
+              title: Translation[language].swalTitle5,
+              text: Translation[language].swalMessage17,
               icon: "error",
               timer: 2000,
             });
@@ -395,8 +400,8 @@ const Plataformas_u = () => {
           }
         } catch (error) {
           Swal.fire({
-            title: "Error al actualizar la plataforma",
-            text: "Recargue la página e intente nuevamente",
+            title: Translation[language].swalTitle5,
+            text: Translation[language].swalMessage17,
             icon: "error",
             timer: 2000,
           });
@@ -408,11 +413,12 @@ const Plataformas_u = () => {
 
   return (
     <div>
+      {/* {Translation[language].titleSeguridad} */}
       <div className="content">
         <div className="title">
-          <h2>Plataformas</h2>
+          <h2>{Translation[language].titlePlatforms}</h2>
           <button className="btns" onClick={showPlatformModal}>
-            Agregar nueva plataforma
+          {Translation[language].button5}
           </button>
         </div>
 
@@ -422,19 +428,19 @@ const Plataformas_u = () => {
             <span className="close" onClick={closeModal}>
               &times;
             </span>
-            <h2>Seleccione una plataforma</h2>
+            <h2>{Translation[language].h2}</h2>
 
             <div className="grupo-input">
-              <label htmlFor="">Seleccione una opcion</label>
+              <label htmlFor="">{Translation[language].label7}</label>
               <select
                 className="swal2-input"
                 onChange={(e) => handlePlatformSelect(e.target.value)}
               >
-                <option value="">Seleccione una plataforma</option>
-                <option value="paypal">PayPal</option>
-                <option value="skrill">Skrill</option>
-                <option value="wise">Wise</option>
-                <option value="otra">Otra</option>
+                <option value="">{Translation[language].option1}</option>
+                <option value="paypal">{Translation[language].option2}</option>
+                <option value="skrill">{Translation[language].option3}</option>
+                <option value="wise">{Translation[language].option4}</option>
+                <option value="otra">{Translation[language].option5}</option>
               </select>
             </div>
           </div>
@@ -446,21 +452,21 @@ const Plataformas_u = () => {
             <span className="close" onClick={closeModal}>
               &times;
             </span>
-            <h2>Agregar nueva plataforma</h2>
+            <h2>{Translation[language].h22}</h2>
 
             <div className="grupo-input">
-              <label>Ingrese el correo electrónico de {selectedPlatform}</label>
+              <label>{Translation[language].label8}</label>
               <input
                 className="swal2-input"
                 type="email"
-                placeholder={`Correo electrónico de ${selectedPlatform}`}
+                placeholder={`${Translation[language].place1}  ${selectedPlatform}`}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
             <button className="btns" onClick={handleSavePlatform}>
-              Guardar
+            {Translation[language].button6}
             </button>
           </div>
         </div>
@@ -472,22 +478,22 @@ const Plataformas_u = () => {
               &times;
             </span>
 
-            <h2>Agregar nueva plataforma personalizada</h2>
-            <p>Ingrese hasta 10 campos personalizados</p>
+            <h2>{Translation[language].h23}</h2>
+            <p>{Translation[language].text12}</p>
 
             <div className="grupo-input">
-              <label htmlFor="">Nombre de la plataforma</label>
+              <label htmlFor="">{Translation[language].label9}</label>
               <input
                 className="swal2-input"
                 type="text"
-                placeholder="Nombre de la plataforma"
+                placeholder={Translation[language].label9}
                 value={platformName}
                 onChange={(e) => setPlatformName(e.target.value)}
               />
             </div>
 
             {customFields.length > 0 && (
-              <h4>Ingrese el nombre del campo y el valor que desee añadirle</h4>
+              <h4>{Translation[language].h4}</h4>
             )}
 
             {/* Fin del nuevo input */}
@@ -497,7 +503,7 @@ const Plataformas_u = () => {
                   <input
                     className="swal2-input"
                     type="text"
-                    placeholder="Nombre del campo"
+                    placeholder={Translation[language].input1}
                     value={field.name}
                     onChange={(e) =>
                       handleFieldChange(index, "name", e.target.value)
@@ -506,7 +512,7 @@ const Plataformas_u = () => {
                   <input
                     className="swal2-input"
                     type="text"
-                    placeholder="Valor del campo"
+                    placeholder={Translation[language].input2}
                     value={field.value}
                     onChange={(e) =>
                       handleFieldChange(index, "value", e.target.value)
@@ -516,7 +522,7 @@ const Plataformas_u = () => {
                     className="eliminar"
                     onClick={() => handleDeleteField(index)}
                   >
-                    Eliminar
+                    {Translation[language].button7}
                   </button>
                 </div>
               </div>
@@ -525,11 +531,11 @@ const Plataformas_u = () => {
             <div className="buttons">
               {customFields.length < 10 && (
                 <button className="btns agregar" onClick={handleAddField}>
-                  Agregar campo
+                  {Translation[language].button8}
                 </button>
               )}
               <button className="btns" onClick={handleSavePlatform}>
-                Guardar
+              {Translation[language].button9}
               </button>
             </div>
           </div>
@@ -537,7 +543,7 @@ const Plataformas_u = () => {
 
         <Enlaces />
 
-        <h3>Lista de Plataformas</h3>
+        <h3>{Translation[language].h3}</h3>
 
         <div className="lista_plataformas">
           {platforms.map((platform) => (
@@ -547,7 +553,7 @@ const Plataformas_u = () => {
                 <div className="plataforma">
                   <div className="platformName">
                     <span>{platform.platformName}</span>
-                    <p>Plataforma con campos personalizados</p>
+                    <p>{Translation[language].text13}</p>
 
                     {/* {Object.entries(platform.customFields).map(
                     ([name, value]) => (
@@ -562,7 +568,7 @@ const Plataformas_u = () => {
                     className="btns"
                     onClick={() => handleEditPlatform(platform)}
                   >
-                    Editar
+                    {Translation[language].button10}
                   </button>
                 </div>
               ) : (
@@ -570,13 +576,13 @@ const Plataformas_u = () => {
                 <div className="plataforma">
                   <div className="platformName">
                     <span>{platform.platformName}</span>
-                    <p>Plataforma normal</p>
+                    <p>{Translation[language].text14}</p>
                   </div>
                   <button
                     className="btns"
                     onClick={() => handleEditPlatform(platform)}
                   >
-                    Editar
+                    {Translation[language].button10}
                   </button>
                 </div>
               )}

@@ -20,6 +20,8 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+$selectedLanguage = isset($_COOKIE['selectedLanguage']) ? $_COOKIE['selectedLanguage'] : 'es';
+
 $userName = $_SESSION['user_name'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -116,8 +118,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($stmtTransaction->execute()) {
             // Agregar notificación
-            $notificationMessage = "Solictud de depósito enviada correctamente";
             $notificationMessageAdmin = "El usuario " . $userName . " ha realizado una solicitud de depósito.";
+
+            if ($selectedLanguage == "en") {
+                $notificationMessage = "Correctly submitted deposit request";
+            } elseif ($selectedLanguage == "pt") {
+                $notificationMessage = "Solicitação de depósito enviada corretamente";
+            } else {
+                $notificationMessage = "Solictud de depósito enviada correctamente";
+            }
 
             // Insertar la notificación en la base de datos
             $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, content, status, type, admin_message, status_admin) VALUES (:userId, :content, 'unread', 'withdrawal_request', :admin_message, 'unread')";
@@ -132,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             include("../emailConfig.php");
 
             $data = [
-                'message' => "Solictud de depósito enviada correctamente",
+                'message' => $notificationMessage,
                 'status' => 'unread',
                 'type' => 'deposit_request',
                 'user_id' => $userId
@@ -143,8 +152,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Enviar notificación por correo electrónico
             $to = $userEmail;
-            $subject = 'Nuovo - Solicitud de Depósito';
-            $message = 'Su solictud de depósito ha sido enviada correctamente';
+            $subject = 'Nuovo - deposit';
+            $message = $notificationMessage;
 
             $headers = 'From: nuovo@gmail.com' . "\r\n" .
                 'Reply-To: nuovo@gmail.com' . "\r\n" .
@@ -152,8 +161,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (mail($to, $subject, $message, $headers)) {
             } else {
-                http_response_code(500);
-                echo json_encode(array("error" => "Error al enviar correo electronico"));
+                if ($selectedLanguage == "en") {
+                    http_response_code(500);
+                    echo json_encode(array("error" => "Error sending email"));
+                } elseif ($selectedLanguage == "pt") {
+                    http_response_code(500);
+                    echo json_encode(array("error" => "Erro ao enviar e-mail"));
+                } else {
+                    http_response_code(500);
+                    echo json_encode(array("error" => "Error al enviar correo electronico"));
+                }
             }
 
             // admin
@@ -181,14 +198,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Confirmar la transacción
         $conexion->commit();
 
-        http_response_code(201); // Created
-        echo json_encode(array("message" => "Solicitud de depósito enviada con éxito."));
+        if ($selectedLanguage == "en") {
+            http_response_code(201);
+            echo json_encode(array("message" => "deposit request successfully submitted."));
+        } elseif ($selectedLanguage == "pt") {
+            http_response_code(201);
+            echo json_encode(array("message" => "Pedido de depósito enviado com sucesso."));
+        } else {
+            http_response_code(201);
+            echo json_encode(array("message" => "Solicitud de depósito enviada con éxito."));
+        }
     } catch (PDOException $e) {
         // Revertir la transacción en caso de error
         $conexion->rollBack();
 
-        http_response_code(500); // Internal Server Error
-        echo json_encode(array("error" => "Error al procesar la solicitud de depósito.", "details" => $e->getMessage()));
+        if ($selectedLanguage == "en") {
+            http_response_code(500);
+            echo json_encode(array("error" => "Error processing deposit request.", "details" => $e->getMessage()));
+        } elseif ($selectedLanguage == "pt") {
+            http_response_code(500);
+            echo json_encode(array("error" => "Erro ao processar o pedido de depósito.", "details" => $e->getMessage()));
+        } else {
+            http_response_code(500);
+            echo json_encode(array("error" => "Error al procesar la solicitud de depósito.", "details" => $e->getMessage()));
+        }
     }
 }
 
