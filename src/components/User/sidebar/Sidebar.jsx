@@ -67,7 +67,9 @@ const Sidebar = () => {
           className={`item i-ajustes ${isActive(
             "/user/ajustes/perfil"
           )} ${isActive("/user/ajustes/verificacion")} ${isActive(
-            "/user/ajustes/seguridad"
+            "/user/ajustes/seguridad" 
+          )} ${isActive(
+            "/user/ajustes/plataformas" 
           )}`}
         >
           <div className="icon">

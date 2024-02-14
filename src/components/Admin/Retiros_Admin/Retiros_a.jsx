@@ -87,15 +87,16 @@ const Retiros_a = () => {
         break;
       case "transferencia_nacional":
         modalContent +=
-        withdrawalRequest.method_arg === "virtual"
-          ? `
+          withdrawalRequest.method_arg === "virtual"
+            ? `
           <h4>Tipo de Pago<h4>
           <span>${withdrawalRequest.method_arg}<span>
           <p>Alias / CBU: ${withdrawalRequest.alias_cbu}</p>
           <p>CUIT / CUIL: ${withdrawalRequest.cuit_cuil}</p>
           <p>Nombre de la cuenta: ${withdrawalRequest.name_account_arg}</p>
           <p></p>
-          ` : `
+          `
+            : `
           <h4>Tipo de Pago<h4>
           <span>${withdrawalRequest.method_arg}<span>
           <p>Alias / CBU: ${withdrawalRequest.alias_cbu}</p>
@@ -104,7 +105,7 @@ const Retiros_a = () => {
           <p>Caja de ahorros / cuenta corriente: ${withdrawalRequest.num_cuenta_arg}</p>
           <p></p>
           `;
-  
+
         break;
       case "transferencia_externa":
         modalContent +=
@@ -236,6 +237,15 @@ const Retiros_a = () => {
   };
 
   const denyRequest = async (withdrawalRequestId, denialReasons) => {
+    if (denialReasons === "") {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Debe seleccionar al menos un motivo",
+      });
+      return;
+    }
+
     try {
       const response = await fetch(
         `http://localhost/nuovo/backend/Api/admin/denyWithdrawalRequest.php?id=${withdrawalRequestId}`,
@@ -289,17 +299,17 @@ const Retiros_a = () => {
       if (isExternalTransfer) {
         swalContent = `
                 <p>Por favor, ingresa el número de referencia de la transacción:</p>
-                <input type="text" id="transactionReference" required>
+                <input class="swal2-input" type="text" id="transactionReference" required>
             `;
       } else if (withdrawalRequest.method === "transferencia_nacional") {
         swalContent = `
                 <p>Por favor, ingresa el número de referencia de la transacción:</p>
-                <input type="text" id="transactionReference" required>
+                <input class="swal2-input" type="text" id="transactionReference" required>
             `;
       } else if (withdrawalRequest.method === "efectivo") {
         swalContent = `
                 <p>Por favor, ingresa la dirección de retiro:</p>
-                <input type="text" id="withdrawalAddress" required>
+                <input class="swal2-input" type="text" id="withdrawalAddress" required>
             `;
       }
 
@@ -312,28 +322,28 @@ const Retiros_a = () => {
         cancelButtonColor: "#dc3545",
         showCancelButton: true,
         preConfirm: async () => {
-          if (isExternalTransfer) {
-            const transactionReference = document.getElementById(
-              "transactionReference"
-            ).value;
-
-            // Realizar la llamada al backend para completar la solicitud
-            await completeWithdrawalRequest(withdrawalRequestId, {
-              transactionReference,
-            });
-          } else if (withdrawalRequest.method === "transferencia_nacional") {
-            const transactionReference = document.getElementById(
-              "transactionReference"
-            ).value;
-
+          if (isExternalTransfer || withdrawalRequest.method === "transferencia_nacional") {
+            const transactionReference = document.getElementById("transactionReference").value;
+  
+            // Validate that the input is not empty
+            if (!transactionReference) {
+              Swal.showValidationMessage("Este campo es obligatorio.");
+              return;
+            }
+  
             // Realizar la llamada al backend para completar la solicitud
             await completeWithdrawalRequest(withdrawalRequestId, {
               transactionReference,
             });
           } else if (withdrawalRequest.method === "efectivo") {
-            const withdrawalAddress =
-              document.getElementById("withdrawalAddress").value;
-
+            const withdrawalAddress = document.getElementById("withdrawalAddress").value;
+  
+            // Validate that the input is not empty
+            if (!withdrawalAddress) {
+              Swal.showValidationMessage("Este campo es obligatorio.");
+              return;
+            }
+  
             // Realizar la llamada al backend para completar la solicitud
             await completeWithdrawalRequest(withdrawalRequestId, {
               withdrawalAddress,

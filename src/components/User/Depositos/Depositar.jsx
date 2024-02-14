@@ -231,13 +231,32 @@ const Depositar = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // validar
+    if (paymentMethod === "bank" && (!amount || !referenceNumber)) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: Translation[language].swalEmpty,
+      });
+      return;
+    }
+
+    if (paymentMethod === "platform" && (!selectedPlatform || !referenceNumber)) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: Translation[language].swalEmpty,
+      });
+      return;
+    }
+
     // Validar que el monto sea mayor o igual a 1 dólar
     const numericAmount = parseFloat(amount.replace(/[^\d.]/g, ""));
     if (isNaN(numericAmount) || numericAmount < 1) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "El monto debe ser de al menos 1 dólar",
+        text: Translation[language].amount,
       });
       return;
     }

@@ -48,6 +48,9 @@ export const Translation = {
 
     swalText2: "Hubo un error al procesar la solicitud de depósito",
     swalText3: "Error inesperado al enviar la solicitud de depósito",
+
+    swalEmpty: "Por favor, complete todos los campos.",
+    amount:"El monto debe ser de al menos 1 USD",
   },
   en: {
     title: "Deposit",
@@ -98,6 +101,9 @@ export const Translation = {
 
     swalText2: "There was an error processing the deposit request",
     swalText3: "Unexpected error when sending the deposit request",
+
+    swalEmpty: "Por favor, complete todos los campos.",
+    amount:"The amount must be at least 1 USD",
   },
   pt: {
     title: "Depositar",
@@ -148,5 +154,9 @@ export const Translation = {
 
     swalText2: "Houve um erro ao processar o pedido de depósito",
     swalText3: "Erro inesperado ao enviar o pedido de depósito",
+
+    swalEmpty: "Por favor, preencha todos os campos.",
+    amount:"O montante deve ser de pelo menos 1 USD",
+
   },
 };

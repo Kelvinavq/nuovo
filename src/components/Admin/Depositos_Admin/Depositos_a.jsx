@@ -202,6 +202,15 @@ const Depositos_a = () => {
   };
 
   const denyRequest = async (depositRequestId, denialReasons) => {
+
+    if (denialReasons === "") {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Debe seleccionar al menos un motivo",
+      });
+      return;
+    }
     try {
       const response = await fetch(
         `http://localhost/nuovo/backend/Api/admin/denyDepositRequest.php?id=${depositRequestId}`,

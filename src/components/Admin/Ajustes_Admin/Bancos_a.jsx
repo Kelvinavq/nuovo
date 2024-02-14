@@ -72,6 +72,15 @@ const Bancos_a = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!nuevaCuenta.accountName || !nuevaCuenta.routingNumberACH || !nuevaCuenta.routingNumberWire || !nuevaCuenta.bankAddress) {
+      Swal.fire({
+        title: "Campos Vacíos",
+        text: "Por favor, completa todos los campos",
+        icon: "warning",
+      });
+      return;
+    }
+
     try {
       const response = await fetch(
         "http://localhost/nuovo/backend/Api/admin/createBank.php",

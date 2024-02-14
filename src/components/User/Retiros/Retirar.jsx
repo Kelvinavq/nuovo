@@ -526,6 +526,7 @@ const Retirar = () => {
         routingNumberWire.trim() === "" ||
         addressBank.trim() === "" ||
         accountNumber.trim() === "" ||
+        beneficiary.trim() === "" ||
         amount.trim() === "")
     ) {
       // Muestra un mensaje de error si algún campo está vacío
@@ -540,7 +541,7 @@ const Retirar = () => {
     if (
       selectedMethod === "transferencia_externa" &&
       selectedRegion === "europa" &&
-      (iban.trim() === "" || amount.trim() === "")
+      (iban.trim() === "" || amount.trim() === "" || bankNameEu.trim() === "" || swiftBic.trim() === "" || addressBankEu.trim() === "" || accountNumberEu.trim() === "" || sortCodeEu.trim() === "" )
     ) {
       // Muestra un mensaje de error si algún campo está vacío
       Swal.fire({
@@ -553,7 +554,22 @@ const Retirar = () => {
 
     if (
       selectedMethod === "transferencia_nacional" &&
-      (aliasCbu.trim() === "" || amount.trim() === "")
+      methodArg === "virtual" &&
+      (aliasCbu.trim() === "" || cuitcuil.trim() === "" || nombreCuenta.trim() === "" || amount.trim() === "")
+    ) {
+      // Muestra un mensaje de error si algún campo está vacío
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: Translation[language].messageEmpty,
+      });
+      return;
+    }
+
+    if (
+      selectedMethod === "transferencia_nacional" &&
+      methodArg === "fisico" &&
+      (aliasCbu.trim() === "" || numeroCuenta.trim() === ""  || cuitcuil.trim() === "" || nombreCuenta.trim() === "" || amount.trim() === "")
     ) {
       // Muestra un mensaje de error si algún campo está vacío
       Swal.fire({
