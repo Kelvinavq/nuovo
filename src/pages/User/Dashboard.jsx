@@ -5,6 +5,7 @@ import Balance from "../../components/User/Balance/Balance";
 import Lateral from "../../components/User/Lateral/Lateral";
 import Recents from "../../components/User/Recents/Recents";
 import Button from "../../components/User/sidebar/Button";
+import Notification from "../../components/User/Notification/Notification";
 
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -79,6 +80,7 @@ const Dashboard = () => {
     <div className="dashboard">
       <Sidebar />
       <Button />
+      <Notification />
 
       <main>
         <Balance />

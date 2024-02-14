@@ -4,6 +4,7 @@ import Depositar from "../../components/User/Depositos/Depositar";
 import Sidebar from "../../components/User/sidebar/Sidebar";
 import Button from "../../components/User/sidebar/Button";
 import Lateral from "../../components/User/Lateral/Lateral";
+import Notification from "../../components/User/Notification/Notification";
 
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -80,6 +81,7 @@ const Depositos = () => {
     <div className="depositos">
       <Sidebar />
       <Button />
+      <Notification />
 
       <main>
         <Depositar  />

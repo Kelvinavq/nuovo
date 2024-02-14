@@ -3,6 +3,7 @@ import Retiros_a from "../../components/Admin/Retiros_Admin/Retiros_a";
 import Sidebar_a from "../../components/Admin/Sidebar_Admin/Sidebar_a";
 import Lateral_a from "../../components/Admin/Lateral_Admin/Lateral_a";
 import Button_a from "../../components/Admin/Sidebar_Admin/Button_a";
+import Notification_a from "../../components/Admin/Notification_Admin/Notification_a";
 
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -77,6 +78,7 @@ const Retiros_admin = () => {
     <div className="retiros_a">
       <Sidebar_a />
       <Button_a />
+      <Notification_a />
 
       <main>
         <Retiros_a />

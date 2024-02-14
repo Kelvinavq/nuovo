@@ -4,6 +4,7 @@ import Balance_a from "../../components/Admin/Balance_Admin/Balance_a";
 import Grafico from "../../components/Admin/Grafico_Admin/Grafico";
 import Lateral_a from "../../components/Admin/Lateral_Admin/Lateral_a";
 import Button_a from "../../components/Admin/Sidebar_Admin/Button_a";
+import Notification_a from "../../components/Admin/Notification_Admin/Notification_a";
 
 import Swal from "sweetalert2";
 
@@ -72,6 +73,7 @@ const Dashboard_a = () => {
     <div className="dashboard_a">
       <Sidebar_a />
       <Button_a />
+      <Notification_a />
 
       <main>
         <Balance_a />

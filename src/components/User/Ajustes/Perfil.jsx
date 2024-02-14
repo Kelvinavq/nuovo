@@ -3,11 +3,12 @@ import Enlaces from "./Enlaces";
 import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
 import { useEffect, useState, useContext } from "react";
 import Swal from "sweetalert2";
-import Pusher from 'pusher-js';
+import Pusher from "pusher-js";
+import Notification from "../Notification/Notification";
 
 import { LanguageContext } from "../../../Language/LanguageContext";
 import { Translation } from "./Translation";
-
+import LanguageSelector from "../../Selector/LanguageSelector";
 
 const Perfil = () => {
   const { language } = useContext(LanguageContext);
@@ -54,7 +55,7 @@ const Perfil = () => {
       icon: "question",
       showCancelButton: true,
       confirmButtonText: Translation[language].swalButton1,
-      cancelButtonText:  Translation[language].swalButton2,
+      cancelButtonText: Translation[language].swalButton2,
     }).then((result) => {
       if (result.isConfirmed) {
         // Crear un objeto FormData y agregar la nueva imagen
@@ -78,7 +79,7 @@ const Perfil = () => {
             // Restablecer el estado de la nueva imagen
             setNewProfilePicture(null);
 
-            Swal.fire( Translation[language].swalMessage2, "", "success");
+            Swal.fire(Translation[language].swalMessage2, "", "success");
             refreshPage();
           })
           .catch((error) =>
@@ -93,23 +94,23 @@ const Perfil = () => {
 
   const [notifications, setNotifications] = useState([]);
   useEffect(() => {
-    const pusher = new Pusher('afe7fd857579ff4b05d7', {
-        cluster: 'mt1',
-        encrypted: true,
+    const pusher = new Pusher("afe7fd857579ff4b05d7", {
+      cluster: "mt1",
+      encrypted: true,
     });
 
-    const channel = pusher.subscribe('canal');
-    channel.bind('evento', data => {
-        // Manejar la notificación recibida
-        setNotifications(prevNotifications => [...prevNotifications, data]);
+    const channel = pusher.subscribe("canal");
+    channel.bind("evento", (data) => {
+      // Manejar la notificación recibida
+      setNotifications((prevNotifications) => [...prevNotifications, data]);
     });
 
     // Limpieza al desmontar el componente
     return () => {
-        channel.unbind();
-        pusher.unsubscribe('canal');
+      channel.unbind();
+      pusher.unsubscribe("canal");
     };
-}, []);
+  }, []);
 
   return (
     <div className="ajustes_perfil">
@@ -118,8 +119,8 @@ const Perfil = () => {
       <div className="content">
         <h2>{Translation[language].title}</h2>
         {notifications.map((notification, index) => (
-                    <li key={index}>{notification.message}</li>
-                ))}
+          <li key={index}>{notification.message}</li>
+        ))}
         <Enlaces />
 
         <div className="imgPerfil">
@@ -144,6 +145,17 @@ const Perfil = () => {
           <div className="text">
             <h2>{userData.name}</h2>
             <p>{userData.email}</p>
+          </div>
+        </div>
+        <div className="language">
+          <h2>{Translation[language].titleLanguage}</h2>
+          <p>
+          {Translation[language].textLanguage}
+          </p>
+
+          <div className="language-selector">
+            <span>{Translation[language].selector}</span>
+            <LanguageSelector />
           </div>
         </div>
       </div>

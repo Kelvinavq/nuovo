@@ -3,6 +3,7 @@ import Sidebar from "../../components/User/sidebar/Sidebar";
 import Button from "../../components/User/sidebar/Button";
 import Lateral from "../../components/User/Lateral/Lateral";
 import Plataformas_u from "../../components/User/Ajustes/Plataformas_u";
+import Notification from "../../components/User/Notification/Notification";
 
 const Ajustes_Plataformas = () => {
 
@@ -72,6 +73,7 @@ const Ajustes_Plataformas = () => {
     <div className="plataformas_u">
       <Sidebar />
       <Button />
+      <Notification />
 
       <main>
        <Plataformas_u />

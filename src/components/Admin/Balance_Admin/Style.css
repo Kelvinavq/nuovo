@@ -18,6 +18,13 @@
   justify-content: space-between;
 }
 
+@media (max-width: 620px) {
+  .balance_a .title {
+    justify-content: initial;
+    gap: 20px;
+  }
+}
+
 .balance_a .title h2 {
   font-weight: 500;
 }

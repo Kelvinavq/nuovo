@@ -16,6 +16,10 @@ export const Translation = {
     swalButton2: "Cancelar",
     swalMessage2: "¡Foto de perfil actualizada!",
 
+    titleLanguage: "Seleccionar idioma",
+    textLanguage: "El idioma seleccionado se usará para todo el sistema de NUOVO, incluyendo las notificaciones recibidas por correo electrónico.",
+    selector: "Idioma actual",
+
     // verificacion
     titleVerificacion: "Verificación de Identidad",
     span1: "Su cuenta está en proceso de verificación",
@@ -157,6 +161,10 @@ export const Translation = {
     swalButton2: "Cancel",
     swalMessage2: "Updated profile photo!",
 
+    titleLanguage: "Select language",
+    textLanguage: "The selected language will be used for the entire NUOVO system, including notifications received by email.",
+    selector: "Current language",
+
     // verificacion
     titleVerificacion: "Identity Verification",
     span1: "Your account is in the process of verification",
@@ -296,6 +304,10 @@ export const Translation = {
     swalButton1: "Sim, atualizar",
     swalButton2: "Cancelar",
     swalMessage2: "Imagem de perfil atualizada!",
+
+    titleLanguage: "Selecionar idioma",
+    textLanguage: "O idioma selecionado será usado para todo o sistema NUOVO, incluindo notificações recebidas por e-mail.",
+    selector: "Língua atual",
 
     // verificacion
     titleVerificacion: "Verificação de identidade",

@@ -62,7 +62,7 @@ const Recents = () => {
                 <span>
                   {transaction.amount} <small>USD</small>
                 </span>
-                <p className={transaction.status === 'completed' ? 'completed' : 'pending'}>{transaction.status === 'completed' ? Translation[language].status1 : Translation[language].status2}</p>
+                <p className={transaction.status === 'approved' ? 'completed' : 'pending'}>{transaction.status === 'approved' ? Translation[language].status1 : Translation[language].status2}</p>
               </div>
             </div>
           </div>

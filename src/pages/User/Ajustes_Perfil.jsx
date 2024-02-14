@@ -3,6 +3,7 @@ import Sidebar from "../../components/User/sidebar/Sidebar"
 import Button from "../../components/User/sidebar/Button"
 import Lateral from "../../components/User/Lateral/Lateral"
 import Perfil from "../../components/User/Ajustes/Perfil"
+import Notification from "../../components/User/Notification/Notification";
 
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -78,6 +79,7 @@ const Ajustes_Perfil = () => {
     <div className="perfil">
       <Sidebar />
       <Button />
+      <Notification />
 
       <main>
         <Perfil />

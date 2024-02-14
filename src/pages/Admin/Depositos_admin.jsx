@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Depositos_a from "../../components/Admin/Depositos_Admin/Depositos_a"
 import Sidebar_a from "../../components/Admin/Sidebar_Admin/Sidebar_a";
 import Button_a from "../../components/Admin/Sidebar_Admin/Button_a";
+import Notification_a from "../../components/Admin/Notification_Admin/Notification_a";
 
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -77,6 +78,7 @@ const Depositos_admin = () => {
     <div className="depositos_a">
     <Sidebar_a />
     <Button_a />
+    <Notification_a />
 
     <main>
       <Depositos_a />

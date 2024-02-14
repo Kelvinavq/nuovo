@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef  } from "react";
 import Swal from "sweetalert2";
 import "./Style.css";
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import ViewCompactIcon from '@mui/icons-material/ViewCompact';
+
 
 const ListTransactions = () => {
   const [fileData, setFileData] = useState();
   const [fileList, setFileList] = useState([]);
   const [filename, setFilename] = useState("");
-
 
   const fetchFileList = async () => {
     try {
@@ -259,7 +261,7 @@ const readAndProcessFile = (file) => {
   }, []);
 
   return (
-    <div className="transacciones_a">
+    <div className="">
       <div className="title">
         <h2>Lista de archivos CSV</h2>
 
@@ -281,13 +283,15 @@ const readAndProcessFile = (file) => {
 
             <li>
               <button onClick={() => downloadCSV(file.filename)}>
-                Descargar CSV
+                <p>Descargar CSV</p>
+                <FileDownloadIcon/>
               </button>
             </li>
 
             <li>
               <button onClick={() => showImportedData(file.id)}>
-                Ver importados
+                <p>Ver importados</p>
+                <ViewCompactIcon/>
               </button>
             </li>
           </ul>

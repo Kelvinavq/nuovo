@@ -52,6 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Obtener el nombre de usuario usando FETCH_ASSOC
         $userData = $getUserNameStmt->fetch(PDO::FETCH_LAZY);
+        $language = $userData['language'];
 
         // Verificar si se encontró el usuario y obtener el nombre
         if ($userData && isset($userData['name'])) {
@@ -70,8 +71,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $insertStmt->execute();
 
+        if ($language === "en") {
+            $contentUser = "Your request for verification has been approved. An e-mail with the details has been sent.";
+        } else if ($language === "pt") {
+            $contentUser = "O seu pedido de verificação foi aprovado. Um e-mail foi enviado com os detalhes.";
+        } else {
+            $contentUser = "Su solicitud de verificacion ha sido aprobada. Se ha enviado un correo electronico con los detalles.";
+        }
+
         // Insertar la notificación en la base de datos
-        $contentUser = "Su solicitud de verificacion ha sido aprobada. Se ha enviado un correo electronico con los detalles.";
+      
         $contentAdmin = "Un administrador aprobó la solicitud de verificación del usuario " . $userName;
 
         $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, type, content, admin_message, status, status_admin, admin_id) VALUES (:user_id, 'approval_verification', :content_user, :content_admin, 'unread', 'unread', :admin_id)";
@@ -99,9 +108,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
         // Enviar notificación por correo electrónico 
+        if ($language === "en") {
+            $subjectMessage = 'Nuovo - Account Verification';
+            $emailMessage = 'Your verification request has been approved, your account number within NUOVO is: ' . $bankAccount;
+        } else if ($language === "pt") {
+            $subjectMessage = 'Nuovo - Verificação de conta';
+            $emailMessage = 'Seu pedido de verificação foi aprovado, seu número de conta dentro de NUOVO é: ' . $bankAccount;
+        } else {
+            $subjectMessage = 'Nuovo - Verificación de Cuenta';
+            $emailMessage = 'Su solicitud de verificacion ha sido aprobada, su número de cuenta dentro de NUOVO es: ' . $bankAccount;
+        }
         $to = $userEmail;
-        $subject = 'Nuovo - Verificación de Cuenta';
-        $message = 'Su solicitud de verificacion ha sido aprobada, su número de cuenta dentro de NUOVO es: ' . $bankAccount;
+        $subject = $subjectMessage;
+        $message = $emailMessage;
 
         $headers = 'From: ' . $adminEmail . "\r\n" .
             'Reply-To: ' . $adminEmail . "\r\n" .

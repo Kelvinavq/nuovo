@@ -1,8 +1,9 @@
-.transacciones main {
+.transacciones_a main {
   width: calc(100% - 120px);
   padding: 10px;
 }
-.transacciones_a .title{
+
+.transacciones_a .title {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -91,7 +92,7 @@
   font-size: 0.9em;
 }
 
-.transacciones_a ul li button{
+.transacciones_a ul li button {
   padding: 8px 10px;
   max-width: 100%;
   cursor: pointer;
@@ -101,18 +102,50 @@
   background: none;
   border: 1px solid var(--green);
   color: var(--white);
-  transition: all .3s;
+  transition: all 0.3s;
   max-width: 180px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.transacciones_a ul li:last-child button{
+.transacciones_a ul li button p {
+  margin: 0;
+}
+
+.transacciones_a ul li:last-child button {
   background: var(--yellow);
   border: none;
   text-shadow: 2px 2px 2px #000;
 }
 
-.transacciones_a ul li button:hover{
+.transacciones_a ul li button:hover {
   box-shadow: var(--shadow);
+}
+
+/* @media (min-width: 950px) {
+  .transacciones_a ul li button svg {
+    display: none;
+  }
+} */
+@media (max-width: 950px) {
+  .transacciones_a ul li button p {
+    display: none;
+  }
+
+  .transacciones_a ul li button  {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .transacciones_a ul li:nth-child(3) {
+    display: flex;
+    align-items: end;
+  }
+
 }
 
 @media (max-width: 750px) {
@@ -136,6 +169,12 @@
     width: calc(100% - 20px);
     padding: 0;
   }
+
+  .transacciones_a .title{
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+  }
 }
 
 @media (max-width: 550px) {
@@ -151,6 +190,18 @@
 
   .transacciones_a ul li span {
     font-size: 0.6em;
+  }
+  .transacciones_a ul li button {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .transacciones_a ul li button svg {
+    font-size: 1em;
   }
 }
 
@@ -180,20 +231,20 @@
   text-align: center;
 }
 
-.custom-table .body .data-cell:nth-child(odd){
+.custom-table .body .data-cell:nth-child(odd) {
   background: var(--blue);
 }
-.custom-table .body .data-cell:nth-child(even){
+.custom-table .body .data-cell:nth-child(even) {
   background: var(--blue2);
 }
 
-.custom-table .body .data-row .data-cell{
+.custom-table .body .data-row .data-cell {
   min-width: 100%;
   text-align: center;
   padding: 10px 0;
 }
 
-.swal2-html-container .checkboxs{
+.swal2-html-container .checkboxs {
   display: flex;
   gap: 50px;
 }

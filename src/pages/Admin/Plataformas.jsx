@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Sidebar_a from "../../components/Admin/Sidebar_Admin/Sidebar_a";
 import Button_a from "../../components/Admin/Sidebar_Admin/Button_a";
 import Plataformas_a from "../../components/Admin/Ajustes_Admin/Plataformas_a";
+import Notification_a from "../../components/Admin/Notification_Admin/Notification_a";
 
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -75,6 +76,7 @@ const Plataformas = () => {
     <div className="ajustes_a plataformas">
       <Sidebar_a />
       <Button_a />
+      <Notification_a />
 
       <main>
         <Plataformas_a />

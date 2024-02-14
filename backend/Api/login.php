@@ -12,6 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
+$selectedLanguage = isset($_COOKIE['selectedLanguage']) ? $_COOKIE['selectedLanguage'] : 'es';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Obtener datos del cuerpo de la solicitud
@@ -40,6 +42,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_role'] = $usuario['role'];
                 $_SESSION['user_email'] = $usuario['email'];
 
+                if ($_SESSION['user_role'] === "user") {
+                    // Actualizar la preferencia de idioma en la tabla users
+                    $updateLanguageQuery = "UPDATE users SET language = :selectedLanguage WHERE id = :userId";
+                    $stmtUpdateLanguage = $conexion->prepare($updateLanguageQuery);
+                    $stmtUpdateLanguage->bindParam(':selectedLanguage', $selectedLanguage, PDO::PARAM_STR);
+                    $stmtUpdateLanguage->bindParam(':userId', $usuario['id'], PDO::PARAM_INT);
+                    $stmtUpdateLanguage->execute();
+                }
+
                 // Devolver información del usuario en la respuesta
                 http_response_code(200);
                 echo json_encode(array(
@@ -52,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 // Contraseña incorrecta
                 http_response_code(401); // Unauthorized
-                echo json_encode(array("error" => "Contraseña incorrecta." ));
+                echo json_encode(array("error" => "Contraseña incorrecta."));
             }
         } else {
             // Usuario no encontrado

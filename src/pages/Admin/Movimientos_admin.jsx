@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import ListaMovimientos_a from "../../components/Admin/Movimientos_Admin/ListaMovimientos_a";
 import Button_a from "../../components/Admin/Sidebar_Admin/Button_a";
 import Sidebar_a from "../../components/Admin/Sidebar_Admin/Sidebar_a";
+import Notification_a from "../../components/Admin/Notification_Admin/Notification_a";
 
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -69,6 +70,7 @@ const Movimientos_admin = () => {
     <div className="movimientos_a">
       <Sidebar_a />
       <Button_a />
+      <Notification_a />
 
       <main>
         <ListaMovimientos_a />

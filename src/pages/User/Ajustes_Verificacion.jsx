@@ -4,6 +4,7 @@ import Sidebar from "../../components/User/sidebar/Sidebar"
 import Button from "../../components/User/sidebar/Button"
 import Lateral from "../../components/User/Lateral/Lateral"
 import Verificacion from "../../components/User/Ajustes/Verificacion"
+import Notification from "../../components/User/Notification/Notification";
 
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -80,6 +81,7 @@ const Ajustes_Verificacion = () => {
 <div className="verificacion">
       <Sidebar />
       <Button />
+      <Notification />
 
       <main>
         <Verificacion />

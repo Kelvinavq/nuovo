@@ -7,7 +7,8 @@
   justify-content: space-between;
   border-bottom: 2px solid var(--gray);
   padding-bottom: 10px;
-  max-width: 350px;
+  max-width: 400px;
+  gap: 20px;
 }
 
 .enlaces_ajustes .content .item.active a {
@@ -15,11 +16,23 @@
   font-weight: 600;
 }
 
+@media (max-width: 400px) {
+  .enlaces_ajustes .content {
+    overflow-x: scroll;
+    border: none;
+  }
+
+  .enlaces_ajustes .content::-webkit-scrollbar {
+    width: 5px;
+    height: 4px;
+  }
+}
+
 /* ********* perfil ********* */
 
 .ajustes_perfil {
   width: 100%;
-  max-width: 350px;
+  max-width: 400px;
 }
 
 .ajustes_perfil .content h2 {
@@ -34,6 +47,22 @@
   margin-top: 20px;
 }
 
+@media (max-width: 400px) {
+  .ajustes_perfil .imgPerfil {
+    gap: 30px;
+  }
+}
+
+@media (max-width: 360px) {
+  .ajustes_perfil .imgPerfil {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .ajustes_perfil .imgPerfil .text {
+    text-align: center;
+  }
+}
 .ajustes_perfil .imgPerfil .foto {
   display: flex;
   align-items: center;
@@ -71,6 +100,23 @@
   cursor: pointer;
 }
 
+.ajustes_perfil .language {
+  margin-top: 50px;
+}
+
+.ajustes_perfil .language p {
+  background: var(--blue);
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 0.9em;
+}
+
+.ajustes_perfil .language-selector {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
 /* ********* perfil ********* */
 
 /* ********* verificacion ********* */
@@ -84,8 +130,6 @@
   font-weight: 500;
 }
 
-
-
 .ajustes_verificacion .estatus {
   margin-top: 20px;
   display: flex;
@@ -93,8 +137,8 @@
   display: none;
 }
 
-.ajustes_verificacion .estatus.active{
-    display: block;
+.ajustes_verificacion .estatus.active {
+  display: block;
 }
 
 .ajustes_verificacion .estatus .danger {
@@ -124,56 +168,53 @@
   flex-direction: column;
 }
 
-.ajustes_verificacion .fotosVerificacion img{
+.ajustes_verificacion .fotosVerificacion img {
   max-width: 200px;
 }
 
-.ajustes_verificacion .fotosVerificacion .fotoVerificacion input{
-    display: none;
+.ajustes_verificacion .fotosVerificacion .fotoVerificacion input {
+  display: none;
 }
 
-.ajustes_verificacion .fotosVerificacion .fotoVerificacion label{
-    background: #000;
-    padding: 15px 20px;
-    border-radius: 30px;
-    cursor: pointer;
-    font-weight: 600;
-    text-shadow: 2px 1px #000000a4;
+.ajustes_verificacion .fotosVerificacion .fotoVerificacion label {
+  background: #000;
+  padding: 15px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  text-shadow: 2px 1px #000000a4;
 }
 
-.ajustes_verificacion .fotosVerificacion .fotoVerificacion:first-child label{
-    background: var(--green);
-    color: var(--white);
+.ajustes_verificacion .fotosVerificacion .fotoVerificacion:first-child label {
+  background: var(--green);
+  color: var(--white);
 }
 
-.ajustes_verificacion .fotosVerificacion .fotoVerificacion:last-child label{
-    border: 2px solid var(--green);
-    background: none;
-    color: var(--white);
+.ajustes_verificacion .fotosVerificacion .fotoVerificacion:last-child label {
+  border: 2px solid var(--green);
+  background: none;
+  color: var(--white);
 }
 
-.ajustes_verificacion .verificado{
-    display: none;
+.ajustes_verificacion .verificado {
+  display: none;
 }
 
-.ajustes_verificacion .verificado.active{
-    display: block;
-    display: flex;
-    margin-top: 30px;
-    align-items: center;
-    gap: 10px;
+.ajustes_verificacion .verificado.active {
+  display: block;
+  display: flex;
+  margin-top: 30px;
+  align-items: center;
+  gap: 10px;
 }
-.ajustes_verificacion .verificado p{
- font-size: 2em;
-}
-
-.ajustes_verificacion .verificado svg{
-    font-size: 2em;
-    color: var(--green);
+.ajustes_verificacion .verificado p {
+  font-size: 2em;
 }
 
-
-
+.ajustes_verificacion .verificado svg {
+  font-size: 2em;
+  color: var(--green);
+}
 
 .ajustes_verificacion .btnVerificacion {
   position: relative;
@@ -194,7 +235,7 @@
   transition: all 0.2s ease-in;
 }
 
-.ajustes_verificacion .btnVerificacion:hover{
+.ajustes_verificacion .btnVerificacion:hover {
   background: var(--green);
   box-shadow: 0 0 30px 5px rgba(20, 236, 0, 0.219);
   -webkit-transition: all 0.2s ease-out;
@@ -202,14 +243,14 @@
   transition: all 0.2s ease-out;
 }
 
-.ajustes_verificacion .btnVerificacion:hover::before{
+.ajustes_verificacion .btnVerificacion:hover::before {
   -webkit-animation: sh02 0.5s 0s linear;
   -moz-animation: sh02 0.5s 0s linear;
   animation: sh02 0.5s 0s linear;
 }
 
-.ajustes_verificacion .btnVerificacion::before{
-  content: '';
+.ajustes_verificacion .btnVerificacion::before {
+  content: "";
   display: block;
   width: 0px;
   height: 86%;
@@ -249,33 +290,30 @@
   transition: box-shadow 0.2s ease-in;
 }
 
-.ajustes_verificacion .estatus.pending .danger{
+.ajustes_verificacion .estatus.pending .danger {
   color: var(--yellow);
 }
-.ajustes_verificacion .estatus.denied .danger{
+.ajustes_verificacion .estatus.denied .danger {
   color: var(--danger);
 }
 
 /* ********* verificacion ********* */
 
-
 /* ********* Seguridad ********* */
-
 
 .ajustes_seguridad {
   width: 100%;
   max-width: 400px;
 }
 
-
 .ajustes_seguridad .content h2 {
   font-weight: 500;
 }
 
-.ajustes_seguridad .content .text{
+.ajustes_seguridad .content .text {
   margin-top: 50px;
 }
-.ajustes_seguridad .content .text button{
+.ajustes_seguridad .content .text button {
   background: none;
   cursor: pointer;
   border: none;
@@ -284,7 +322,7 @@
   padding: 0;
 }
 
-.ajustes_seguridad .modal{
+.ajustes_seguridad .modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -296,7 +334,7 @@
   animation: fadeIn 0.3s ease-in-out;
 }
 
-.ajustes_seguridad .modal .overlay{
+.ajustes_seguridad .modal .overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -306,7 +344,7 @@
   animation: fadeIn 0.3s ease-in-out;
 }
 
-.ajustes_seguridad .modal .modal-content{
+.ajustes_seguridad .modal .modal-content {
   width: 460px;
   max-width: 90%;
   background: var(--bg);
@@ -337,9 +375,7 @@
   }
 }
 
-
-
-.ajustes_seguridad .modal .modal-content .message{
+.ajustes_seguridad .modal .modal-content .message {
   background: var(--blue);
   width: calc(100% - 30px);
   height: 80px;
@@ -347,7 +383,7 @@
   padding: 15px;
 }
 
-.ajustes_seguridad .modal .modal-content .message .icon{
+.ajustes_seguridad .modal .modal-content .message .icon {
   width: 100%;
   display: flex;
   align-items: center;
@@ -356,13 +392,13 @@
   font-weight: 600;
 }
 
-.ajustes_seguridad .modal .modal-content .message .text{
-  font-size: .8em;
+.ajustes_seguridad .modal .modal-content .message .text {
+  font-size: 0.8em;
   text-align: left;
   margin-top: -5px;
 }
 
-.ajustes_seguridad .modal .modal-content .grupo-input{
+.ajustes_seguridad .modal .modal-content .grupo-input {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -371,12 +407,12 @@
   margin-top: 15px;
 }
 
-.ajustes_seguridad .modal .modal-content .grupo-input label{
+.ajustes_seguridad .modal .modal-content .grupo-input label {
   font-size: 1em;
   cursor: pointer;
 }
 
-.ajustes_seguridad .modal .modal-content .grupo-input input{
+.ajustes_seguridad .modal .modal-content .grupo-input input {
   height: 45px;
   border: none;
   outline: none;
@@ -387,7 +423,7 @@
   padding-left: 10px;
 }
 
-.ajustes_seguridad .modal .modal-content .button-group{
+.ajustes_seguridad .modal .modal-content .button-group {
   margin-top: 15px;
   width: 100%;
   display: flex;
@@ -395,7 +431,7 @@
   gap: 12px;
 }
 
-.ajustes_seguridad .modal .modal-content .button-group button{
+.ajustes_seguridad .modal .modal-content .button-group button {
   padding: 10px 20px;
   border-radius: 12px;
   border: none;
@@ -403,14 +439,14 @@
   cursor: pointer;
 }
 
-.ajustes_seguridad .modal .modal-content .button-group button:first-child{
+.ajustes_seguridad .modal .modal-content .button-group button:first-child {
   background: var(--green);
   color: var(--white);
   font-weight: 600;
   text-shadow: 0px 0px 2px #000000be;
 }
 
-.ajustes_seguridad .modal .modal-content .button-group button:last-child{
+.ajustes_seguridad .modal .modal-content .button-group button:last-child {
   background: none;
   border: 2px solid var(--green);
   color: var(--green);
@@ -440,9 +476,7 @@
   box-shadow: var(--shadow);
 }
 
-
 /* ********* plataformas ********* */
-
 
 .plataformas_u .title {
   width: 100%;
@@ -471,6 +505,7 @@
   flex-direction: column;
   gap: 20px;
   max-width: 920px;
+  margin-top: 20px;
 }
 
 .plataformas_u .lista_plataformas .plataforma {
@@ -492,8 +527,6 @@
   background: #000 !important;
   display: flex !important;
 }
-
-
 
 .plataformas_u .modal {
   display: none;
@@ -519,7 +552,7 @@
   background-color: var(--bg);
   padding: 20px;
   width: 80%;
-  max-width: 600px;
+  max-width: 650px;
   min-height: 200px;
   display: flex;
   justify-content: center;
@@ -529,7 +562,6 @@
   z-index: 99;
   animation: animate 0.3s ease;
 }
-
 
 .plataformas_u .modal-content .grupo-input {
   display: flex;
@@ -556,6 +588,7 @@
   margin-top: 15px;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .plataformas_u .modal-content .custom-field button.eliminar {
@@ -605,7 +638,6 @@
   cursor: pointer;
 }
 
-
 .plataformas_u .custom-field {
   display: flex;
   gap: 10px;
@@ -631,16 +663,12 @@
   }
 }
 
-
-
-
-
-.swalPlataforma input{
+.swalPlataforma input {
   margin: 0;
   margin-top: -10px;
 }
 
-.swalPlataforma .custom-field{
+.swalPlataforma .custom-field {
   display: flex;
   gap: 15px;
   margin: 20px 0;
@@ -649,15 +677,33 @@
   border-radius: 15px;
 }
 
-.swalPlataforma .custom-field:nth-child(even){
+.swalPlataforma .custom-field:nth-child(even) {
   background: var(--blue) !important;
 }
 
-.swalPlataforma .custom-field label{
+.swalPlataforma .custom-field label {
   text-align: left;
 }
 
-.swalPlataforma .custom-field input{
+.swalPlataforma .custom-field input {
   margin: 0;
 }
+
+@media (max-width: 620px) {
+  .plataformas_u .modal-content {
+    text-align: center;
+  }
+
+  .plataformas_u .modal-content .custom-field {
+    border-bottom: 2px solid var(--gray);
+    padding: 10px 0;
+  }
+
+  .plataformas_u .modal-content .custom-field select,
+  .plataformas_u .modal-content .custom-field input {
+    min-width: 100% !important;
+    margin: 0;
+  }
+}
+
 /* ********* plataformas ********* */

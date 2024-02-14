@@ -54,17 +54,27 @@ $resultDeposit = $getUserId->fetch(PDO::FETCH_LAZY);
 $userId = $resultDeposit['user_id'];
 
 // obtener nombre del usuario
-$getUserNameQuery = "SELECT name, email FROM users WHERE id = :idUser";
+$getUserNameQuery = "SELECT name, email, language FROM users WHERE id = :idUser";
 $getUserName = $conexion->prepare($getUserNameQuery);
 $getUserName->bindParam(':idUser', $userId, PDO::PARAM_INT);
 $getUserName->execute();
 $result = $getUserName->fetch(PDO::FETCH_LAZY);
 $userName = $result['name'];
 $userEmail = $result['email'];
+$language = $result['language'];
+
 
 // notificaciones
 
-$contentUser = "Su solicitud de depósito por $" . $resultDeposit['amount'] . " ha sido denegada. Se ha enviado un correo electronico con los motivos.";
+if ($language === "en") {
+    $contentUser = "Your withdrawal deposit for $" . $resultDeposit['amount'] . " has been denied. An e-mail with the reasons has been sent.";
+} else if ($language === "pt") {
+    $contentUser = "Seu pedido de depósito por $" . $resultDeposit['amount'] . " foi recusado. Foi enviado um e-mail com os motivos.";
+} else {
+    $contentUser = "Su solicitud de depósito por $" . $resultDeposit['amount'] . " ha sido denegada. Se ha enviado un correo electronico con los motivos.";
+}
+
+
 $contentAdmin = "Un administrador denegó la solicitud de depósito del usuario " . $userName . " correo electrónico: " . $userEmail . " por un monto de $" . $resultDeposit['amount'];
 
 // Insertar la notificación en la base de datos
@@ -93,9 +103,21 @@ $data = [
 $pusher->trigger('notifications-channel', 'evento', $data);
 
 // Enviar notificación por correo electrónico 
+if ($language === "en") {
+    $subjectMessage = 'Nuovo - Request for deposit denied';
+    $emailMessage = 'Your deposit request for the amount of $ ' . $resultDeposit['amount'] . ' has been denied on the following grounds: ' . $denialReasons;
+} else if ($language === "pt") {
+    $subjectMessage = 'Nuovo - Pedido de depósito recusado';
+    $emailMessage = 'Pedido de depósito do montante de $ ' . $resultDeposit['amount'] . ' foi recusado pelos seguintes motivos:: ' . $denialReasons;
+} else {
+    $subjectMessage = 'Nuovo - Solicitud de depósito denegada';
+    $emailMessage = 'Su solicitud de depósito por el monto de $ ' . $resultDeposit['amount'] . ' ha sido denegada por los siguientes motivos: ' . $denialReasons;
+}
+
+
 $to = $userEmail;
-$subject = 'Nuovo - Solicitud de depósito denegada';
-$message = 'Su solicitud de depósito por el monto de $ ' . $resultDeposit['amount'] . ' ha sido denegada por los siguientes motivos: ' . $denialReasons;
+$subject = $subjectMessage;
+$message = $emailMessage;
 
 $headers = 'From: ' . $adminEmail . "\r\n" .
     'Reply-To: ' . $adminEmail . "\r\n" .

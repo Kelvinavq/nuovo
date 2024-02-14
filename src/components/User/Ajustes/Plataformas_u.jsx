@@ -417,9 +417,7 @@ const Plataformas_u = () => {
       <div className="content">
         <div className="title">
           <h2>{Translation[language].titlePlatforms}</h2>
-          <button className="btns" onClick={showPlatformModal}>
-          {Translation[language].button5}
-          </button>
+    
         </div>
 
         {/* Modal de selección de plataforma */}
@@ -544,7 +542,9 @@ const Plataformas_u = () => {
         <Enlaces />
 
         <h3>{Translation[language].h3}</h3>
-
+        <button className="btns" onClick={showPlatformModal}>
+          {Translation[language].button5}
+          </button>
         <div className="lista_plataformas">
           {platforms.map((platform) => (
             <div key={platform.id}>

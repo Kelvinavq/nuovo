@@ -73,17 +73,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
         // obtener nombre del usuario
-        $getUserNameQuery = "SELECT name, email FROM users WHERE id = :idUser";
+        $getUserNameQuery = "SELECT name, email, language FROM users WHERE id = :idUser";
         $getUserName = $conexion->prepare($getUserNameQuery);
         $getUserName->bindParam(':idUser', $depositInfo['user_id'], PDO::PARAM_INT);
         $getUserName->execute();
         $result = $getUserName->fetch(PDO::FETCH_LAZY);
         $userName = $result['name'];
         $userEmail = $result['email'];
+        $language = $result['language'];
 
         // notificaciones
 
-        $contentUser = "Su solicitud de depósito por $" . $depositInfo['amount'] . " ha sido aprobada.";
+        if ($language === "en") {
+            $contentUser = "Your deposit request for $" . $depositInfo['amount'] . " has been approved.";
+        } else if ($language === "pt") {
+            $contentUser = "Seu pedido de depósito por $" . $depositInfo['amount'] . " foi aprovado.";
+        } else {
+            $contentUser = "Su solicitud de depósito por $" . $depositInfo['amount'] . " ha sido aprobada.";
+        }
+
+   
+
         $contentAdmin = "Un administrador aprobó la solicitud de depósito del usuario " . $userName . " correo electrónico: " . $userEmail . " por un monto de $" . $depositInfo['amount'];
 
         // Insertar la notificación en la base de datos
@@ -111,9 +121,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pusher->trigger('notifications-channel', 'evento', $data);
 
         // Enviar notificación por correo electrónico 
+
+        if ($language === "en") {
+            $subjectMessage = 'Nuovo - Deposit request approved';
+            $emailMessage = 'Your deposit request for the amount of $ ' . $depositInfo['amount'] . ' has been approved.';
+        } else if ($language === "pt") {
+            $subjectMessage = 'Nuovo - Solicitação de depósito aprovada';
+            $emailMessage = 'A sua solicitação de depósito pelo montante de $ ' . $depositInfo['amount'] . ' foi aprovada.';
+        } else {
+            $subjectMessage = 'Nuovo - Solicitud de depósito aprobada';
+            $emailMessage = 'Su solicitud de depósito por el monto de $ ' . $depositInfo['amount'] . ' ha sido aprobada.';
+        }
+
         $to = $userEmail;
-        $subject = 'Nuovo - Solicitud de depósito aprobada';
-        $message = 'Su solicitud de depósito por el monto de $ ' . $depositInfo['amount'] . ' ha sido aprobada.';
+        $subject = $subjectMessage;
+        $message = $emailMessage;
 
         $headers = 'From: ' . $adminEmail . "\r\n" .
             'Reply-To: ' . $adminEmail . "\r\n" .

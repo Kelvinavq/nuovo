@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(array("error" => "Método no permitido."));
     exit();
 }
+$selectedLanguage = isset($_COOKIE['selectedLanguage']) ? $_COOKIE['selectedLanguage'] : 'es';
 
 // Obtener datos del cuerpo de la solicitud
 $data = json_decode(file_get_contents("php://input"), true);
@@ -55,18 +56,29 @@ try {
     $conexion->commit();
 
     // obtener nombre del usuario
-    $getUserNameQuery = "SELECT name, email FROM users WHERE id = :idUser";
+    $getUserNameQuery = "SELECT name, email, language FROM users WHERE id = :idUser";
     $getUserName = $conexion->prepare($getUserNameQuery);
     $getUserName->bindParam(':idUser', $userId, PDO::PARAM_INT);
     $getUserName->execute();
     $result = $getUserName->fetch(PDO::FETCH_LAZY);
     $userName = $result['name'];
     $userEmail = $result['email'];
+    $language = $result['language'];
 
 
     // notificaciones
 
-    $contentUser = "Su solicitud de retiro por $" . $withdrawalInfo['amount'] . " ha sido denegada. Se ha enviado un correo electronico con los motivos.";
+
+
+    if ($language === "en") {
+        $contentUser = "Your withdrawal request for $" . $withdrawalInfo['amount'] . " has been denied. An e-mail with the reasons has been sent.";
+    } else if ($language === "pt") {
+        $contentUser = "Seu pedido de retirada por $" . $withdrawalInfo['amount'] . " foi recusado. Foi enviado um e-mail com os motivos.";
+    } else {
+        $contentUser = "Su solicitud de retiro por $" . $withdrawalInfo['amount'] . " ha sido denegada. Se ha enviado un correo electronico con los motivos.";
+    }
+
+
     $contentAdmin = "Un administrador denegó la solicitud de retiro del usuario " . $userName . " correo electrónico: " . $userEmail . " por un monto de $" . $withdrawalInfo['amount'];
 
 
@@ -97,9 +109,20 @@ try {
 
 
     // Enviar notificación por correo electrónico 
+    if ($language === "en") {
+        $subjectMessage = 'Nuovo - Request for withdrawal denied';
+        $emailMessage = 'Your withdrawal request for the amount of $ ' . $withdrawalInfo['amount'] . ' has been denied on the following grounds: ' . $denialReasons;
+    } else if ($language === "pt") {
+        $subjectMessage = 'Nuovo - Pedido de retirada recusado';
+        $emailMessage = 'Pedido de retirada do montante de $ ' . $withdrawalInfo['amount'] . ' foi recusado pelos seguintes motivos:: ' . $denialReasons;
+    } else {
+        $subjectMessage = 'Nuovo - Solicitud de retiro denegada';
+        $emailMessage = 'Su solicitud de retiro por el monto de $ ' . $withdrawalInfo['amount'] . ' ha sido denegada por los siguientes motivos: ' . $denialReasons;
+    }
+
     $to = $userEmail;
-    $subject = 'Nuovo - Solicitud de retiro denegada';
-    $message = 'Su solicitud de retiro por el monto de $ ' . $withdrawalInfo['amount'] . ' ha sido denegada por los siguientes motivos: ' . $denialReasons;
+    $subject = $subjectMessage;
+    $message = $emailMessage;
 
     $headers = 'From: ' . $adminEmail . "\r\n" .
         'Reply-To: ' . $adminEmail . "\r\n" .

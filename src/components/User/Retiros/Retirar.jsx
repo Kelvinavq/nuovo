@@ -697,7 +697,7 @@ const Retirar = () => {
             <form onSubmit={handleSubmit}>
               <div className="grupo-input">
                 <label htmlFor="paymentMethod">
-                {Translation[language].label1}
+                {Translation[language].label1d1}
                 </label>
                 <select
                   name="paymentMethod"

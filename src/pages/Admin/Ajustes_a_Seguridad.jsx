@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import Sidebar_a from "../../components/Admin/Sidebar_Admin/Sidebar_a";
 import Seguridad_a from "../../components/Admin/Ajustes_Admin/Seguridad_a";
+import Notification_a from "../../components/Admin/Notification_Admin/Notification_a";
+import Button_a from "../../components/Admin/Sidebar_Admin/Button_a";
 
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -75,7 +77,9 @@ const Ajustes_a_Seguridad = () => {
   return (
     <div>
       <Sidebar_a />
-
+      <Button_a />
+      <Notification_a />
+      
       <main>
         <Seguridad_a />
       </main>

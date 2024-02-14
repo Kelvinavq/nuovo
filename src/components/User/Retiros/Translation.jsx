@@ -1,7 +1,7 @@
 export const Translation = {
   es: {
     title: "Retirar",
-    label1: "Seleccione el medio de pago",
+    label1d1: "Seleccione el medio de pago",
 
     option1: "Seleccionar método de retiro",
     option2: "Transferencia entre usuarios",
@@ -72,7 +72,7 @@ export const Translation = {
   en: {
     title: "Withdraw money",
 
-    label1: "Select the means of payment",
+    label1d1: "Select the means of payment",
 
     option1: "Select withdrawal method",
     option2: "Transfer between users",
@@ -141,7 +141,7 @@ export const Translation = {
   pt: {
     title: "Retirar dinheiro",
 
-    label1: "Escolha o meio de pagamento",
+    label1d1: "Escolha o meio de pagamento",
 
     option1: "Selecione o método de retirada",
     option2: "Transferência entre usuários",

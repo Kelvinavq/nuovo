@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Sidebar_a from "../../components/Admin/Sidebar_Admin/Sidebar_a";
 import Button_a from "../../components/Admin/Sidebar_Admin/Button_a";
 import Ajustes_a from "../../components/Admin/Ajustes_Admin/Ajustes_a";
+import Notification_a from "../../components/Admin/Notification_Admin/Notification_a";
 
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -77,6 +78,7 @@ const Verificaciones_Admin = () => {
     <div classname="ajustes_a perfil">
       <Sidebar_a />
       <Button_a />
+      <Notification_a />
 
       <main >
         <Ajustes_a />

@@ -46,16 +46,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $userId = $getUserStmt->fetchColumn();
 
         // obtener nombre del usuario
-        $getUserNameQuery = "SELECT name, email FROM users WHERE id = :idUser";
+        $getUserNameQuery = "SELECT name, email, language FROM users WHERE id = :idUser";
         $getUserName = $conexion->prepare($getUserNameQuery);
         $getUserName->bindParam(':idUser', $userId, PDO::PARAM_INT);
         $getUserName->execute();
         $result = $getUserName->fetch(PDO::FETCH_LAZY);
         $userName = $result['name'];
         $userEmail = $result['email'];
+        $language = $result['language'];
 
 
-        $contentUser = "Su solicitud de verificacion ha sido denegada. Se ha enviado un correo electronico con los motivos.";
+        if ($language === "en") {
+            $contentUser = "Your verification request has been denied. An e-mail with the reasons has been sent.";
+        } else if ($language === "pt") {
+            $contentUser = "Seu pedido de verificação foi recusado. Foi enviado um e-mail com os motivos.";
+        } else {
+            $contentUser = "Su solicitud de verificacion ha sido denegada. Se ha enviado un correo electronico con los motivos.";
+        }
+
+        
         $contentAdmin = "Un administrador denegó la solicitud de verificación del usuario " . $userName;
 
         // Insertar la notificación en la base de datos
@@ -83,10 +92,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pusher->trigger('notifications-channel', 'evento', $data);
 
         // Enviar notificación por correo electrónico 
-        $to = $userEmail;
-        $subject = 'Nuovo - Verificación de Cuenta';
-        $message = 'Su solicitud de verificacion ha sido denegada por los siguientes motivos: ' . $formattedReasons;
+        if ($language === "en") {
+            $subjectMessage = 'Nuovo - Account Verification';
+            $emailMessage = 'Your verification request has been denied on the following grounds: ' . $formattedReasons;
+        } else if ($language === "pt") {
+            $subjectMessage = 'Nuovo - Verificação de conta';
+            $emailMessage = 'O seu pedido de verificação foi recusado pelos seguintes motivos: ' . $formattedReasons;
+        } else {
+            $subjectMessage = 'Nuovo - Verificación de Cuenta';
+            $emailMessage = 'Su solicitud de verificacion ha sido denegada por los siguientes motivos: ' . $formattedReasons;
+        }
 
+        $to = $userEmail;
+        $subject = $subjectMessage;
+        $message = $emailMessage;
         $headers = 'From: ' . $adminEmail . "\r\n" .
             'Reply-To: ' . $adminEmail . "\r\n" .
             'X-Mailer: PHP/' . phpversion();

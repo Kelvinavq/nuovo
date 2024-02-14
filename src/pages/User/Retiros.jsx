@@ -3,6 +3,7 @@ import Retirar from "../../components/User/Retiros/Retirar";
 import Sidebar from "../../components/User/sidebar/Sidebar";
 import Button from "../../components/User/sidebar/Button";
 import Lateral from "../../components/User/Lateral/Lateral";
+import Notification from "../../components/User/Notification/Notification";
 
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -75,6 +76,7 @@ const Retiros = () => {
     <div className="retiros">
       <Sidebar />
       <Button />
+      <Notification />
 
       <main>
         <Retirar />

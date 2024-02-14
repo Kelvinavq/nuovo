@@ -404,7 +404,7 @@ const Plataformas_a = () => {
         <div className="title">
           <h2>Plataformas</h2>
           <button className="btns" onClick={showPlatformModal}>
-            Agregar nueva plataforma
+            Agregar
           </button>
         </div>
 

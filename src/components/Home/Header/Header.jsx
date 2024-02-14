@@ -1,5 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import device from "../../../assets/images/frame.png";
+import device_es from "../../../assets/images/mobile_es.png";
+import device_en from "../../../assets/images/mobile_en.png";
+import device_pt from "../../../assets/images/mobile_pt.png";
+
 import "./Style.css";
 import { Link } from "react-router-dom";
 import ParticlesBg from "particles-bg";
@@ -26,6 +29,22 @@ const Header = () => {
 
   const particleNum = windowWidth < 560 ? 30 : 100;
 
+    // Determinar la imagen del dispositivo según el idioma seleccionado
+    let deviceImage;
+    switch (language) {
+      case "es":
+        deviceImage = device_es;
+        break;
+      case "en":
+        deviceImage = device_en;
+        break;
+      case "pt":
+        deviceImage = device_pt;
+        break;
+      default:
+        deviceImage = device_es;
+    }
+
   return (
     <div className="container">
       <ParticlesBg num={particleNum} type="cobweb" bg={true} color="#85ff2e" />
@@ -40,7 +59,7 @@ const Header = () => {
         </div>
 
         <div className="right">
-          <img src={device} alt="device nuovotech" />
+          <img src={deviceImage} alt="device nuovotech" />
         </div>
       </div>
     </div>

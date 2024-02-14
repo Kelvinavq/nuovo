@@ -144,7 +144,7 @@ const Bancos_a = () => {
       <div className="content">
         <div className="title">
           <h2>Bancos</h2>
-          <button className="btns" onClick={abrirModalNuevaCuenta}>Agregar nueva cuenta</button>
+          <button className="btns" onClick={abrirModalNuevaCuenta}>Agregar</button>
         </div>
         <Enlaces_a />
 

@@ -54,11 +54,37 @@ const LanguageSelector = () => {
     setLanguage(newLanguage);
     setSelectedLanguage(newLanguage);
     setDropdownOpen(false);
+    updateLanguageOnBackend(newLanguage);
+  };
+
+
+  const updateLanguageOnBackend = async (newLanguage) => {
+    try {
+      const response = await fetch('http://localhost/nuovo/backend/Api/updateLanguage.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          language: newLanguage,
+        }),
+        credentials: "include",
+      });
+  
+      if (response.ok) {
+        console.log('Idioma actualizado en el backend con éxito.');
+      } else {
+        console.error('Error al actualizar el idioma en el backend:', response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error('Error en la solicitud al backend:', error);
+    }
   };
 
   useEffect(() => {
     setSelectedLanguage(language);
   }, [language]);
+
 
   return (
     <>
