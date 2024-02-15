@@ -33,9 +33,9 @@ if (!isset($_FILES['dniFront']) || !isset($_FILES['dniSelfie']) || !isset($_FILE
 }
 
 // Rutas para guardar las imágenes
-$dniFrontPath = '../../src/assets/user_selfie/';
-$dniBackPath = '../../src/assets/user_dni_back/';
-$dniSelfiePath = '../../src/assets/user_dni/';
+$dniFrontPath = '../public/assets/user_selfie/';
+$dniBackPath = '../public/assets/user_dni_back/';
+$dniSelfiePath = '../public/assets/user_dni/';
 
 // Nombres de archivo
 $dniFrontFilename = 'dni_selfie_' . $userId . '.' . pathinfo($_FILES['dniFront']['name'], PATHINFO_EXTENSION);

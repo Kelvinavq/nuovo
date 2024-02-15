@@ -25,7 +25,7 @@ if (isset($_FILES['file']) && isset($_POST['columns']) && isset($_POST['fileName
       
         $csvFile = isset($_FILES['file']) ? $_FILES['file'] : null;
         $csvName = $csvFile ? uniqid('file') . '_' . $csvFile['name'] : null;
-        $csvPath = $csvFile ? "../../../src/assets/csv/" . $csvName : null;
+        $csvPath = $csvFile ? "../../public/assets/csv/" . $csvName : null;
 
         $fileName = $_POST['fileName'];
 

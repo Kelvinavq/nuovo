@@ -36,7 +36,7 @@ const Perfil = () => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-
+  
     // Validar la extensión del archivo
     const allowedExtensions = /\.(png|jpg|jpeg)$/i;
     if (!allowedExtensions.test(file.name)) {
@@ -47,9 +47,9 @@ const Perfil = () => {
       });
       return;
     }
-
+  
     setNewProfilePicture(file);
-
+  
     // Mostrar la ventana de Swal al seleccionar una imagen
     Swal.fire({
       title: Translation[language].swalTitle1,
@@ -62,26 +62,48 @@ const Perfil = () => {
         // Crear un objeto FormData y agregar la nueva imagen
         const formData = new FormData();
         formData.append("profile_picture", file);
-
+  
         // Enviar la nueva imagen al servidor
         fetch(`${Config.backendBaseUrl}updateProfilePicture.php`, {
           method: "POST",
           credentials: "include",
           body: formData,
         })
-          .then((response) => response.json())
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error(
+                `Error ${response.status}: ${response.statusText}`
+              );
+            }
+          })
           .then((data) => {
-            // Actualizar la información del usuario en el estado
-            setUserData((prevData) => ({
-              ...prevData,
-              profile_picture: data.newProfilePictureName,
-            }));
-
-            // Restablecer el estado de la nueva imagen
-            setNewProfilePicture(null);
-
-            Swal.fire(Translation[language].swalMessage2, "", "success");
-            refreshPage();
+            if (data.error) {
+              // Mostrar mensaje de error específico del servidor
+              Swal.fire({
+                title: "Error",
+                icon: "error",
+                text: data.error,
+              });
+            } else {
+              // Actualizar la información del usuario en el estado
+              setUserData((prevData) => ({
+                ...prevData,
+                profile_picture: data.newProfilePictureName,
+              }));
+  
+              // Restablecer el estado de la nueva imagen
+              setNewProfilePicture(null);
+  
+              Swal.fire({
+                title: Translation[language].swalMessage2,
+                icon: "success",
+                didClose: () => {
+                  window.location.reload();
+                },
+              });
+            }
           })
           .catch((error) =>
             console.error("Error al actualizar la foto de perfil", error)
@@ -92,6 +114,7 @@ const Perfil = () => {
       }
     });
   };
+  
 
   const [notifications, setNotifications] = useState([]);
   useEffect(() => {
@@ -127,7 +150,7 @@ const Perfil = () => {
         <div className="imgPerfil">
           <div className="foto">
             <img
-              src={`http://localhost/nuovo/src/assets/users/${userData.profile_picture}`}
+              src={`${Config.imgProfile}${userData.profile_picture}`}
               alt=""
             />
             <div className="input">

@@ -87,9 +87,8 @@ const Depositos_a = () => {
       <p><strong>Numero de referencia de la transacción:</strong> ${
         solicitud.reference_number || "No aplica"
       }</p>
-      <img src="http://localhost/nuovo/src/assets/vouchers/${
-        depositDetails.voucher_img
-      }" alt="" />
+      <p></p>
+     
       `;
 
       // Agregar el campo platformEmail_user si no es null
@@ -112,6 +111,16 @@ const Depositos_a = () => {
         
         `;
       }
+
+      if (depositDetails.voucher_img !== null) {
+        htmlContent += `
+        <p>Comprobante</p>
+        <img src="${Config.imgVoucher}${
+          depositDetails.voucher_img
+        }" alt="" />
+        `;
+      }
+
 
       Swal.fire({
         title: `Detalles de la Solicitud - ${solicitud.platform_type}`,

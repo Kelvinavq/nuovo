@@ -94,7 +94,14 @@ const readAndProcessFile = (file) => {
 
       if (response.ok) {
         const data = await response.json();
-
+        Swal.fire({
+          icon: "success",
+          title: "Éxitos",
+          text: "Archivo subido correctamente",
+          didClose: () =>{
+            window.location.reload();
+          }
+        });
         console.log(selectedColumnsJSON)
       } else {
         console.error("Error al guardar en la base de datos:", response.statusText);
@@ -235,7 +242,7 @@ const readAndProcessFile = (file) => {
 
   const downloadCSV = (fileName) => {
     // TODO: Cambiar la URL del servidor para apuntar al directorio donde se almacenan los archivos CSV
-    const serverUrl = "http://localhost/nuovo/src/assets/csv/";
+    const serverUrl = `${Config.csvArchive}`;
     const fileUrl = `${serverUrl}${fileName}`;
   
     // Crear un enlace invisible

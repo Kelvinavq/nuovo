@@ -8,11 +8,9 @@ import Button from "../../components/User/sidebar/Button";
 import Notification from "../../components/User/Notification/Notification";
 import Config from "../../Config";
 
-import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const userRole = localStorage.getItem("user_role");
   const [showAlert, setShowAlert] = useState(false); 
@@ -46,7 +44,7 @@ const Dashboard = () => {
               text: "Acceso no permitido para el rol actual.",
               timer: 3000,
               didClose: () => {
-                history.back()
+                window.history.back()
               },
             });
           }
@@ -59,7 +57,7 @@ const Dashboard = () => {
             text: "Debes iniciar sesión para acceder a esta página.",
             timer: 3000,
             didClose: () => {
-              // window.location.href = "/login";
+              window.location.href = "/login";
             },
           });
         }
@@ -70,7 +68,7 @@ const Dashboard = () => {
 
     // Llamar a la función para verificar la sesión
     checkAuthStatus();
-  }, [history]);
+  }, []);
 
   // Si el usuario no ha iniciado sesión o no tiene el rol adecuado, no renderizar el componente
   if (!isLoggedIn || showAlert) {

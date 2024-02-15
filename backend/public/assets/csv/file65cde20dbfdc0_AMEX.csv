@@ -1,0 +1,9 @@
+Date,Description,Status,Currency, Amount , Ending Balance ,Reference
+11/02/2023,Wire Transfer Domestic Incoming,Posted,USD, $678.01 ," $3,266.97 ",9.00E+12
+11/02/2023,Wire Transfer Domestic Incoming,Posted,USD, $500.00 ," $2,588.96 ",9.00E+12
+11/02/2023,Wire Transfer Domestic Incoming,Posted,USD, $88.96 ," $2,088.96 ",9.00E+12
+11/02/2023,Wire Transfer Domestic Incoming,Posted,USD," $1,000.00 "," $2,000.00 ",9.00E+12
+11/02/2023,Wire Transfer Domestic Incoming,Posted,USD," $1,000.00 "," $1,000.00 ",9.00E+12
+11/03/2023,Wire Transfer Domestic Incoming,Posted,USD," $1,733.03 "," $5,000.00 ",9.00E+12
+11/30/2023,Interest Deposit,Posted,USD, $5.07 ," $5,005.07 ",9.00E+12
+12/08/2023,Transfer to Checking *4380,Posted,USD, $(5.07)," $5,000.00 ",9.00E+12

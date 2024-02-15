@@ -134,21 +134,21 @@ const Verificaciones_a = () => {
 
         <div className="grupo-input img">
           <p>Foto del DNI</p>
-          <img src="http://localhost/nuovo/src/assets/user_dni/${
+          <img src="${Config.imgDni}${
             solicitud.dni_image
           }" alt="Foto del DNI" />
         </div>
 
         <div className="grupo-input img">
         <p>Foto selfie con el DNI</p>
-        <img src="http://localhost/nuovo/src/assets/user_selfie/${
+        <img src="${Config.imgSelfieDni}${
           solicitud.selfie_with_dni_image
         }" alt="Foto del Selfie con DNI" />
       </div>
 
         <div className="grupo-input img">
           <p>Foto del dorso DNI</p>
-          <img src="http://localhost/nuovo/src/assets/user_dni_back/${
+          <img src="${Config.imgDorsoDni}${
             solicitud.dni_back
           }" alt="Foto del Selfie con DNI" />
         </div>

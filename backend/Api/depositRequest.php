@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Generar un nombre único para la imagen
         $voucherImgName = $voucherImg ? uniqid('payment_proof_') . '_' . $voucherImg['name'] : null;
-        $voucherImgPath = $voucherImg ? "../../src/assets/vouchers/" . $voucherImgName : null;
+        $voucherImgPath = $voucherImg ? "../public/assets/vouchers/" . $voucherImgName : null;
 
         // Insertar la solicitud de depósito en la tabla deposit_requests
         $userId = $_SESSION['user_id'];
