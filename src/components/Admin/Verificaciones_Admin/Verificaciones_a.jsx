@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import "./Style.css";
+import Config from "../../../Config";
 
 const Verificaciones_a = () => {
   const [solicitudes, setSolicitudes] = useState([]);
@@ -11,7 +12,7 @@ const Verificaciones_a = () => {
     const obtenerSolicitudes = async () => {
       try {
         const response = await fetch(
-          "http://localhost/nuovo/backend/Api/admin/getVerificationRequests.php",
+          `${Config.backendBaseUrlAdmin}getVerificationRequests.php`,
           {
             method: "GET",
             mode: "cors",
@@ -51,7 +52,7 @@ const Verificaciones_a = () => {
     const obtenerBancos = async () => {
       try {
         const response = await fetch(
-          "http://localhost/nuovo/backend/Api/admin/getBankAccounts.php",
+          `${Config.backendBaseUrlAdmin}getBankAccounts.php`,
           {
             method: "GET",
             mode: "cors",
@@ -87,7 +88,7 @@ const Verificaciones_a = () => {
   const handleClick = async (solicitud) => {
     // Obtener el estado de verificación del usuario
     const verificationStatusResponse = await fetch(
-      `http://localhost/nuovo/backend/Api/admin/getVerificationStatus.php?user_id=${solicitud.user_id}`,
+      `${Config.backendBaseUrlAdmin}getVerificationStatus.php?user_id=${solicitud.user_id}`,
       {
         method: "GET",
         mode: "cors",
@@ -221,7 +222,7 @@ const Verificaciones_a = () => {
               const selectedBankId = bankAccountSelect.value;
 
               const updateBankAccountResponse = await fetch(
-                "http://localhost/nuovo/backend/Api/admin/updateBankAccount.php",
+                `${Config.backendBaseUrlAdmin}updateBankAccount.php`,
                 {
                   method: "POST",
                   mode: "cors",
@@ -353,7 +354,7 @@ const Verificaciones_a = () => {
             ) {
               // Denegar la solicitud y registrar el motivo en la base de datos
               const response = await fetch(
-                "http://localhost/nuovo/backend/Api/admin/denyVerification.php",
+                `${Config.backendBaseUrlAdmin}denyVerification.php`,
                 {
                   method: "POST",
                   mode: "cors",

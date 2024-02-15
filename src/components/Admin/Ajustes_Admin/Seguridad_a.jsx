@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 const MySwal = withReactContent(Swal);
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import Config from "../../../Config";
 
 const Seguridad_a = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -54,7 +55,7 @@ const Seguridad_a = () => {
     // Enviar la solicitud al backend
     try {
       const response = await fetch(
-        "http://localhost/nuovo/backend/Api/admin/updatePassword.php",
+        `${Config.backendBaseUrlAdmin}updatePassword.php`,
         {
           method: "POST",
           headers: {

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import "./Style.css";
 import Swal from "sweetalert2";
 import Enlaces from "./Enlaces";
+import Config from "../../../Config";
 
 import { LanguageContext } from "../../../Language/LanguageContext";
 import { Translation } from "./Translation";
@@ -24,7 +25,7 @@ const Plataformas_u = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost/nuovo/backend/Api/getPlatformsSettings.php?user_id=${UserId}`
+          `${Config.backendBaseUrl}getPlatformsSettings.php?user_id=${UserId}`
         );
         const data = await response.json();
   
@@ -71,7 +72,7 @@ const Plataformas_u = () => {
 
         // Lógica para manejar la plataforma "otra" con campos personalizados
         const response = await fetch(
-          "http://localhost/nuovo/backend/Api/createPlatform.php",
+          `${Config.backendBaseUrl}createPlatform.php`,
           {
             method: "POST",
             headers: {
@@ -124,7 +125,7 @@ const Plataformas_u = () => {
         }
 
         const response = await fetch(
-          "http://localhost/nuovo/backend/Api/createPlatform.php",
+          `${Config.backendBaseUrl}createPlatform.php`,
           {
             method: "POST",
             headers: {
@@ -218,7 +219,7 @@ const Plataformas_u = () => {
       // Consultar customFields asociados a la plataforma "otra"
       try {
         const response = await fetch(
-          `http://localhost/nuovo/backend/Api/getCustomFields.php?platformId=${platform.id}`
+          `${Config.backendBaseUrl}getCustomFields.php?platformId=${platform.id}`
         );
 
         const data = await response.json();
@@ -321,7 +322,7 @@ const Plataformas_u = () => {
       if (result.isDenied) {
         try {
           const response = await fetch(
-            `http://localhost/nuovo/backend/Api/deletePlatform.php?id=${platform.id}`,
+            `${Config.backendBaseUrl}deletePlatform.php?id=${platform.id}`,
             {
               method: "GET",
             }
@@ -364,7 +365,7 @@ const Plataformas_u = () => {
         try {
           // Enviar datos al backend para la actualización
           const response = await fetch(
-            "http://localhost/nuovo/backend/Api/updatePlatform.php",
+            `${Config.backendBaseUrl}updatePlatform.php`,
             {
               method: "POST",
               headers: {

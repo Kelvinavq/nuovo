@@ -5,6 +5,7 @@ import Sidebar from "../../components/User/sidebar/Sidebar";
 import Button from "../../components/User/sidebar/Button";
 import Lateral from "../../components/User/Lateral/Lateral";
 import Notification from "../../components/User/Notification/Notification";
+import Config from "../../Config";
 
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -22,7 +23,7 @@ const Depositos = () => {
     const checkAuthStatus = async () => {
       try {
         const response = await fetch(
-          "http://localhost/nuovo/backend/Api/check-session.php",
+          `${Config.backendBaseUrl}check-session.php`,
           {
             method: "GET",
             mode: "cors",

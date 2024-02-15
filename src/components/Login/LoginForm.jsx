@@ -3,6 +3,7 @@ import logotipo from "../../assets/images/nuovo.png";
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import Config from "../../Config";
 
 import { LanguageContext } from "../../Language/LanguageContext";
 import { TranslationLogin } from "../../Language/TranslationLogin";
@@ -36,7 +37,7 @@ const LoginForm = () => {
     // Enviar datos al servidor
     try {
       const response = await fetch(
-        "http://localhost/nuovo/backend/Api/login.php",
+        `${Config.backendBaseUrl}login.php`,
         {
           method: "POST",
           headers: {

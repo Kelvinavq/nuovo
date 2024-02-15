@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Style.css";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import Config from "../../../Config";
 
 const Saldo = () => {
   const [showBalance, setShowBalance] = useState(true);
@@ -14,7 +15,7 @@ const Saldo = () => {
     }
 
     // Obtener el saldo del usuario
-    fetch("http://localhost/nuovo/backend/Api/getUserBalance.php", {
+    fetch(`${Config.backendBaseUrl}getUserBalance.php`, {
       method: "GET",
       credentials: "include",
     })

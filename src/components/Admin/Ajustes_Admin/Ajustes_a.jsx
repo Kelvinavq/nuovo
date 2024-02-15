@@ -2,6 +2,7 @@ import foto from "../../../assets/icons/usuario.png";
 import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
 import "./Style.css";
 import Enlaces_a from "./Enlaces_a";
+import Config from "../../../Config";
 
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
@@ -16,7 +17,7 @@ const Ajustes_a = () => {
 
   useEffect(() => {
     // Obtener información del usuario al cargar el componente
-    fetch("http://localhost/nuovo/backend/Api/admin/getUserInfo.php", {
+    fetch(`${Config.backendBaseUrlAdmin}getUserInfo.php`, {
       method: "GET",
       credentials: "include",
     })
@@ -57,7 +58,7 @@ const Ajustes_a = () => {
         formData.append("profile_picture", file);
 
         // Enviar la nueva imagen al servidor
-        fetch("http://localhost/nuovo/backend/Api/admin/updateProfilePicture.php", {
+        fetch(`${Config.backendBaseUrlAdmin}updateProfilePicture.php`, {
           method: "POST",
           credentials: "include",
           body: formData,

@@ -3,6 +3,7 @@ import HorizontalRuleOutlinedIcon from "@mui/icons-material/HorizontalRuleOutlin
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import Config from "../../../Config";
 
 const ListaMovimientos = () => {
   const [transactions, setTransactions] = useState([]);
@@ -12,7 +13,7 @@ const ListaMovimientos = () => {
     const fetchTransactions = async () => {
       try {
         const response = await fetch(
-          "http://localhost/nuovo/backend/Api/getMoves.php",
+          `${Config.backendBaseUrl}getMoves.php`,
           {
             method: "GET",
             credentials: "include",

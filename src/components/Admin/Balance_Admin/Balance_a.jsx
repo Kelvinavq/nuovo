@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import DescriptionIcon from "@mui/icons-material/Description";
 import "./Style.css";
 import Swal from "sweetalert2";
+import Config from "../../../Config";
 
 const Balance_a = () => {
   const [balance, setBalance] = useState({
@@ -16,7 +17,7 @@ const Balance_a = () => {
     const fetchBalance = async () => {
       try {
         const response = await fetch(
-          "http://localhost/nuovo/backend/Api/admin/getBalanceAdmin.php",
+          `${Config.backendBaseUrlAdmin}getBalanceAdmin.php`,
           {
             method: "GET",
             credentials: "include",
@@ -92,7 +93,7 @@ const Balance_a = () => {
     params.append("endDate", endDate);
     try {
       const response = await fetch(
-        `http://localhost/nuovo/backend/Api/admin/generateExcelReport.php?${params.toString()}`,
+        `${Config.backendBaseUrlAdmin}generateExcelReport.php?${params.toString()}`,
         {
           method: "GET",
           credentials: "include",
@@ -103,7 +104,7 @@ const Balance_a = () => {
         const data = await response.json();
         if (data.success) {
           // Construir la URL completa del archivo
-          const baseUrl = "http://localhost/nuovo/src/assets/reports";
+          const baseUrl = `http://localhost/nuovo/src/assets/reports`;
           const fullUrl = `${baseUrl}/${data.file_url}`;
 
           // Mostrar la alerta con el botón de descarga

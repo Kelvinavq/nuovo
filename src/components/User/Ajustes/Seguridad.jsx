@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import Enlaces from "./Enlaces";
 import Saldo from "../Saldo/Saldo";
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
+import Config from "../../../Config";
 
 import { LanguageContext } from "../../../Language/LanguageContext";
 import { Translation } from "./Translation";
@@ -58,7 +59,7 @@ const Seguridad = () => {
     // Enviar la solicitud al backend
     try {
       const response = await fetch(
-        "http://localhost/nuovo/backend/Api/updatePassword.php",
+        `${Config.backendBaseUrl}updatePassword.php`,
         {
           method: "POST",
           headers: {

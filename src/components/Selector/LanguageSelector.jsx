@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { LanguageContext } from "../../Language/LanguageContext";
 import {Translation} from "../../Language/Translation";
-
+import Config from "../../Config";
 import inglesIcon from "../../assets/icons/ingles.png";
 import espanaIcon from "../../assets/icons/espana.png";
 import portugalIcon from "../../assets/icons/portugal.png";
@@ -60,7 +60,7 @@ const LanguageSelector = () => {
 
   const updateLanguageOnBackend = async (newLanguage) => {
     try {
-      const response = await fetch('http://localhost/nuovo/backend/Api/updateLanguage.php', {
+      const response = await fetch(`${Config.backendBaseUrl}updateLanguage.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

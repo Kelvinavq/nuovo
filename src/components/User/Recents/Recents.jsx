@@ -2,6 +2,7 @@ import React, { useState, useEffect , useContext} from "react";
 import "./Style.css";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import HorizontalRuleOutlinedIcon from '@mui/icons-material/HorizontalRuleOutlined';
+import Config from "../../../Config";
 
 import { LanguageContext } from "../../../Language/LanguageContext";
 import { Translation } from "./Translation";
@@ -15,7 +16,7 @@ const Recents = () => {
     // Lógica para obtener las transacciones desde el backend
     const fetchTransactions = async () => {
       try {
-        const response = await fetch("http://localhost/nuovo/backend/Api/getTransactions.php", {
+        const response = await fetch(`${Config.backendBaseUrl}getTransactions.php`, {
           method: "GET",
           credentials: "include",
         });

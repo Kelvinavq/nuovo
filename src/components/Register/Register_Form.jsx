@@ -2,6 +2,7 @@ import "./Style.css";
 import logotipo from "../../assets/images/nuovo.png";
 import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import Config from "../../Config";
 
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -47,7 +48,7 @@ const Register_Form = () => {
 
     try {
       const response = await fetch(
-        `http://localhost/nuovo/backend/Api/usuarios.php`,
+        `${Config.backendBaseUrl}usuarios.php`,
         {
           method: "POST",
           headers: {

@@ -8,6 +8,7 @@ import DangerousOutlinedIcon from "@mui/icons-material/DangerousOutlined";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import imgDni from "../../../assets/images/dni.png";
 import ImgSelfie from "../../../assets/images/selfie.jpg";
+import Config from "../../../Config";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -78,7 +79,7 @@ const Verificacion = () => {
 
     try {
       const response = await fetch(
-        "http://localhost/nuovo/backend/Api/uploadVerification.php",
+        `${Config.backendBaseUrl}uploadVerification.php`,
         {
           method: "POST",
           body: formData,
@@ -118,7 +119,7 @@ const Verificacion = () => {
 
   useEffect(() => {
     // Obtener estado de verificación al cargar el componente
-    fetch("http://localhost/nuovo/backend/Api/getVerificationStatus.php", {
+    fetch(`${Config.backendBaseUrl}getVerificationStatus.php`, {
       method: "GET",
       credentials: "include",
     })

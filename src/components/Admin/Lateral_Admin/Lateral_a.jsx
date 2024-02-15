@@ -7,6 +7,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import HorizontalRuleOutlinedIcon from "@mui/icons-material/HorizontalRuleOutlined";
 import Pusher from "pusher-js";
+import Config from "../../../Config";
 
 const Lateral_a = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -38,7 +39,7 @@ const Lateral_a = () => {
   const getNotifications = async () => {
     try {
       const response = await fetch(
-        "http://localhost/nuovo/backend/Api/admin/getNotifications.php",
+        `${Config.backendBaseUrlAdmin}getNotifications.php`,
         {
           method: "GET",
           credentials: "include",
@@ -62,7 +63,7 @@ const Lateral_a = () => {
     try {
       // Enviar una solicitud para marcar las notificaciones como "read"
       const response = await fetch(
-        "http://localhost/nuovo/backend/Api/admin/markNotificationsAsRead.php",
+        `${Config.backendBaseUrlAdmin}markNotificationsAsRead.php`,
         {
           method: "POST",
           credentials: "include",
@@ -92,7 +93,7 @@ const Lateral_a = () => {
     try {
       // Obtener los últimos 3 depósitos
       const depositResponse = await fetch(
-        "http://localhost/nuovo/backend/Api/admin/getRecentDeposits.php",
+        `${Config.backendBaseUrlAdmin}getRecentDeposits.php`,
         {
           method: "GET",
           credentials: "include",
@@ -106,7 +107,7 @@ const Lateral_a = () => {
 
       // Obtener los últimos 3 retiros
       const withdrawalResponse = await fetch(
-        "http://localhost/nuovo/backend/Api/admin/getRecentWithdrawals.php",
+        `${Config.backendBaseUrlAdmin}getRecentWithdrawals.php`,
         {
           method: "GET",
           credentials: "include",
@@ -146,7 +147,7 @@ const Lateral_a = () => {
     getNotifications();
 
     // Obtener información del usuario al cargar el componente
-    fetch("http://localhost/nuovo/backend/Api/admin/getUserInfo.php", {
+    fetch(`${Config.backendBaseUrlAdmin}getUserInfo.php`, {
       method: "GET",
       credentials: "include",
     })

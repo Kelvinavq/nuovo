@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import "./Style.css";
+import Config from "../../Config";
 
 import { LanguageContext } from "../../Language/LanguageContext";
 import { TranslationResetPassword } from "../../Language/TranslationResetPassword";
@@ -37,7 +38,7 @@ const Reset_Password_Page = () => {
 
   const validateToken = async (token) => {
     try {
-      const response = await fetch("http://localhost/nuovo/backend/Api/validateToken.php", {
+      const response = await fetch(`${Config.backendBaseUrl}validateToken.php`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -103,7 +104,7 @@ const Reset_Password_Page = () => {
 
     // Realizar el fetch para actualizar la contraseña
     try {
-      const response = await fetch("http://localhost/nuovo/backend/Api/restorePassword.php", {
+      const response = await fetch(`${Config.backendBaseUrl}restorePassword.php`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Style.css";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import Swal from "sweetalert2";
+import Config from "../../../Config";
 
 const Depositos_a = () => {
   const [depositRequests, setDepositRequests] = useState([]);
@@ -11,7 +12,7 @@ const Depositos_a = () => {
     const fetchDepositRequests = async () => {
       try {
         const response = await fetch(
-          "http://localhost/nuovo/backend/Api/admin/getDepositRequests.php",
+          `${Config.backendBaseUrlAdmin}getDepositRequests.php`,
           {
             method: "GET",
             credentials: "include",
@@ -46,7 +47,7 @@ const Depositos_a = () => {
     try {
       // Obtener detalles específicos del depósito
       const response = await fetch(
-        `http://localhost/nuovo/backend/Api/admin/getDepositDetails.php?id=${solicitud.id}`,
+        `${Config.backendBaseUrlAdmin}getDepositDetails.php?id=${solicitud.id}`,
         {
           method: "GET",
           credentials: "include",
@@ -213,7 +214,7 @@ const Depositos_a = () => {
     }
     try {
       const response = await fetch(
-        `http://localhost/nuovo/backend/Api/admin/denyDepositRequest.php?id=${depositRequestId}`,
+        `${Config.backendBaseUrlAdmin}denyDepositRequest.php?id=${depositRequestId}`,
         {
           method: "POST",
           credentials: "include",
@@ -247,7 +248,7 @@ const Depositos_a = () => {
   const markAsCompleted = async (depositRequestId) => {
     try {
       const response = await fetch(
-        `http://localhost/nuovo/backend/Api/admin/completedDepositRequest.php?id=${depositRequestId}`,
+        `${Config.backendBaseUrlAdmin}completedDepositRequest.php?id=${depositRequestId}`,
         {
           method: "POST",
           credentials: "include",

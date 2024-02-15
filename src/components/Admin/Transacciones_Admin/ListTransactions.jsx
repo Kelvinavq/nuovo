@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import "./Style.css";
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import ViewCompactIcon from '@mui/icons-material/ViewCompact';
-
+import Config from "../../../Config";
 
 const ListTransactions = () => {
   const [fileData, setFileData] = useState();
@@ -13,7 +13,7 @@ const ListTransactions = () => {
   const fetchFileList = async () => {
     try {
       // TODO: Cambiar la URL a la ruta correcta de tu backend para obtener la lista de archivos
-      const apiUrl = "http://localhost/nuovo/backend/Api/admin/getFileList.php";
+      const apiUrl = `${Config.backendBaseUrlAdmin}getFileList.php`;
       const response = await fetch(apiUrl);
 
       if (response.ok) {
@@ -84,7 +84,7 @@ const readAndProcessFile = (file) => {
       const selectedColumnsJSON = JSON.stringify(selectedColumns);
       formData.append("columns", selectedColumnsJSON);
 
-      const apiUrl = "http://localhost/nuovo/backend/Api/admin/uploadCsv.php";
+      const apiUrl = `${Config.backendBaseUrlAdmin}uploadCsv.php`;
 
       const response = await fetch(apiUrl, {
         method: "POST",
@@ -179,7 +179,7 @@ const readAndProcessFile = (file) => {
   const showImportedData = async (fileId) => {
     try {
       // TODO: Cambiar la URL a la ruta correcta de tu backend para obtener los datos importados
-      const apiUrl = `http://localhost/nuovo/backend/Api/admin/getImportedData.php?fileId=${fileId}`;
+      const apiUrl = `${Config.backendBaseUrlAdmin}getImportedData.php?fileId=${fileId}`;
       const response = await fetch(apiUrl);
 
       if (response.ok) {

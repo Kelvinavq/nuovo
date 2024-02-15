@@ -2,6 +2,7 @@ import "./Style.css";
 import React, { useState,useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import Config from "../../../Config";
 
 import { LanguageContext } from "../../../Language/LanguageContext";
 import { Translation } from "./Translation";
@@ -20,7 +21,7 @@ const Balance = () => {
     }
 
     // Obtener el saldo del usuario
-    fetch("http://localhost/nuovo/backend/Api/getUserBalance.php", {
+    fetch(`${Config.backendBaseUrl}getUserBalance.php`, {
       method: "GET",
       credentials: "include",
     })
@@ -45,6 +46,7 @@ const Balance = () => {
   const formatBalance = (balance) => {
     return showBalance ? balance : "*****";
   };
+  
   return (
     <div className="balance">
       <div className="balance">

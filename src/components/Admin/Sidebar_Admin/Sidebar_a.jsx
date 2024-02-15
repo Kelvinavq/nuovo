@@ -9,6 +9,7 @@ import AjustesIcon from "../../../assets/icons/Ajustes.svg";
 import UserIcon from "../../../assets/icons/user-line.svg";
 import LogoutIcon from "../../../assets/icons/Logout.svg";
 import TransactionsIcon from "../../../assets/icons/transactions.svg";
+import Config from "../../../Config";
 
 const Sidebar_a = () => {
   const location = useLocation();
@@ -19,7 +20,7 @@ const Sidebar_a = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost/nuovo/backend/Api/logout.php", {
+      const response = await fetch(`${Config.backendBaseUrl}logout.php`, {
         method: "POST",
         mode: "cors",
         credentials: "include",

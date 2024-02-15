@@ -4,6 +4,7 @@ import Sidebar_a from "../../components/Admin/Sidebar_Admin/Sidebar_a";
 import Seguridad_a from "../../components/Admin/Ajustes_Admin/Seguridad_a";
 import Notification_a from "../../components/Admin/Notification_Admin/Notification_a";
 import Button_a from "../../components/Admin/Sidebar_Admin/Button_a";
+import Config from "../../Config";
 
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -20,7 +21,7 @@ const Ajustes_a_Seguridad = () => {
     const checkAuthStatus = async () => {
       try {
         const response = await fetch(
-          "http://localhost/nuovo/backend/Api/check-session.php",
+          `${Config.backendBaseUrl}check-session.php`,
           {
             method: "GET",
             mode: "cors",

@@ -2,6 +2,7 @@ import "./Style.css";
 import HorizontalRuleOutlinedIcon from "@mui/icons-material/HorizontalRuleOutlined";
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import Config from "../../../Config";
 
 const Retiros_a = () => {
   const [withdrawalRequests, setWithdrawalRequests] = useState([]);
@@ -11,7 +12,7 @@ const Retiros_a = () => {
     const fetchWithdrawalRequests = async () => {
       try {
         const response = await fetch(
-          "http://localhost/nuovo/backend/Api/admin/getWithdrawalRequests.php",
+          `${Config.backendBaseUrlAdmin}getWithdrawalRequests.php`,
           {
             method: "GET",
             credentials: "include",
@@ -248,7 +249,7 @@ const Retiros_a = () => {
 
     try {
       const response = await fetch(
-        `http://localhost/nuovo/backend/Api/admin/denyWithdrawalRequest.php?id=${withdrawalRequestId}`,
+        `${Config.backendBaseUrlAdmin}denyWithdrawalRequest.php?id=${withdrawalRequestId}`,
         {
           method: "POST",
           credentials: "include",
@@ -379,7 +380,7 @@ const Retiros_a = () => {
   const completeWithdrawalRequest = async (withdrawalRequestId, data) => {
     try {
       const response = await fetch(
-        `http://localhost/nuovo/backend/Api/admin/completedWithdrawalRequest.php?id=${withdrawalRequestId}`,
+        `${Config.backendBaseUrlAdmin}completedWithdrawalRequest.php?id=${withdrawalRequestId}`,
         {
           method: "POST",
           credentials: "include",

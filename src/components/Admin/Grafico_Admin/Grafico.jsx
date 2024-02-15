@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import "./Style.css";
 import ReactApexChart from "react-apexcharts";
+import Config from "../../../Config";
 
 const Grafico = () => {
   const [chartData, setChartData] = useState({
@@ -79,7 +80,7 @@ const Grafico = () => {
   useEffect(() => {
     const fetchChartData = async () => {
       try {
-        const response = await fetch('http://localhost/nuovo/backend/Api/admin/getDataGraphic.php');
+        const response = await fetch(`${Config.backendBaseUrlAdmin}getDataGraphic.php`);
         if (response.ok) {
           const data = await response.json();
 

@@ -6,6 +6,7 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { LanguageContext } from "../../../Language/LanguageContext";
 import { Translation } from "./Translation";
+import Config from "../../../Config";
 
 const Depositar = () => {
   const { language } = useContext(LanguageContext);
@@ -31,7 +32,7 @@ const Depositar = () => {
     // Lógica para obtener el ID del usuario
     const fetchUserId = async () => {
       const response = await fetch(
-        "http://localhost/nuovo/backend/Api/getUserId.php",
+        `${Config.backendBaseUrl}getUserId.php`,
         {
           method: "GET",
           credentials: "include",
@@ -54,7 +55,7 @@ const Depositar = () => {
   useEffect(() => {
     const checkVerification = async () => {
       const response = await fetch(
-        "http://localhost/nuovo/backend/Api/checkVerification.php",
+        `${Config.backendBaseUrl}checkVerification.php`,
         {
           method: "GET",
           credentials: "include",
@@ -75,7 +76,7 @@ const Depositar = () => {
     const fetchPlatforms = async () => {
       try {
         const response = await fetch(
-          "http://localhost/nuovo/backend/Api/getPlatforms.php",
+          `${Config.backendBaseUrl}getPlatforms.php`,
           {
             method: "GET",
             credentials: "include",
@@ -113,7 +114,7 @@ const Depositar = () => {
   const handlePlatformUser = async () => {
     try {
       const response = await fetch(
-        `http://localhost/nuovo/backend/Api/getPlatformUser.php?userId=${UserId}`,
+        `${Config.backendBaseUrl}getPlatformUser.php?userId=${UserId}`,
         {
           method: "GET",
           credentials: "include",
@@ -155,7 +156,7 @@ const Depositar = () => {
     try {
       // Obtener información del banco desde el backend
       const response = await fetch(
-        `http://localhost/nuovo/backend/Api/getBankInfo.php?userId=${userId}`,
+        `${Config.backendBaseUrl}getBankInfo.php?userId=${userId}`,
         {
           method: "GET",
           credentials: "include",
@@ -178,7 +179,7 @@ const Depositar = () => {
     // Lógica para obtener información detallada de la plataforma desde el backend
     try {
       const response = await fetch(
-        `http://localhost/nuovo/backend/Api/getPlatformInfo.php?platformId=${platformId}`,
+        `${Config.backendBaseUrl}getPlatformInfo.php?platformId=${platformId}`,
         {
           method: "GET",
           credentials: "include",
@@ -283,7 +284,7 @@ const Depositar = () => {
     // Lógica para enviar la solicitud al backend según el método de pago seleccionado
     try {
       const response = await fetch(
-        "http://localhost/nuovo/backend/Api/depositRequest.php",
+        `${Config.backendBaseUrl}depositRequest.php`,
         {
           method: "POST",
           credentials: "include",

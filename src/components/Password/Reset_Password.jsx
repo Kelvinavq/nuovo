@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import "./Style.css";
+import Config from "../../Config";
 
 import { LanguageContext } from "../../Language/LanguageContext";
 import { TranslationResetPassword } from "../../Language/TranslationResetPassword";
@@ -31,7 +32,7 @@ const Reset_Password = () => {
 
     try {
       // Realizar el fetch al backend para solicitar el restablecimiento de contraseña
-      const response = await fetch("http://localhost/nuovo/backend/Api/resetPassword.php", {
+      const response = await fetch(`${Config.backendBaseUrl}resetPassword.php`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

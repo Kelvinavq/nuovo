@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import Pusher from "pusher-js";
 import "./Style.css";
+import Config from "../../../Config";
 
 const Notification = () => {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -28,7 +29,7 @@ const Notification = () => {
   const getNotifications = async () => {
     try {
       const response = await fetch(
-        "http://localhost/nuovo/backend/Api/getNotifications.php",
+        `${Config.backendBaseUrl}getNotifications.php`,
         {
           method: "GET",
           credentials: "include",
@@ -55,7 +56,7 @@ const Notification = () => {
     try {
       // Enviar una solicitud para marcar las notificaciones como "read"
       const response = await fetch(
-        "http://localhost/nuovo/backend/Api/markNotificationsAsRead.php",
+        `${Config.backendBaseUrl}markNotificationsAsRead.php`,
         {
           method: "POST",
           credentials: "include",

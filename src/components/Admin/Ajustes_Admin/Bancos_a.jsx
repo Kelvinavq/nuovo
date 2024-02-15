@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Enlaces_a from "./Enlaces_a";
 import Swal from "sweetalert2";
+import Config from "../../../Config";
 
 const Bancos_a = () => {
   const [nuevaCuenta, setNuevaCuenta] = useState({
@@ -43,7 +44,7 @@ const Bancos_a = () => {
   const cargarCuentasBanco = async () => {
     try {
       const response = await fetch(
-        "http://localhost/nuovo/backend/Api/admin/getBankAccounts.php",
+        `${Config.backendBaseUrlAdmin}getBankAccounts.php`,
         {
           method: "GET",
           mode: "cors",
@@ -83,7 +84,7 @@ const Bancos_a = () => {
 
     try {
       const response = await fetch(
-        "http://localhost/nuovo/backend/Api/admin/createBank.php",
+        `${Config.backendBaseUrlAdmin}createBank.php`,
         {
           method: "POST",
           mode: "cors",
@@ -124,7 +125,7 @@ const Bancos_a = () => {
 
     try {
       const response = await fetch(
-        `http://localhost/nuovo/backend/Api/admin/getBankAccountDetails.php?id=${selectedAccount}`,
+        `${Config.backendBaseUrlAdmin}getBankAccountDetails.php?id=${selectedAccount}`,
         {
           method: "GET",
           mode: "cors",

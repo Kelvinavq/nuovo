@@ -5,6 +5,7 @@ import { useEffect, useState, useContext } from "react";
 import Swal from "sweetalert2";
 import Pusher from "pusher-js";
 import Notification from "../Notification/Notification";
+import Config from "../../../Config";
 
 import { LanguageContext } from "../../../Language/LanguageContext";
 import { Translation } from "./Translation";
@@ -22,7 +23,7 @@ const Perfil = () => {
 
   useEffect(() => {
     // Obtener información del usuario al cargar el componente
-    fetch("http://localhost/nuovo/backend/Api/getUserInfo.php", {
+    fetch(`${Config.backendBaseUrl}getUserInfo.php`, {
       method: "GET",
       credentials: "include",
     })
@@ -63,7 +64,7 @@ const Perfil = () => {
         formData.append("profile_picture", file);
 
         // Enviar la nueva imagen al servidor
-        fetch("http://localhost/nuovo/backend/Api/updateProfilePicture.php", {
+        fetch(`${Config.backendBaseUrl}updateProfilePicture.php`, {
           method: "POST",
           credentials: "include",
           body: formData,

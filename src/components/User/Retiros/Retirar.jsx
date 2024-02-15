@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import "./Style.css";
 import Saldo from "../Saldo/Saldo";
 import Swal from "sweetalert2";
+import Config from "../../../Config";
 
 import { LanguageContext } from "../../../Language/LanguageContext";
 import { Translation } from "./Translation";
@@ -39,7 +40,7 @@ const Retirar = () => {
   useEffect(() => {
     const checkVerification = async () => {
       const response = await fetch(
-        "http://localhost/nuovo/backend/Api/checkVerification.php",
+        `${Config.backendBaseUrl}checkVerification.php`,
         {
           method: "GET",
           credentials: "include",
@@ -659,7 +660,7 @@ const Retirar = () => {
     try {
       // Enviar la solicitud al backend
       const response = await fetch(
-        "http://localhost/nuovo/backend/Api/withdrawalRequests.php",
+        `${Config.backendBaseUrl}withdrawalRequests.php`,
         {
           method: "POST",
           headers: {

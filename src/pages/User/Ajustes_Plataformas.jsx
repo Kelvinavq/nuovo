@@ -4,6 +4,7 @@ import Button from "../../components/User/sidebar/Button";
 import Lateral from "../../components/User/Lateral/Lateral";
 import Plataformas_u from "../../components/User/Ajustes/Plataformas_u";
 import Notification from "../../components/User/Notification/Notification";
+import Config from "../../Config";
 
 const Ajustes_Plataformas = () => {
 
@@ -16,7 +17,7 @@ const Ajustes_Plataformas = () => {
       const checkAuthStatus = async () => {
         try {
           const response = await fetch(
-            "http://localhost/nuovo/backend/Api/check-session.php",
+            `${Config.backendBaseUrl}check-session.php`,
             {
               method: "GET",
               mode: "cors",

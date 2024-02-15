@@ -5,6 +5,7 @@ import Grafico from "../../components/Admin/Grafico_Admin/Grafico";
 import Lateral_a from "../../components/Admin/Lateral_Admin/Lateral_a";
 import Button_a from "../../components/Admin/Sidebar_Admin/Button_a";
 import Notification_a from "../../components/Admin/Notification_Admin/Notification_a";
+import Config from "../../Config";
 
 import Swal from "sweetalert2";
 
@@ -19,7 +20,7 @@ const Dashboard_a = () => {
     const checkAuthStatus = async () => {
       try {
         const response = await fetch(
-          "http://localhost/nuovo/backend/Api/check-session.php",
+          `${Config.backendBaseUrl}check-session.php`,
           {
             method: "POST",
             mode: "cors",

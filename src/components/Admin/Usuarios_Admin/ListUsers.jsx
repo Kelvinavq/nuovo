@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import "./Style.css";
+import Config from "../../../Config";
 
 const ListUsers = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -13,7 +14,7 @@ const ListUsers = () => {
     const obtenerUsuarios = async () => {
       try {
         const url = new URL(
-          "http://localhost/nuovo/backend/Api/admin/getUsers.php"
+          `${Config.backendBaseUrlAdmin}getUsers.php`
         );
 
         url.searchParams.append("estatus", estatusFilter);
@@ -60,7 +61,7 @@ const ListUsers = () => {
     const obtenerBancos = async () => {
       try {
         const response = await fetch(
-          "http://localhost/nuovo/backend/Api/admin/getBanksFilter.php",
+          `${Config.backendBaseUrlAdmin}getBanksFilter.php`,
           {
             method: "GET",
             mode: "cors",
