@@ -96,7 +96,7 @@ const Ajustes_a = () => {
         <div className="imgPerfil">
           <div className="foto">
             <img
-              src={`http://localhost/nuovo/src/assets/users/${userData.profile_picture}`}
+              src={`${Config.imgProfile}${userData.profile_picture}`}
               alt=""
             />
             <div className="input">

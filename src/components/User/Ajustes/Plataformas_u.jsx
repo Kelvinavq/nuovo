@@ -547,7 +547,7 @@ const Plataformas_u = () => {
           {Translation[language].button5}
           </button>
         <div className="lista_plataformas">
-          {platforms.map((platform) => (
+          {platforms && platforms.map((platform) => (
             <div key={platform.id}>
               {platform.platformType === "otra" ? (
                 // Si el tipo de plataforma es "otra", mostrar campos personalizados

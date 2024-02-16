@@ -89,10 +89,10 @@ export const Translation = {
 
     // ******************* header ***************************
 
-    headerTitle: "MOVE AND USE YOUR MONEY, WHEN AND WHEN YOU WANT!",
+    headerTitle: "MOVE AND USE YOUR MONEY, WHEN AND WHERE YOU WANT!",
     headerText:
-      "Bring your money from other wallets, receive payments and transfer it from your U.S. dollar account connected to the world.",
-    headerButton: "ENTER NOW",
+      "Transfer money from your other wallets, plus send or recieve payments from any USD account from around the world",
+    headerButton: "JOIN NOW",
 
     // ******************* header ***************************
 
@@ -105,11 +105,11 @@ export const Translation = {
     step2Title: "Deposit",
     step2Text: "With",
     step2Text2:
-      "deposit money is as simple as a click. We offer you different options to manage your money effectively and safely.",
+      "depositing money is as simple as one click. We offer you different options to manage your money effectively and safely.",
 
     step3Title: "Withdrawals",
     step3Text:
-      "Your money, your choice! It will withdraw your balance conveniently and safely. Whatever your need, we are here to make access to your money quick and seamless.",
+      "Your money, your choice! You can withdraw your balance conveniently and safely. Whatever your needs, we are here to make access to your money efficent and seamless.",
 
     // ******************* steps ***************************
 
@@ -145,7 +145,7 @@ export const Translation = {
     ctaText2:
       "Sign up today to discover the convenience of managing your money intelligently. From seamless deposits to personalized services,",
     ctaText3:
-      "offers you a modern and secure financial experience. Don’t miss the chance to take control of your financial future! click to start now.",
+      "offers you a modern and secure financial experience. Don’t miss the chance to take control of your financial future! Click to start now.",
 
     ctaButton: "Join Now",
 

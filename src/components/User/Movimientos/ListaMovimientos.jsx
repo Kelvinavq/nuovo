@@ -1,24 +1,27 @@
 import "./Style.css";
 import HorizontalRuleOutlinedIcon from "@mui/icons-material/HorizontalRuleOutlined";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+
 import Swal from "sweetalert2";
 import Config from "../../../Config";
 
+import { LanguageContext } from "../../../Language/LanguageContext";
+import { Translation } from "./Translation";
+
 const ListaMovimientos = () => {
+  const { language } = useContext(LanguageContext);
+
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
     // Llamada al backend para obtener la lista de movimientos del usuario
     const fetchTransactions = async () => {
       try {
-        const response = await fetch(
-          `${Config.backendBaseUrl}getMoves.php`,
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
+        const response = await fetch(`${Config.backendBaseUrl}getMoves.php`, {
+          method: "GET",
+          credentials: "include",
+        });
 
         if (response.ok) {
           const data = await response.json();
@@ -87,11 +90,11 @@ const ListaMovimientos = () => {
   return (
     <div>
       <div className="title">
-        <h2>Movimientos</h2>
+        <h2>{Translation[language].title}</h2>
       </div>
 
       {transactions.length === 0 ? (
-        <p>No hay movimientos disponibles.</p>
+        <p>{Translation[language].text1}</p>
       ) : (
         <div className="lista_movimientos">
           {transactions.map((transaction, index) => (
@@ -108,24 +111,26 @@ const ListaMovimientos = () => {
 
               <li>
                 <h2>
-                  {transaction.type === "withdrawal" ? "Retiro" : "Depósito"}
+                  {transaction.type === "withdrawal"
+                    ? Translation[language].transaction2
+                    : Translation[language].transaction1}
                 </h2>
 
                 {transaction.type === "withdrawal" ? (
                   <span>
                     {transaction.withdrawal.method ===
                     "transferencia_entre_usuarios"
-                      ? "Transferencia"
+                      ? Translation[language].tipo1
                       : transaction.withdrawal.method ===
                         "transferencia_nacional"
-                      ? "Nacional"
+                      ? Translation[language].tipo2
                       : transaction.withdrawal.method === "efectivo"
-                      ? "Efectivo"
+                      ? Translation[language].tipo3
                       : transaction.withdrawal.method ===
                         "transferencia_externa"
                       ? transaction.withdrawal.region === "usa"
-                        ? "Transferencia Externa (USA)"
-                        : "Transferencia Externa (EUROPA)"
+                        ? Translation[language].tipo4
+                        : Translation[language].tipo5
                       : transaction.withdrawal.method}
                   </span>
                 ) : (
@@ -134,17 +139,17 @@ const ListaMovimientos = () => {
               </li>
 
               <li>
-                <h2>Fecha</h2>
+                <h2>{Translation[language].h2Date}</h2>
                 <span>{transaction.transaction_date}</span>
               </li>
 
               <li className="monto">
-                <h2>Monto</h2>
+                <h2>{Translation[language].h2Amount}</h2>
                 <span>${transaction.amount}</span>
               </li>
 
               <li className={`estatus ${transaction.status.toLowerCase()}`}>
-                <h2>Estatus</h2>
+                <h2>{Translation[language].h2Status}</h2>
                 <span>{transaction.status}</span>
               </li>
             </ul>

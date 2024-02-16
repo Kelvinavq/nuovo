@@ -104,7 +104,7 @@ const Balance_a = () => {
         const data = await response.json();
         if (data.success) {
           // Construir la URL completa del archivo
-          const baseUrl = `http://localhost/nuovo/src/assets/reports`;
+          const baseUrl = `${Config.report}`;
           const fullUrl = `${baseUrl}/${data.file_url}`;
 
           // Mostrar la alerta con el botón de descarga

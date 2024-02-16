@@ -32,8 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $selectedMethod = filter_var($data->selectedMethod, FILTER_SANITIZE_STRING);
     $amount = filter_var($data->amount, FILTER_SANITIZE_STRING);
     // Agregar notificación
-    // $notificationMessage = "Solicitud de retiro enviada correctamente";
-    // $notificationMessageAdmin = "El usuario " . $userName . " Ha realizado una solicitud de retiro";
+
 
     if ($selectedLanguage == "en") {
         $subjectMessage = "Nuovo - withdrawal request";
@@ -235,6 +234,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $notificationMessage = "La transferencia se ha realizado correctamente";
             }
+            
         } else if ($selectedMethod === 'transferencia_nacional' && isset($data->methodArg)) {
 
 
@@ -382,7 +382,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $lastWithdrawalRequestId = $conexion->lastInsertId();
         }
 
-        $insertTransactionQuery = "INSERT INTO transactions (user_id, type, amount, status, transaction_date, transaction_time, payment_method, withdrawal_request_id) VALUES(:user_id, :typeTransaction, :amount, :status, :transaction_date, :transaction_time, :payment_method, :withdrawal_request_id)";
+        $insertTransactionQuery = "INSERT INTO transactions (user_id, type, amount, status, transaction_date, transaction_time, payment_method, withdrawal_request_id, recipient_user_id) VALUES(:user_id, :typeTransaction, :amount, :status, :transaction_date, :transaction_time, :payment_method, :withdrawal_request_id, :recipient_user_id)";
 
         $stmtTransaction = $conexion->prepare($insertTransactionQuery);
 
@@ -394,6 +394,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtTransaction->bindParam(':transaction_time', $requestTime, PDO::PARAM_STR);
         $stmtTransaction->bindParam(':payment_method', $selectedMethod, PDO::PARAM_STR);
         $stmtTransaction->bindParam(':withdrawal_request_id', $lastWithdrawalRequestId, PDO::PARAM_INT);
+        $stmtTransaction->bindParam(':recipient_user_id', $recipientUserId, PDO::PARAM_INT);
 
         // Ejecutar la consulta de transacción
 
@@ -529,16 +530,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Revertir la transacción en caso de error
         $conexion->rollBack();
         error_log($e->getMessage());
- 
+
 
         if ($selectedLanguage == "en") {
-            http_response_code(500); 
+            http_response_code(500);
             echo json_encode(array("error" => "Error processing withdrawal request.", "details" => $e->getMessage()));
         } elseif ($selectedLanguage == "pt") {
-            http_response_code(500); 
+            http_response_code(500);
             echo json_encode(array("error" => "Erro ao processar o pedido de retirada.", "details" => $e->getMessage()));
         } else {
-            http_response_code(500); 
+            http_response_code(500);
             echo json_encode(array("error" => "Error al procesar la solicitud de retiro.", "details" => $e->getMessage()));
         }
     }

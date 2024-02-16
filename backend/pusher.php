@@ -1,6 +1,6 @@
 <?php
 // Incluye la biblioteca de Pusher
-require __DIR__ . '../../vendor/autoload.php';
+require 'vendor/autoload.php';
 
 // Configuración de Pusher
 $options = array(

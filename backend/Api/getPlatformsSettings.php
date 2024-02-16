@@ -53,7 +53,7 @@ try {
     }
 } catch (PDOException $e) {
     // Manejar excepciones de PDO (puedes personalizar esto según tus necesidades)
-    echo json_encode(array('error' => 'Error en la conexión a la base de datos'));
+    echo json_encode(array('error' => 'Error al obtener la lista de plataformas'));
 }
 
 // Cerrar la conexión

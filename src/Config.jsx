@@ -9,6 +9,7 @@ const Config = {
     imgDni:"http://localhost/nuovo/backend/public/assets/user_dni/",
     imgSelfieDni:"http://localhost/nuovo/backend/public/assets/user_selfie/",
     imgDorsoDni:"http://localhost/nuovo/backend/public/assets/user_dni_back/",
+    report: "http://localhost/nuovo/backend/public/assets/reports",
 
     // backendBaseUrl: "https://blessedcas.com/backend/Api/",
     // backendBaseUrlAdmin: "https://blessedcas.com/backend/Api/admin/",
@@ -18,6 +19,7 @@ const Config = {
     // imgDni:"https://blessedcas.com/backend/public/assets/user_dni/",
     // imgSelfieDni:"https://blessedcas.com/backend/public/assets/user_selfie/",
     // imgDorsoDni:"https://blessedcas.com/backend/public/assets/user_dni_back/",
+    // report: "https://blessedcas.com/backend/public/assets/reports",
     
   };
   

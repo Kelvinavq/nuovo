@@ -1,7 +1,7 @@
 <?php
 include '../../Config/config.php';
 include '../../cors.php';
-require __DIR__ . '../../../../vendor/autoload.php'; // Ruta a Composer autoloader
+require  '../../vendor/autoload.php'; // Ruta a Composer autoloader
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -104,7 +104,7 @@ ORDER BY
     $totalWithdrawalDenied = $stmtWithdrawalTotalDenied->fetch(PDO::FETCH_ASSOC)['total_denied'];
 
     // Ruta de la plantilla Excel
-    $templatePath = __DIR__ . '../../../../src/assets/reports/plantilla.xlsx';
+    $templatePath =  '../../public/assets/reports/plantilla.xlsx';
 
     // Cargar la plantilla
     $spreadsheet = IOFactory::load($templatePath);
@@ -211,8 +211,8 @@ ORDER BY
     $date = time();
 
     // Definir la ruta del archivo de destino
-    $filePath = __DIR__ . '../../../../src/assets/reports/Reporte(' . $date . ').xlsx';
-    $filePathRelative = '../../src/assets/reports/Reporte(' . $date . ').xlsx';
+    $filePath =  '../../public/assets/reports/Reporte(' . $date . ').xlsx';
+    // $filePathRelative = '../../public/assets/reports/Reporte(' . $date . ').xlsx';
 
     // Guardar el archivo Excel
     $writer->save($filePath);

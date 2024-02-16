@@ -27,7 +27,7 @@ if ($stmtUserInfo->rowCount() > 0) {
     $userInfo = $stmtUserInfo->fetch(PDO::FETCH_ASSOC);
 
     // Ruta donde se guardarán las imágenes de perfil en el servidor
-    $uploadDirectory = '../../../src/assets/users/';
+    $uploadDirectory = '../../public/assets/users/';
 
     // Obtener la información del archivo subido
     $file = $_FILES['profile_picture'];

@@ -6,16 +6,14 @@ import Config from "../../../Config";
 const ListUsers = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [estatusFilter, setEstatusFilter] = useState("all");
-  const [bankFilter, setBankFilter] = useState("all"); 
+  const [bankFilter, setBankFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [bancos, setBancos] = useState([]);
 
   useEffect(() => {
     const obtenerUsuarios = async () => {
       try {
-        const url = new URL(
-          `${Config.backendBaseUrlAdmin}getUsers.php`
-        );
+        const url = new URL(`${Config.backendBaseUrlAdmin}getUsers.php`);
 
         url.searchParams.append("estatus", estatusFilter);
         url.searchParams.append("bank", bankFilter);
@@ -89,7 +87,6 @@ const ListUsers = () => {
   const mostrarDetallesUsuario = (usuario) => {
     // Crear el contenido HTML para la ventana modal
 
-
     let modalContent = `
       <div>
         <h2>${usuario.name}</h2>
@@ -102,25 +99,88 @@ const ListUsers = () => {
         <p>Routing Number (WIRE): ${usuario.routing_number_wire} </p>
         <p>Dirección del banco: ${usuario.bank_address} </p>
         <p>Nombre de la cuenta: ${usuario.account_name} </p>
+        <button id="viewPlatforms" class="swal2-confirm swal2-styled">Ver plataformas</button>
+
         <p></p>
       </div>
     `;
-
-    if (usuario.email_platform !== null) {
-      modalContent += `
-      <h4>Plataforma registrada según la búsqueda</h4>
-      <p>Correo electrónico de plataforma: ${usuario.email_platform}</p>
-      <p></p>
-      `;
-    }
-    
 
     Swal.fire({
       title: "Detalles del Usuario",
       html: modalContent,
       showCloseButton: true,
     });
+    const verPlataformasBtn = document.getElementById("viewPlatforms");
+    if (verPlataformasBtn) {
+      verPlataformasBtn.addEventListener("click", () => {
+        mostrarPlataformas(usuario.id);
+      });
+    }
   };
+
+  const mostrarPlataformas = async (userId) => {
+    try {
+      const response = await fetch(`${Config.backendBaseUrlAdmin}getPlatformsUsers.php?userId=${userId}`, {
+        method: "GET",
+        mode: "cors",
+        credentials: "include",
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+  
+        if (data && data.platforms.length > 0) {
+          // Modificar la lógica para mostrar la información en Swal según tus necesidades
+          let modalContent = `<div>`;
+  
+          data.platforms.forEach((platform) => {
+            modalContent += `<h3>${platform.platformName}</h3>`;
+  
+            if (platform.email) {
+              modalContent += `<p>Email: ${platform.email}</p>`;
+            } else {
+              modalContent += `<p>Campos Personalizados:</p>`;
+              modalContent += `<ul>`;
+  
+              // Asegúrate de dividir los strings en arrays
+              const fieldNames = platform.fieldName.split(',');
+              const fieldValues = platform.fieldValue.split(',');
+  
+              // Iterar sobre los arrays
+              fieldNames.forEach((fieldName, index) => {
+                modalContent += `<li>${fieldName}: ${fieldValues[index]}</li>`;
+              });
+  
+              modalContent += `</ul>`;
+            }
+          });
+  
+          modalContent += `</div>`;
+  
+          Swal.fire({
+            title: "Plataformas del Usuario",
+            html: modalContent,
+            showCloseButton: true,
+          });
+        } else {
+          Swal.fire({
+            icon: "info",
+            title: "Sin plataformas registradas",
+            text: "No hay plataformas registradas para este usuario en este momento.",
+          });
+        }
+      } else {
+        console.error("Error al obtener las plataformas");
+      }
+    } catch (error) {
+      console.error("Error al obtener las plataformas:", error);
+    }
+  };
+  
+  
 
   return (
     <div className="usuarios">
@@ -170,7 +230,10 @@ const ListUsers = () => {
 
       <div className="lista_usuarios">
         {usuarios.map((usuario, index) => (
-          <ul key={usuario.id || index} onClick={() => mostrarDetallesUsuario(usuario)}>
+          <ul
+            key={usuario.id || index}
+            onClick={() => mostrarDetallesUsuario(usuario)}
+          >
             <li>
               <div className="icono">{usuario.name.charAt(0)}</div>
             </li>

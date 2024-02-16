@@ -23,10 +23,11 @@
 }
 
 
-.sidebar .items .item:last-child{
+/* .sidebar:not(.sidebar_a) .items .item:last-child{
     position: absolute;
     bottom: 20px;
-}
+} */
+
 
 .sidebar .items .item:last-child button{
     background: none;

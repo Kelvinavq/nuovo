@@ -19,7 +19,7 @@ try {
 
     // Consulta para obtener las transacciones del usuario
     $getTransactionsQuery = "
-        SELECT 
+      SELECT 
             t.*,
             d.amount AS deposit_amount,
             d.request_date AS deposit_request_date,
@@ -32,11 +32,12 @@ try {
             w.status AS withdrawal_status,
             w.method AS withdrawal_method,
             w.reference_number AS withdrawal_reference_number,
-            w.region AS withdrawal_region
+            w.region AS withdrawal_region,
+            w.recipient_user_id AS withdrawal_recipient_user_id
         FROM transactions t
         LEFT JOIN deposit_requests d ON t.deposit_request_id = d.id
         LEFT JOIN withdrawal_requests w ON t.withdrawal_request_id = w.id
-        WHERE t.user_id = :user_id
+        WHERE t.user_id = :user_id OR w.recipient_user_id = :user_id
         ORDER BY t.transaction_date DESC, t.transaction_time DESC
     ";
     $getTransactionsStmt = $conexion->prepare($getTransactionsQuery);
@@ -50,9 +51,16 @@ try {
     $formattedTransactions = array_map(function ($transaction) {
         $formattedDate = date('d-m-Y', strtotime($transaction['transaction_date']));
         $formattedTime = date('H:i:s', strtotime($transaction['transaction_time']));
+        $user_id = $_SESSION['user_id'];
+
+        $transactionType = ($transaction['recipient_user_id'] == $user_id) ? 'Transferencia recibida' : $transaction['type'];
+
+        $platformType = ($transaction['recipient_user_id'] == $user_id) ? 'Transferencia recibida' : $transaction['platform_type'];
+
+        
         return array(
             'id' => $transaction['id'],
-            'type' => $transaction['type'],
+            'type' => $transactionType,
             'amount' => $transaction['amount'],
             'status' => $transaction['status'],
             'transaction_date' => $formattedDate,
@@ -63,7 +71,7 @@ try {
                 'request_time' => $transaction['deposit_request_time'],
                 'status' => $transaction['deposit_status'],
                 'reference_number' => $transaction['deposit_reference_number'],
-                'platform_type' => $transaction['platform_type'],
+                'platform_type' => $platformType,
             ),
             'withdrawal' => array(
                 'amount' => $transaction['withdrawal_amount'],

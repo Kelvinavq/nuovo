@@ -43,7 +43,7 @@ const Sidebar_a = () => {
   };
 
   return (
-    <div className="sidebar">
+    <div className="sidebar sidebar_a">
       <div className="items">
         <div className={`item i-dashboard ${isActive("/admin/dashboard")} ${isActive("/admin/movimientos")}`}>
           <div className="icon">

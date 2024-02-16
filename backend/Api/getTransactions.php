@@ -18,7 +18,10 @@ try {
     $user_id = $_SESSION['user_id'];
 
     // Consulta para obtener las transacciones del usuario
-    $getTransactionsQuery = "SELECT * FROM transactions WHERE user_id = :user_id ORDER BY transaction_date DESC, transaction_time DESC LIMIT 6";
+    $getTransactionsQuery = "SELECT * FROM transactions
+    WHERE user_id = :user_id OR recipient_user_id = :user_id
+    ORDER BY transaction_date DESC, transaction_time DESC
+    LIMIT 6";
     $getTransactionsStmt = $conexion->prepare($getTransactionsQuery);
     $getTransactionsStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $getTransactionsStmt->execute();
@@ -30,8 +33,21 @@ try {
     $formattedTransactions = array_map(function ($transaction) {
         $formattedDate = date('m-d-Y', strtotime($transaction['transaction_date']));
         $formattedTime = date('H:i:s', strtotime($transaction['transaction_time']));
+
+        $user_id = $_SESSION['user_id'];
+        $selectedLanguage = isset($_COOKIE['selectedLanguage']) ? $_COOKIE['selectedLanguage'] : 'es';
+
+        if ($selectedLanguage == "en") {
+            $transactionType = ($transaction['recipient_user_id'] == $user_id) ? 'Transfer received' : $transaction['type'];
+        } elseif ($selectedLanguage == "pt") {
+            $transactionType = ($transaction['recipient_user_id'] == $user_id) ? 'Transferência recebida' : $transaction['type'];
+        } else {
+            $transactionType = ($transaction['recipient_user_id'] == $user_id) ? 'Transferencia recibida' : $transaction['type'];
+        }
+
+
         return array(
-            'type' => $transaction['type'],
+            'type' => $transactionType,
             'amount' => $transaction['amount'],
             'status' => $transaction['status'],
             'platform_type' => $transaction['platform_type'],
@@ -49,4 +65,3 @@ try {
     // Cerrar la conexión después de usarla
     $conexion = null;
 }
-?>

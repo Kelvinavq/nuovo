@@ -26,7 +26,7 @@ $bankFilter = $_GET['bank'] ?? 'all';
 $searchTerm = $_GET['search'] ?? '';
 
 // Consulta SQL para obtener usuarios con filtros
-$obtenerUsuarios = "SELECT DISTINCT u.name, u.email, u.phoneNumber, u.address, DATE_FORMAT(u.registrationDate, '%m-%d-%Y') AS formatted_registrationDate, uv.status, uv.bank_account, b.routing_number_ach, b.routing_number_wire, b.bank_address, b.account_name
+$obtenerUsuarios = "SELECT DISTINCT u.id, u.name, u.email, u.phoneNumber, u.address, DATE_FORMAT(u.registrationDate, '%m-%d-%Y') AS formatted_registrationDate, uv.status, uv.bank_account, b.routing_number_ach, b.routing_number_wire, b.bank_address, b.account_name
                    FROM users u
                    LEFT JOIN user_verification uv ON u.id = uv.user_id
                    LEFT JOIN bank_account ba ON u.id = ba.user_id

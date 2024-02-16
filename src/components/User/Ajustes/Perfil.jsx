@@ -4,7 +4,6 @@ import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
 import { useEffect, useState, useContext } from "react";
 import Swal from "sweetalert2";
 import Pusher from "pusher-js";
-import Notification from "../Notification/Notification";
 import Config from "../../../Config";
 
 import { LanguageContext } from "../../../Language/LanguageContext";
@@ -17,9 +16,7 @@ const Perfil = () => {
   const [userData, setUserData] = useState({});
   const [newProfilePicture, setNewProfilePicture] = useState(null);
 
-  function refreshPage() {
-    window.location.reload(false);
-  }
+
 
   useEffect(() => {
     // Obtener información del usuario al cargar el componente
@@ -36,7 +33,7 @@ const Perfil = () => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-  
+
     // Validar la extensión del archivo
     const allowedExtensions = /\.(png|jpg|jpeg)$/i;
     if (!allowedExtensions.test(file.name)) {
@@ -47,9 +44,9 @@ const Perfil = () => {
       });
       return;
     }
-  
+
     setNewProfilePicture(file);
-  
+
     // Mostrar la ventana de Swal al seleccionar una imagen
     Swal.fire({
       title: Translation[language].swalTitle1,
@@ -62,48 +59,26 @@ const Perfil = () => {
         // Crear un objeto FormData y agregar la nueva imagen
         const formData = new FormData();
         formData.append("profile_picture", file);
-  
+
         // Enviar la nueva imagen al servidor
         fetch(`${Config.backendBaseUrl}updateProfilePicture.php`, {
           method: "POST",
           credentials: "include",
           body: formData,
         })
-          .then((response) => {
-            if (response.ok) {
-              return response.json();
-            } else {
-              throw new Error(
-                `Error ${response.status}: ${response.statusText}`
-              );
-            }
-          })
+          .then((response) => response.json())
           .then((data) => {
-            if (data.error) {
-              // Mostrar mensaje de error específico del servidor
-              Swal.fire({
-                title: "Error",
-                icon: "error",
-                text: data.error,
-              });
-            } else {
-              // Actualizar la información del usuario en el estado
-              setUserData((prevData) => ({
-                ...prevData,
-                profile_picture: data.newProfilePictureName,
-              }));
-  
-              // Restablecer el estado de la nueva imagen
-              setNewProfilePicture(null);
-  
-              Swal.fire({
-                title: Translation[language].swalMessage2,
-                icon: "success",
-                didClose: () => {
-                  window.location.reload();
-                },
-              });
-            }
+            // Actualizar la información del usuario en el estado
+            setUserData((prevData) => ({
+              ...prevData,
+              profile_picture: data.newProfilePictureName,
+            }));
+
+            // Restablecer el estado de la nueva imagen
+            setNewProfilePicture(null);
+
+            Swal.fire("¡Foto de perfil actualizada!", "", "success");
+            window.location.reload();
           })
           .catch((error) =>
             console.error("Error al actualizar la foto de perfil", error)
@@ -114,7 +89,8 @@ const Perfil = () => {
       }
     });
   };
-  
+
+
 
   const [notifications, setNotifications] = useState([]);
   useEffect(() => {
@@ -173,9 +149,7 @@ const Perfil = () => {
         </div>
         <div className="language">
           <h2>{Translation[language].titleLanguage}</h2>
-          <p>
-          {Translation[language].textLanguage}
-          </p>
+          <p>{Translation[language].textLanguage}</p>
 
           <div className="language-selector">
             <span>{Translation[language].selector}</span>
