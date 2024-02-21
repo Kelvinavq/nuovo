@@ -102,7 +102,10 @@ const Depositos_a = () => {
       }
 
       // Agregar custom_fields si no está vacío
-      if (depositDetails.is_personalizable === "yes" &&  depositDetails.platformEmail_user === null) {
+      if (
+        depositDetails.is_personalizable === "yes" &&
+        depositDetails.platformEmail_user === null
+      ) {
         htmlContent += `
         <p><strong>Plataforma emisora (Personalizada):</strong>  ${depositDetails.user_platform_name}</p>
 
@@ -115,12 +118,9 @@ const Depositos_a = () => {
       if (depositDetails.voucher_img !== null) {
         htmlContent += `
         <p>Comprobante</p>
-        <img src="${Config.imgVoucher}${
-          depositDetails.voucher_img
-        }" alt="" />
+        <img src="${Config.imgVoucher}${depositDetails.voucher_img}" alt="" />
         `;
       }
-
 
       Swal.fire({
         title: `Detalles de la Solicitud - ${solicitud.platform_type}`,
@@ -147,7 +147,7 @@ const Depositos_a = () => {
           }).then((result) => {
             if (result.isConfirmed) {
               // Lógica para marcar como completado
-              markAsCompleted(solicitud.id);
+              markAsCompleted(solicitud);
             }
           });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -212,7 +212,6 @@ const Depositos_a = () => {
   };
 
   const denyRequest = async (depositRequestId, denialReasons) => {
-
     if (denialReasons === "") {
       Swal.fire({
         icon: "error",
@@ -254,49 +253,158 @@ const Depositos_a = () => {
     }
   };
 
-  const markAsCompleted = async (depositRequestId) => {
-    try {
-      const response = await fetch(
-        `${Config.backendBaseUrlAdmin}completedDepositRequest.php?id=${depositRequestId}`,
-        {
-          method: "POST",
-          credentials: "include",
-        }
-      );
-
-      if (response.ok) {
-        // Puedes realizar acciones adicionales si es necesario
-
-        Swal.fire({
-          title: "¡Completado!",
-          text: "La solicitud ha sido marcada como completada.",
-          icon: "success",
-          didClose: () => {
-            window.location.reload();
-          },
+  const markAsCompleted = async (depositRequest) => {
+    if (depositRequest.payment_method === "cash") {
+      if (depositRequest.address === null) {
+        const { value: depositAddress, dismiss } = await Swal.fire({
+          title: "Ingrese la dirección de depósito",
+          input: "text",
+          inputLabel: "Dirección de depósito",
+          inputPlaceholder: "Ingrese la dirección aquí...",
+          showCancelButton: true,
+          confirmButtonText: "Enviar",
+          cancelButtonText: "Cancelar",
         });
-      } else {
-        console.error("Error al marcar como completado");
+
+        if (depositAddress.trim() === "") {
+          Swal.fire({
+            title: "Error",
+            text: "La dirección no puede estar vacía",
+            icon: "warning",
+          });
+          return;
+        }
+      
+        // Check if the user clicked on "Enviar" and the depositAddress is not empty
+        if (depositAddress !== undefined && depositAddress.trim() !== "") {
+          try {
+            const response = await fetch(
+              `${Config.backendBaseUrlAdmin}completedDepositRequest.php?id=${depositRequest.id}&depositAddress=${depositAddress}`,
+              {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+      
+            if (response.ok) {
+              Swal.fire({
+                title: "¡Completado!",
+                text: "La solicitud ha sido marcada como pendiente.",
+                icon: "success",
+                didClose: () => {
+                  window.location.reload();
+                },
+              });
+            } else {
+              console.error("Error al marcar como pendiente");
+              Swal.fire(
+                "Error",
+                "Hubo un error al marcar la solicitud como completada",
+                "error"
+              );
+            }
+          } catch (error) {
+            console.error("Error al marcar como completado:", error);
+            Swal.fire(
+              "Error",
+              "Error inesperado al marcar la solicitud como completada",
+              "error"
+            );
+          }
+        } else if (dismiss === Swal.DismissReason.cancel) {
+          // User clicked on "Cancelar"
+          Swal.fire("Cancelado", "No se ha enviado la solicitud", "info");
+        }
+      }
+       else {
+        try {
+          const response = await fetch(
+            `${Config.backendBaseUrlAdmin}completedDepositRequest.php?id=${depositRequest.id}`,
+            {
+              method: "POST",
+              credentials: "include",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          if (response.ok) {
+            Swal.fire({
+              title: "¡Completado!",
+              text: "La solicitud ha sido marcada como completada.",
+              icon: "success",
+              didClose: () => {
+                window.location.reload();
+              },
+            });
+          } else {
+            console.error("Error al marcar como completado");
+            Swal.fire(
+              "Error",
+              "Hubo un error al marcar la solicitud como completada",
+              "error"
+            );
+          }
+        } catch (error) {
+          console.error("Error al marcar como completado:", error);
+          Swal.fire(
+            "Error",
+            "Error inesperado al marcar la solicitud como completada",
+            "error"
+          );
+        }
+      }
+    } else {
+      try {
+        const response = await fetch(
+          `${Config.backendBaseUrlAdmin}completedDepositRequest.php?id=${depositRequest.id}`,
+          {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.ok) {
+          Swal.fire({
+            title: "¡Completado!",
+            text: "La solicitud ha sido marcada como completada.",
+            icon: "success",
+            didClose: () => {
+              window.location.reload();
+            },
+          });
+        } else {
+          console.error("Error al marcar como completado");
+          Swal.fire(
+            "Error",
+            "Hubo un error al marcar la solicitud como completada",
+            "error"
+          );
+        }
+      } catch (error) {
+        console.error("Error al marcar como completado:", error);
         Swal.fire(
           "Error",
-          "Hubo un error al marcar la solicitud como completada",
+          "Error inesperado al marcar la solicitud como completada",
           "error"
         );
       }
-    } catch (error) {
-      console.error("Error al marcar como completado:", error);
-      Swal.fire(
-        "Error",
-        "Error inesperado al marcar la solicitud como completada",
-        "error"
-      );
     }
+
+    // Verificar si el usuario hizo clic en "Enviar"
   };
 
   return (
     <div className="depositos_admin">
       <div className="title">
-        <h2>Solicitudes de Depósito</h2>
+        <h2>Depósitos</h2>
       </div>
 
       {depositRequests.length === 0 ? (

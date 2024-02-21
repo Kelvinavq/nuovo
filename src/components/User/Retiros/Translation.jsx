@@ -17,7 +17,7 @@ export const Translation = {
     // transferencia_entre_usuarios
 
     label1: "Correo electrónico destino",
-    label2: "Ingrese el monto a depositar",
+    label2: "Ingrese el monto a retirar",
 
     // transferencia_nacional
 
@@ -32,7 +32,7 @@ export const Translation = {
     label7: "Dirección del banco",
     label8: "Número de cuenta",
     label9: "Nombre del beneficiario",
-    label10: "Ingrese el monto a depositar",
+    label10: "Ingrese el monto a retirar",
 
     label11: "Nombre del banco",
     label12: "Código SWIFT / BIC",
@@ -40,7 +40,7 @@ export const Translation = {
     label14: "Numero de cuenta",
     label15: "Código SORT",
     label16: "IBAN",
-    label17: "Ingrese el monto a depositar",
+    label17: "Ingrese el monto a retirar",
 
     // transferencia_nacional
 
@@ -52,15 +52,15 @@ export const Translation = {
     label18: "Ingrese su alias o Número de cuenta nacional (CBU)",
     label19: "Ingrese el CUIT/CUIL",
     label20: "Ingrese el nombre de la cuenta",
-    label21: "Ingrese el monto a depositar",
+    label21: "Ingrese el monto a retirar",
 
     label22: "Ingrese su alias o Número de cuenta nacional (CBU)",
-    label23: " Ingrese el numero de caja de ahorros ó cuenta corriente",
+    label23: " Ingrese el número de caja de ahorros ó cuenta corriente",
     label24: "Ingrese el CUIT/CUIL",
     label25: "Ingrese el nombre de la cuenta",
-    label26: "Ingrese el monto a depositar",
+    label26: "Ingrese el monto a retirar",
 
-    label27: "Ingrese el monto a depositar",
+    label27: "Ingrese el monto a retirar",
 
 
 
@@ -88,7 +88,7 @@ export const Translation = {
     // transferencia_entre_usuarios
 
     label1: "E-mail destination",
-    label2: "Enter the amount to deposit",
+    label2: "Enter the amount to withdraw",
 
     // transferencia_nacional
 
@@ -103,7 +103,7 @@ export const Translation = {
     label7: "Direction of the bank",
     label8: "Account Number",
     label9: "Name of the beneficiary",
-    label10: "Enter the amount to deposit",
+    label10: "Enter the amount to withdraw",
 
     label11: "Bank name",
     label12: "SWIFT / BIC Code",
@@ -111,7 +111,7 @@ export const Translation = {
     label14: "Account Number",
     label15: "SORT Code",
     label16: "IBAN",
-    label17: "Enter the amount to deposit",
+    label17: "Enter the amount to withdraw",
 
     // transferencia_nacional
 
@@ -123,15 +123,15 @@ export const Translation = {
     label18: "Enter your alias or National Account Number (CBU)",
     label19: "Enter the CUIT/CUIL",
     label20: "Enter account name",
-    label21: "Enter the amount to deposit",
+    label21: "Enter the amount to withdraw",
 
     label22: "Enter your alias or National Account Number (CBU)",
     label23: "Enter Savings or Current Account Number",
     label24: "Enter CUIT/CUIL",
     label25: "Enter account name",
-    label26: "Enter the amount to deposit",
+    label26: "Enter the amount to withdraw",
 
-    label27: "Enter the amount to deposit",
+    label27: "Enter the amount to withdraw",
 
 
 
@@ -156,7 +156,7 @@ export const Translation = {
     // transferencia_entre_usuarios
 
     label1: "E-mail do destino",
-    label2: "Insira o montante a depositar",
+    label2: "Insira o valor a ser sacado",
 
     // transferencia_nacional
 
@@ -171,7 +171,7 @@ export const Translation = {
     label7: "Endereço do banco",
     label8: "Número de conta",
     label9: "Nome do beneficiário",
-    label10: "Insira o montante a depositar",
+    label10: "Insira o valor a ser sacado",
 
     label11: "Nome do banco",
     label12: "Código SWIFT / BIC",
@@ -179,7 +179,7 @@ export const Translation = {
     label14: "Número de conta",
     label15: "Código SORT",
     label16: "IBAN",
-    label17: "Insira o montante a depositar",
+    label17: "Insira o valor a ser sacado",
 
     // transferencia_nacional
 
@@ -191,15 +191,15 @@ export const Translation = {
     label18: "Digite seu alias ou número de conta nacional (CBU)",
     label19: "Insira o CUIT/CUIL",
     label20: "Insira o nome da conta",
-    label21: "Insira o montante a depositar",
+    label21: "Insira o valor a ser sacado",
 
     label22: "Digite seu alias ou número de conta nacional (CBU)",
     label23: " Ingrese el numero de caja de ahorros ó cuenta corriente",
     label24: "Insira o CUIT/CUIL",
     label25: "Insira o nome da conta",
-    label26: "Insira o montante a depositar",
+    label26: "Insira o valor a ser sacado",
 
-    label27: "Insira o montante a depositar",
+    label27: "Insira o valor a ser sacado",
 
 
 

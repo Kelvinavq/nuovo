@@ -8,6 +8,7 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import HorizontalRuleOutlinedIcon from "@mui/icons-material/HorizontalRuleOutlined";
 import Pusher from "pusher-js";
 import Config from "../../../Config";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 const Lateral_a = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -25,10 +26,7 @@ const Lateral_a = () => {
     setIsProfileOpen(!isProfileOpen);
   };
 
-  const toggleNotificationsDropdown = () => {
-    markNotificationsAsRead();
-    setIsNotificationsOpen(!isNotificationsOpen);
-  };
+
 
   const closeDropdownOutsideClick = (event, dropdownRef, setIsOpen) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -36,6 +34,11 @@ const Lateral_a = () => {
     }
   };
 
+  const toggleNotificationsDropdown = () => {
+    setIsNotificationsOpen(!isNotificationsOpen);
+    markNotificationsAsRead();
+  };
+  
   const getNotifications = async () => {
     try {
       const response = await fetch(
@@ -193,6 +196,31 @@ const Lateral_a = () => {
     };
   }, []);
 
+  const deleteNotification = async () => {
+    try {
+      // Enviar una solicitud para marcar las notificaciones como "read"
+      const response = await fetch(
+        `${Config.backendBaseUrlAdmin}deleteNotification.php`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error en la solicitud: ${response.statusText}`);
+      } else {
+        getNotifications();
+        setIsNotificationsOpen(false);
+      }
+
+      // Actualizar el recuento de notificaciones no leídas
+      setUnreadNotificationsCount(0);
+    } catch (error) {
+      console.error("Error al marcar las notificaciones como leídas", error);
+    }
+  };
+
   return (
     <div className="lateral_a">
       <div className="profile">
@@ -225,6 +253,11 @@ const Lateral_a = () => {
           </button>
           {isNotificationsOpen && (
             <div className="dropdown-content" ref={notificationsDropdownRef}>
+              <div className="deleteAll">
+                <button onClick={deleteNotification}>
+                  <DeleteForeverIcon />
+                </button>
+              </div>
               {notifications.map((notification) => (
                 <div key={notification.id}>
                   <p>

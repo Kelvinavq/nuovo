@@ -270,7 +270,7 @@ const readAndProcessFile = (file) => {
   return (
     <div className="">
       <div className="title">
-        <h2>Lista de archivos CSV</h2>
+        <h2>Archivos CSV</h2>
 
        <button className="btns" onClick={selectFile }>Subir CSV</button>
       </div>

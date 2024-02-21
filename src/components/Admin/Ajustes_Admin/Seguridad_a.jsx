@@ -153,8 +153,8 @@ const Seguridad_a = () => {
               />
             </div>
             <div className="button-group">
-              <button onClick={handleUpdatePassword}>Actualizar</button>
-              <button onClick={closePasswordModal}>Cancelar</button>
+              <button className="btns" onClick={handleUpdatePassword}>Actualizar</button>
+              <button className="btns" onClick={closePasswordModal}>Cancelar</button>
             </div>
           </div>
         </div>

@@ -9,6 +9,7 @@ import { Translation } from "./Translation";
 
 const Retirar = () => {
   const { language } = useContext(LanguageContext);
+  const [verificationComplete, setVerificationComplete] = useState(false);
 
   const [isUserVerified, setIsUserVerified] = useState(false);
   const [selectedRegion, setSelectedRegion] = useState("");
@@ -50,6 +51,7 @@ const Retirar = () => {
       const data = await response.json();
       if (response.ok) {
         setIsUserVerified(data.status);
+        setVerificationComplete(true);
       }
     };
 
@@ -709,7 +711,7 @@ const Retirar = () => {
       <div className="content">
         <h2>{Translation[language].title}</h2>
 
-        {isUserVerified === "approved" ? (
+        {verificationComplete && isUserVerified === "approved" ? (
           <div className="form">
             <form onSubmit={handleSubmit}>
               <div className="grupo-input">
@@ -743,10 +745,12 @@ const Retirar = () => {
               </div>
             </form>
           </div>
-        ) : (
+        ) :  verificationComplete && isUserVerified !== "approved" ? (
           <p>
             {Translation[language].text1}
           </p>
+        ): (
+          <p></p>
         )}
       </div>
     </div>

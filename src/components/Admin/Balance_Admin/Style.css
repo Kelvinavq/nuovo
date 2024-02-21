@@ -8,8 +8,8 @@
 
 .balance_a {
   width: 100%;
-  height: 220px;
-  margin-top: 30px;
+  height: auto;
+  /* margin-top: 30px; */
 }
 
 .balance_a .title {
@@ -111,8 +111,6 @@
   color: var(--green);
 }
 
-
-
 @media (max-width: 1080px) {
   .balance_a .card .content .saldo span {
     font-size: 1.6em;
@@ -147,39 +145,56 @@
 
 @media (max-width: 1270px) {
   .dashboard_a main {
-    width: calc(100% - 500px);
+    width: calc(100% - 520px);
   }
 }
 
 @media (max-width: 960px) {
   .dashboard_a main {
-    width: calc(100% - 110px);
+    width: calc(100% - 140px);
   }
 }
 
 @media (max-width: 620px) {
   .dashboard_a main {
-    width: calc(100% - 20px);
-    left: 10px;
+    width: calc(100% - 30px);
+    left: 0;
     padding-right: 10px;
   }
 
   .balance_a {
-    margin-top: 50px;
+    margin-top: 0;
   }
 }
 
-@media (max-width: 540px) {
+@media (max-width: 580px) {
   .balance_a .card {
-    padding: 10px 0;
+    padding: 25px 0;
+    position: relative;
   }
+
   .balance_a .card .content {
     grid-template-columns: 1fr 1fr;
+    width: 85%;
+    height: 85%;
+  }
+
+  .balance_a .enlace {
+    bottom: -10px !important;
   }
 }
 .rangos .grupo-input {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 480px) {
+  .balance_a .card .content .item:nth-child(3){
+    display: none;
   }
-  
+  .balance_a .card .content .saldo span {
+    font-size: 1.2em;
+  }
+
+}

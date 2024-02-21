@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // Consultar el total depositado
         $totalDepositQuery = "SELECT SUM(amount) AS total_deposit FROM transactions WHERE type = 'deposit' AND status = 'approved'";
         $totalDepositStmt = $conexion->query($totalDepositQuery);
+
         $totalDeposit = $totalDepositStmt->fetch(PDO::FETCH_ASSOC)['total_deposit'];
 
         // Consultar el total retirado

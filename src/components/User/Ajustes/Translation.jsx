@@ -10,7 +10,7 @@ export const Translation = {
     // perfil
     title: "Ajustes",
     swalMessage1:
-      "Por favor, selecciona un archivo de imagen válido (png, jpg, jpeg).",
+      "Por favor, seleccione un archivo de imágen válido (png, jpg, jpeg).",
     swalTitle1: "¿Estás seguro de actualizar tu foto de perfil?",
     swalButton1: "Sí, actualizar",
     swalButton2: "Cancelar",

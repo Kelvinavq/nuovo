@@ -426,7 +426,7 @@ const Verificaciones_a = () => {
   return (
     <div className="verificaciones_admin">
       <div className="title">
-        <h2>Solicitudes de Verificación</h2>
+        <h2>Verificaciones</h2>
       </div>
 
       <div className="lista_verificaciones">

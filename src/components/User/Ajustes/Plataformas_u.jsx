@@ -3,6 +3,7 @@ import "./Style.css";
 import Swal from "sweetalert2";
 import Enlaces from "./Enlaces";
 import Config from "../../../Config";
+import Saldo from "../Saldo/Saldo";
 
 import { LanguageContext } from "../../../Language/LanguageContext";
 import { Translation } from "./Translation";
@@ -28,19 +29,22 @@ const Plataformas_u = () => {
           `${Config.backendBaseUrl}getPlatformsSettings.php?user_id=${UserId}`
         );
         const data = await response.json();
-  
+
         if (response.ok) {
           setPlatforms(data.platforms);
         } else {
-          console.error("Error al obtener la lista de plataformas:", data.error);
+          console.error(
+            "Error al obtener la lista de plataformas:",
+            data.error
+          );
         }
       } catch (error) {
         console.error("Error al procesar la solicitud:", error.message);
       }
     };
-  
+
     fetchData();
-  }, [UserId]); 
+  }, [UserId]);
 
   const handleAddField = () => {
     if (customFields.length < 10) {
@@ -246,7 +250,9 @@ const Plataformas_u = () => {
           <label>${Translation[language].label10}</label>
             <input type="text" id="platformName" value="${
               platform.platformName
-            }" class="swal2-input" placeholder=${Translation[language].label10} required>
+            }" class="swal2-input" placeholder=${
+              Translation[language].label10
+            } required>
           </div>
           
         ${customFields
@@ -355,7 +361,7 @@ const Plataformas_u = () => {
         } catch (error) {
           Swal.fire({
             title: Translation[language].swalTitle4,
-              text: Translation[language].swalMessage17,
+            text: Translation[language].swalMessage17,
             icon: "error",
             timer: 2000,
           });
@@ -414,11 +420,10 @@ const Plataformas_u = () => {
 
   return (
     <div>
-      {/* {Translation[language].titleSeguridad} */}
+      <Saldo />
       <div className="content">
         <div className="title">
           <h2>{Translation[language].titlePlatforms}</h2>
-    
         </div>
 
         {/* Modal de selección de plataforma */}
@@ -465,7 +470,7 @@ const Plataformas_u = () => {
             </div>
 
             <button className="btns" onClick={handleSavePlatform}>
-            {Translation[language].button6}
+              {Translation[language].button6}
             </button>
           </div>
         </div>
@@ -491,9 +496,7 @@ const Plataformas_u = () => {
               />
             </div>
 
-            {customFields.length > 0 && (
-              <h4>{Translation[language].h4}</h4>
-            )}
+            {customFields.length > 0 && <h4>{Translation[language].h4}</h4>}
 
             {/* Fin del nuevo input */}
             {customFields.map((field, index) => (
@@ -534,7 +537,7 @@ const Plataformas_u = () => {
                 </button>
               )}
               <button className="btns" onClick={handleSavePlatform}>
-              {Translation[language].button9}
+                {Translation[language].button9}
               </button>
             </div>
           </div>
@@ -545,50 +548,51 @@ const Plataformas_u = () => {
         <h3>{Translation[language].h3}</h3>
         <button className="btns" onClick={showPlatformModal}>
           {Translation[language].button5}
-          </button>
+        </button>
         <div className="lista_plataformas">
-          {platforms && platforms.map((platform) => (
-            <div key={platform.id}>
-              {platform.platformType === "otra" ? (
-                // Si el tipo de plataforma es "otra", mostrar campos personalizados
-                <div className="plataforma">
-                  <div className="platformName">
-                    <span>{platform.platformName}</span>
-                    <p>{Translation[language].text13}</p>
+          {platforms &&
+            platforms.map((platform) => (
+              <div key={platform.id}>
+                {platform.platformType === "otra" ? (
+                  // Si el tipo de plataforma es "otra", mostrar campos personalizados
+                  <div className="plataforma">
+                    <div className="platformName">
+                      <span>{platform.platformName}</span>
+                      <p>{Translation[language].text13}</p>
 
-                    {/* {Object.entries(platform.customFields).map(
+                      {/* {Object.entries(platform.customFields).map(
                     ([name, value]) => (
                       <div key={name}>
                      
                       </div>
                     )
                   )} */}
-                  </div>
+                    </div>
 
-                  <button
-                    className="btns"
-                    onClick={() => handleEditPlatform(platform)}
-                  >
-                    {Translation[language].button10}
-                  </button>
-                </div>
-              ) : (
-                // Si el tipo de plataforma no es "otra", mostrar nombre y correo
-                <div className="plataforma">
-                  <div className="platformName">
-                    <span>{platform.platformName}</span>
-                    <p>{Translation[language].text14}</p>
+                    <button
+                      className="btns"
+                      onClick={() => handleEditPlatform(platform)}
+                    >
+                      {Translation[language].button10}
+                    </button>
                   </div>
-                  <button
-                    className="btns"
-                    onClick={() => handleEditPlatform(platform)}
-                  >
-                    {Translation[language].button10}
-                  </button>
-                </div>
-              )}
-            </div>
-          ))}
+                ) : (
+                  // Si el tipo de plataforma no es "otra", mostrar nombre y correo
+                  <div className="plataforma">
+                    <div className="platformName">
+                      <span>{platform.platformName}</span>
+                      <p>{Translation[language].text14}</p>
+                    </div>
+                    <button
+                      className="btns"
+                      onClick={() => handleEditPlatform(platform)}
+                    >
+                      {Translation[language].button10}
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
         </div>
       </div>
     </div>

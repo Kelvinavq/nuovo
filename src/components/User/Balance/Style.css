@@ -1,9 +1,12 @@
+
 main{
-    width: calc(100% - 420px);
+    width: calc(100% - 460px);
     position: absolute;
     left: 100px;
     height: 100vh;
     overflow-y: auto;
+
+    padding: 0 20px;
 }
 
 .balance{
@@ -27,7 +30,7 @@ main{
 }
 
 .balance .card .content{
-    width: 95%;
+    width: 85%;
     height: 95%;
     position: relative;
 
@@ -38,7 +41,7 @@ main{
 
 .balance .card .content .text{
     display: flex;
-    gap: 30px;
+    gap: 5px;
     margin-top: -20px;
 }
 
@@ -77,16 +80,52 @@ main{
 
 @media (max-width: 920px) {
     main{
-        width: calc(100% - 100px);
+        width: calc(100% - 140px);
     }
 }
 
 
 @media (max-width: 620px) {
     main{
-        width: calc(100% - 20px);
-        left: 10px;
+        width: calc(100% - 30px);
+        left: 0;
         padding-right: 10px;
     }
 
 }
+.loader {
+    width: 100%;
+    text-align: center;
+    border-radius: 30px;
+    background-color: var(--bg);
+  }
+  
+  .card__skeleton {
+    background-image: linear-gradient(
+      90deg,
+      rgba(85, 85, 85, 0.247) 0px,
+      rgb(56, 56, 56) 40px,
+      rgba(85, 85, 85, 0.247) 80px
+    );
+    background-size: 300%;
+    background-position: 100% 0;
+    border-radius: inherit;
+    animation: shimmer 4s infinite;
+  }
+  
+  .card__title {
+    height: 120px;
+    margin-bottom: 15px;
+  }
+  
+  .card__description {
+    height: 60px;
+    margin: 10px 0;
+  }
+  
+  @keyframes shimmer {
+    to {
+      background-position: -100% 0;
+    }
+  }
+  

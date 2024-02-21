@@ -4,6 +4,7 @@ import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNone
 import Pusher from "pusher-js";
 import "./Style.css"
 import Config from "../../../Config";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 const Notification_a = () => {
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -16,13 +17,12 @@ const Notification_a = () => {
     setIsNotificationsOpen(!isNotificationsOpen);
   };
 
-  const closeDropdownOutsideClick = (event, dropdownRef, setIsOpen) => {
+  const closeDropdownOutsideClick = (event) => {
     if (
-      dropdownRef &&
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target)
+      notificationsDropdownRef.current &&
+      !notificationsDropdownRef.current.contains(event.target)
     ) {
-      setIsOpen(false);
+      setIsNotificationsOpen(false);
     }
   };
 
@@ -82,6 +82,31 @@ const Notification_a = () => {
     }
   };
 
+  const deleteNotification = async () => {
+    try {
+      // Enviar una solicitud para marcar las notificaciones como "read"
+      const response = await fetch(
+        `${Config.backendBaseUrlAdmin}deleteNotification.php`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error en la solicitud: ${response.statusText}`);
+      } else {
+        getNotifications();
+        setIsNotificationsOpen(false);
+      }
+
+      // Actualizar el recuento de notificaciones no leídas
+      setUnreadNotificationsCount(0);
+    } catch (error) {
+      console.error("Error al marcar las notificaciones como leídas", error);
+    }
+  };
+
   useEffect(() => {
     // Configurar Pusher
     const pusher = new Pusher("afe7fd857579ff4b05d7", {
@@ -125,7 +150,7 @@ const Notification_a = () => {
 
   return (
     <div>
-        <div className="notification float">
+        <div className="notificationAdmin float">
           <button onClick={toggleNotificationsDropdown}>
             <NotificationsNoneOutlinedIcon />
             {unreadNotificationsCount > 0 && (
@@ -136,6 +161,11 @@ const Notification_a = () => {
           </button>
           {isNotificationsOpen && (
             <div className="dropdown-content" ref={notificationsDropdownRef}>
+              <div className="deleteAll">
+                <button onClick={deleteNotification}>
+                  <DeleteForeverIcon />
+                </button>
+              </div>
               {notifications.map((notification) => (
                 <div key={notification.id}>
                   <p>

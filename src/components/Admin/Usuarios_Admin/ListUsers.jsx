@@ -185,7 +185,7 @@ const ListUsers = () => {
   return (
     <div className="usuarios">
       <div className="title">
-        <h2>Usuarios registrados</h2>
+        <h2>Usuarios </h2>
       </div>
 
       <div className="filters">

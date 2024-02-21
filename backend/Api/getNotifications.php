@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $userId = $_SESSION['user_id'];
 
     // Consulta para obtener las notificaciones del usuario
-    $getNotificationsQuery = "SELECT * FROM pusher_notifications WHERE user_id = :userId ORDER BY created_at DESC";
+    $getNotificationsQuery = "SELECT * FROM pusher_notifications WHERE user_id = :userId AND visible = 'yes' ORDER BY created_at DESC";
     $stmtGetNotifications = $conexion->prepare($getNotificationsQuery);
     $stmtGetNotifications->bindParam(':userId', $userId);
     $stmtGetNotifications->execute();

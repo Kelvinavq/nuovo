@@ -24,8 +24,8 @@ const Head = () => {
         <button>
           <Link to="/login">{Translation[language].headButton1}</Link>
         </button>
-        <button>
-          <Link to="/registro">{Translation[language].headButton2}</Link>
+        <button className="btnRegistro">
+          <Link  to="/registro">{Translation[language].headButton2}</Link>
         </button>
       </div>
     </div>

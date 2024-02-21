@@ -6,70 +6,75 @@ import Bancos_a from "../../components/Admin/Ajustes_Admin/Bancos_a";
 import Notification_a from "../../components/Admin/Notification_Admin/Notification_a";
 import Config from "../../Config";
 
-import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import Loading from "../Loading";
 
 const Bancos = () => {
 
-    const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const userRole = localStorage.getItem("user_role");
     const [showAlert, setShowAlert] = useState(false); 
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Verificar si el usuario está autenticado
-        const checkAuthStatus = async () => {
-          try {
-            const response = await fetch(
-              `${Config.backendBaseUrl}check-session.php`,
-              {
-                method: "GET",
-                mode: "cors",
-                credentials: "include",
-              }
-            );
-    
-            const responseData = await response.json();
-    
-            if (response.ok) {
-              setIsLoggedIn(true);
-    
-              // Verificar el rol del usuario después de la autenticación
-              if (userRole !== "admin") {
-                setShowAlert(true);
-                // Si el rol no es admin, redirigir al usuario al inicio de sesión
-                Swal.fire({
-                  icon: "error",
-                  title: "Error",
-                  text: "Acceso no permitido para el rol actual.",
-                  timer: 3000,
-                  didClose: () => {
-                    history.back()
-                  },
-                });
-              }
-            } else {
+      // Verificar si el usuario está autenticado
+      const checkAuthStatus = async () => {
+        try {
+          const response = await fetch(
+            `${Config.backendBaseUrl}check-session.php`,
+            {
+              method: "GET",
+              mode: "cors",
+              credentials: "include",
+            }
+          );
+          
+          const responseData = await response.json();
+  
+          if (response.ok) {
+            setIsLoggedIn(true);
+            setTimeout(() => {
+              setLoading(false);
+            }, 1000);
+            // Verificar el rol del usuario después de la autenticación
+            if (userRole !== "admin") {
               setShowAlert(true);
-              // Si la sesión no es válida, redirige al usuario al inicio de sesión
+              // Si el rol no es admin, redirigir al usuario al inicio de sesión
               Swal.fire({
                 icon: "error",
                 title: "Error",
-                text: "Debes iniciar sesión para acceder a esta página.",
+                text: "Acceso no permitido para el rol actual.",
                 timer: 3000,
                 didClose: () => {
-                  window.location.href = "/login";
+                  window.history.back()
                 },
               });
             }
-          } catch (error) {
-            console.error("Error al verificar la sesión:", error);
+          } else {
+            setShowAlert(true);
+            // Si la sesión no es válida, redirige al usuario al inicio de sesión
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "Debes iniciar sesión para acceder a esta página.",
+              timer: 3000,
+              didClose: () => {
+                window.location.href = "/login";
+              },
+            });
           }
-        };
-    
-        // Llamar a la función para verificar la sesión
-        checkAuthStatus();
-      }, [history]);
-    
+        } catch (error) {
+          console.error("Error al verificar la sesión:", error);
+        }
+      };
+  
+      // Llamar a la función para verificar la sesión
+      checkAuthStatus();
+    }, []);
+  
+    if (loading) {
+      return <Loading />;
+    }
       // Si el usuario no ha iniciado sesión o no tiene el rol adecuado, no renderizar el componente
       if (!isLoggedIn || showAlert) {
         return null;

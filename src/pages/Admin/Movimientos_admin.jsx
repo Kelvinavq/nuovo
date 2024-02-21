@@ -6,15 +6,16 @@ import Sidebar_a from "../../components/Admin/Sidebar_Admin/Sidebar_a";
 import Notification_a from "../../components/Admin/Notification_Admin/Notification_a";
 import Config from "../../Config";
 
-import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import Loading from "../Loading";
 
 const Movimientos_admin = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const userRole = localStorage.getItem("user_role");
+  const [showAlert, setShowAlert] = useState(false); 
+  const [loading, setLoading] = useState(true);
 
   // Hook de historial para la redirección
-
   useEffect(() => {
     // Verificar si el usuario está autenticado
     const checkAuthStatus = async () => {
@@ -22,36 +23,44 @@ const Movimientos_admin = () => {
         const response = await fetch(
           `${Config.backendBaseUrl}check-session.php`,
           {
-            method: "POST",
+            method: "GET",
             mode: "cors",
             credentials: "include",
           }
         );
-
+        
         const responseData = await response.json();
 
         if (response.ok) {
           setIsLoggedIn(true);
-
+          setTimeout(() => {
+            setLoading(false);
+          }, 1000);
           // Verificar el rol del usuario después de la autenticación
           if (userRole !== "admin") {
+            setShowAlert(true);
             // Si el rol no es admin, redirigir al usuario al inicio de sesión
             Swal.fire({
               icon: "error",
               title: "Error",
               text: "Acceso no permitido para el rol actual.",
               timer: 3000,
-              didClose: () => {},
+              didClose: () => {
+                window.history.back()
+              },
             });
           }
         } else {
+          setShowAlert(true);
           // Si la sesión no es válida, redirige al usuario al inicio de sesión
           Swal.fire({
             icon: "error",
             title: "Error",
             text: "Debes iniciar sesión para acceder a esta página.",
             timer: 3000,
-            didClose: () => {},
+            didClose: () => {
+              window.location.href = "/login";
+            },
           });
         }
       } catch (error) {
@@ -61,8 +70,11 @@ const Movimientos_admin = () => {
 
     // Llamar a la función para verificar la sesión
     checkAuthStatus();
-  }, [history, userRole]);
+  }, []);
 
+  if (loading) {
+    return <Loading />;
+  }
   // Si el usuario no ha iniciado sesión o no tiene el rol adecuado, no renderizar el componente
   if (!isLoggedIn) {
     return null;

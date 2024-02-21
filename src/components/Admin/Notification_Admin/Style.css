@@ -1,102 +1,145 @@
-.notification.float {
-    display: none;
-  }
-  
-  .notification button {
-    background: none;
-    border: none;
-    outline: none;
-    cursor: pointer;
+.notificationAdmin.float {
+  display: none;
+}
+
+.notificationAdmin button {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: var(--green);
+}
+
+.notificationAdmin button svg {
+  filter: drop-shadow(3px 5px 5px #000000);
+}
+
+.notificationAdmin .dropdown-content {
+  position: absolute;
+  right: 10px;
+  width: 300px;
+  max-height: 320px;
+  overflow-y: auto;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  padding: 10px;
+  border-radius: 15px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.notificationAdmin .dropdown-content p {
+  margin: 0;
+  padding: 10px;
+  border-radius: 15px;
+  background: var(--blue2);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 1;
+}
+.notificationAdmin .dropdown-content div:nth-child(odd) p {
+  background: var(--blue);
+}
+
+.notificationAdmin .dropdown-content small {
+  font-size: 0.8em;
+  text-align: right;
+  color: var(--gray);
+}
+
+.notification-count {
+  background-color: red;
+  color: var(--white);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  position: absolute;
+  top: -10px;
+  left: 0;
+  font-size: 12px;
+}
+
+@media (max-width: 920px) {
+  .notificationAdmin.float {
+    /* position: absolute ;
+    display: block;
+    justify-content: right;
+    right: 20px;
+    top: 22px !important;
+    z-index: 9; */
+
+    display: block;
+    position: absolute;
+    right: 20px;
     color: var(--green);
-  }
-  
-  .notification button svg{
-      filter:drop-shadow(3px 5px 5px #000000)
-  }
-  
-  .notification .dropdown-content {
-    position: absolute;
-    right: 10px;
-    width: 300px;
-    max-height: 320px;
-    overflow-y: auto;
-    position: absolute;
-    background: var(--bg);
-    box-shadow: var(--shadow);
-    padding: 10px;
-    border-radius: 15px;
-  
+    cursor: pointer;
+    z-index: 99;
+    border-radius: 12px;
+    width: 45px;
+    height: 45px;
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    justify-content: center;
+    align-items: center;
   }
-  
-  .notification .dropdown-content p {
-    margin: 0;
-    padding: 10px;
-    border-radius: 15px;
-    background: var(--blue2);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    font-size: 1;
-  }
-  .notification .dropdown-content div:nth-child(odd) p {
-    background: var(--blue);
-  }
-  
-  .notification .dropdown-content small {
-    font-size: 0.8em;
-    text-align: right;
-    color: var(--gray);
-  }
-  
-  .notification-count {
-    background-color: red;
+
+  .notificationAdmin.float .dropdown-content {
+    /* position: absolute; */
+    /* width: calc(100% - 60px);
+    max-width: 320px;
+    max-height: 420px;
+    right: 20px;
+    top: 130px; */
+
+    width: 320px !important;
+    max-width: 100%;
     color: var(--white);
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    display: grid;
-    place-items: center;
-    position: absolute;
-    top: -10px;
+  }
+
+  .notificationAdmin.float .notification-count {
+    top: 0px;
     left: 0;
-    font-size: 12px;
   }
-  
-  @media (max-width: 920px) {
-    .notification.float {
-      display: block;
-      justify-content: right;
-      position: fixed;
-      right: 25px;
-      top: 100px;
-      z-index: 999 !important;
-  
+}
+
+@media (min-width: 620px) {
+  .notificationAdmin.float {
+    top: 15px;
+  }
+
+  .notificationAdmin.float .dropdown-content {
+    position: absolute;
+    width: calc(100% - 60px);
+    max-width: 320px;
+    max-height: 420px;
+    right: 20px;
+    top: 50px;
+  }
+}
+
+@media (max-width: 620px) {
+  .notificationAdmin.float {
+    top: 15px;
+    right: 80px;
+  }
+
+  .notificationAdmin.float .dropdown-content {
+    position: absolute;
+    width: 100%;
+    max-width: 320px;
+    max-height: 420px;
+    right: -60px;
+    top: 50px;
+  }
+
+  @media (max-width: 375px) {
+    .notificationAdmin.float .dropdown-content {
+      min-width: 250px !important;
+      max-width: 100% !important;
     }
-  
-    .notification.float .dropdown-content {
-      position: fixed;
-      width: calc(100% - 60px);
-      max-width: 320px;
-      max-height: 420px;
-      right: 20px;
-      top: 130px;
-    }
   }
-  
-  @media ( min-width: 620px)  {
-      .notification.float {
-          top: 15px;
-      }
-  
-      .notification.float .dropdown-content {
-          position: fixed;
-          width: calc(100% - 60px);
-          max-width: 320px;
-          max-height: 420px;
-          right: 20px;
-          top: 50px;
-        }
-  }
+}

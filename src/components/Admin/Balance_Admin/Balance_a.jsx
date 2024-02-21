@@ -149,7 +149,6 @@ const Balance_a = () => {
           </Link>
         </button>
       </div>
-
       <div className="card">
         <div className="content">
           <div className="item">
@@ -159,7 +158,7 @@ const Balance_a = () => {
 
             <div className="saldo">
               <span>
-                <strong>$</strong> {balance.total_deposit} <small>USD</small>
+                <strong>$</strong> {balance.total_deposit == null ? 0.00 : balance.total_deposit} <small>USD</small>
               </span>
             </div>
           </div>
@@ -170,7 +169,7 @@ const Balance_a = () => {
 
             <div className="saldo">
               <span>
-                <strong>$</strong> {balance.total_withdrawal} <small>USD</small>
+                <strong>$</strong> {balance.total_withdrawal == null ? 0.00 : balance.total_withdrawal} <small>USD</small>
               </span>
             </div>
           </div>
@@ -180,7 +179,7 @@ const Balance_a = () => {
             </div>
 
             <div className="saldo">
-              <span>{balance.total_users}</span>
+              <span>{balance.total_users == null ? 0.00 : balance.total_users}</span>
             </div>
           </div>
 

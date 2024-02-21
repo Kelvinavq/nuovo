@@ -6,6 +6,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import Pusher from "pusher-js";
 import Config from "../../../Config";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 const Lateral = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -74,11 +75,11 @@ const Lateral = () => {
           credentials: "include",
         }
       );
-  
+
       if (!response.ok) {
         throw new Error(`Error en la solicitud: ${response.statusText}`);
       }
-  
+
       // Actualizar el estado local de las notificaciones
       setNotifications((prevNotifications) =>
         prevNotifications.map((notification) => ({
@@ -86,7 +87,32 @@ const Lateral = () => {
           status: "read",
         }))
       );
-  
+
+      // Actualizar el recuento de notificaciones no leídas
+      setUnreadNotificationsCount(0);
+    } catch (error) {
+      console.error("Error al marcar las notificaciones como leídas", error);
+    }
+  };
+
+  const deleteNotification = async () => {
+    try {
+      // Enviar una solicitud para marcar las notificaciones como "read"
+      const response = await fetch(
+        `${Config.backendBaseUrl}deleteNotification.php`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error en la solicitud: ${response.statusText}`);
+      } else {
+        getNotifications();
+        setIsNotificationsOpen(false);
+      }
+
       // Actualizar el recuento de notificaciones no leídas
       setUnreadNotificationsCount(0);
     } catch (error) {
@@ -177,7 +203,6 @@ const Lateral = () => {
     };
   }, []);
 
-
   return (
     <div className="lateral">
       <div className="profile">
@@ -190,10 +215,7 @@ const Lateral = () => {
             ""
           )}
 
-          <img
-            src={`${Config.imgProfile}${userData.profile_picture}`}
-            alt=""
-          />
+          <img src={`${Config.imgProfile}${userData.profile_picture}`} alt="" />
           <div className="dropdown" ref={profileDropdownRef}>
             <button onClick={toggleProfileDropdown}>
               <KeyboardArrowDownIcon />
@@ -220,6 +242,12 @@ const Lateral = () => {
           </button>
           {isNotificationsOpen && (
             <div className="dropdown-content" ref={notificationsDropdownRef}>
+              <div className="deleteAll">
+                <button onClick={deleteNotification}>
+                  <DeleteForeverIcon />
+                </button>
+              </div>
+
               {notifications.map((notification) => (
                 <div key={notification.id}>
                   <p>

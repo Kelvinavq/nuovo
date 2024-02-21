@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // Obtener el ID de usuario de la sesión
 
     // Consulta para obtener las notificaciones del usuario
-    $getNotificationsQuery = "SELECT * FROM pusher_notifications  ORDER BY created_at DESC";
+    $getNotificationsQuery = "SELECT * FROM pusher_notifications WHERE visible_admin = 'yes' ORDER BY created_at DESC";
     $stmtGetNotifications = $conexion->prepare($getNotificationsQuery);
     $stmtGetNotifications->execute();
 

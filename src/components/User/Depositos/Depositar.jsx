@@ -10,7 +10,7 @@ import Config from "../../../Config";
 
 const Depositar = () => {
   const { language } = useContext(LanguageContext);
-
+  const [verificationComplete, setVerificationComplete] = useState(false);
   const [isUserVerified, setIsUserVerified] = useState(false);
   const [userId, setUserId] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
@@ -26,31 +26,6 @@ const Depositar = () => {
   const [platformSelected, setPlatformSelected] = useState();
   const [platformsUser, setPlatformsUser] = useState([]);
   const UserId = localStorage.getItem("user_id");
-
-  // obtener id del usuario
-  useEffect(() => {
-    // Lógica para obtener el ID del usuario
-    const fetchUserId = async () => {
-      const response = await fetch(
-        `${Config.backendBaseUrl}getUserId.php`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setUserId(data.userId);
-      } else {
-        console.error("Error al obtener el ID del usuario");
-      }
-    };
-
-    fetchUserId();
-  }, []);
-
   // verificar estatus del usuario
   useEffect(() => {
     const checkVerification = async () => {
@@ -65,10 +40,32 @@ const Depositar = () => {
       const data = await response.json();
       if (response.ok) {
         setIsUserVerified(data.status);
+        setVerificationComplete(true);
       }
     };
 
     checkVerification();
+  }, []);
+
+  // obtener id del usuario
+  useEffect(() => {
+    // Lógica para obtener el ID del usuario
+    const fetchUserId = async () => {
+      const response = await fetch(`${Config.backendBaseUrl}getUserId.php`, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setUserId(data.userId);
+      } else {
+        console.error("Error al obtener el ID del usuario");
+      }
+    };
+
+    fetchUserId();
   }, []);
 
   // obtener lista de plataformas
@@ -242,7 +239,10 @@ const Depositar = () => {
       return;
     }
 
-    if (paymentMethod === "platform" && (!selectedPlatform || !referenceNumber)) {
+    if (
+      paymentMethod === "platform" &&
+      (!selectedPlatform || !referenceNumber)
+    ) {
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -347,6 +347,7 @@ const Depositar = () => {
     );
   };
 
+
   return (
     <div className="depositar">
       <Saldo />
@@ -354,7 +355,7 @@ const Depositar = () => {
       <div className="content">
         <h2>{Translation[language].title}</h2>
 
-        {isUserVerified === "approved" ? (
+        {verificationComplete && isUserVerified === "approved"  ? (
           <div className="form">
             <form onSubmit={handleSubmit}>
               <div className="grupo-input">
@@ -619,8 +620,10 @@ const Depositar = () => {
               </div>
             </form>
           </div>
-        ) : (
+        ) : verificationComplete && isUserVerified !== "approved" ? (
           <p>{Translation[language].text9}</p>
+        ): (
+          <p></p>
         )}
       </div>
     </div>

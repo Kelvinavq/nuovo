@@ -30,6 +30,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $amount = filter_input(INPUT_POST, 'amount');
     $referenceNumber = filter_input(INPUT_POST, 'reference_number', FILTER_SANITIZE_STRING);
 
+        // Limpiar y formatear el monto para convertirlo a valor numérico
+        $amount = str_replace(',', '', $amount); // Eliminar comas
+        $amount = floatval($amount); // Convertir a valor numérico
+
     // Obtener el tipo de plataforma seleccionada si existe
     $platformType = isset($_POST['selected_platform']) ? filter_input(INPUT_POST, 'selected_platform', FILTER_SANITIZE_STRING) :  $paymentMethod;
 

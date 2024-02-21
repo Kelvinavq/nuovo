@@ -1,6 +1,6 @@
 .usuarios_a main{
-    width: calc(100% - 120px);
-    padding: 10px;
+  width: calc(100% - 150px);
+  padding: 10px 20px;
   }
   
   .usuarios_a .title h2 {

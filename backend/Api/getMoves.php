@@ -53,11 +53,22 @@ try {
         $formattedTime = date('H:i:s', strtotime($transaction['transaction_time']));
         $user_id = $_SESSION['user_id'];
 
-        $transactionType = ($transaction['recipient_user_id'] == $user_id) ? 'Transferencia recibida' : $transaction['type'];
+        $selectedLanguage = isset($_COOKIE['selectedLanguage']) ? $_COOKIE['selectedLanguage'] : 'es';
 
-        $platformType = ($transaction['recipient_user_id'] == $user_id) ? 'Transferencia recibida' : $transaction['platform_type'];
 
-        
+        if ($selectedLanguage === "en") {
+            $transactionType = ($transaction['recipient_user_id'] == $user_id) ? 'Received Transfer' : $transaction['type'];
+            $platformType = ($transaction['recipient_user_id'] == $user_id) ? 'Received Transfer' : $transaction['platform_type'];
+        } else if ($selectedLanguage === "pt") {
+            $transactionType = ($transaction['recipient_user_id'] == $user_id) ? 'Transferência recebida' : $transaction['type'];
+            $platformType = ($transaction['recipient_user_id'] == $user_id) ? 'Transferência recebida' : $transaction['platform_type'];
+        } else {
+            $transactionType = ($transaction['recipient_user_id'] == $user_id) ? 'Transferencia recibida' : $transaction['type'];
+            $platformType = ($transaction['recipient_user_id'] == $user_id) ? 'Transferencia recibida' : $transaction['platform_type'];
+        }
+
+
+
         return array(
             'id' => $transaction['id'],
             'type' => $transactionType,
@@ -94,4 +105,3 @@ try {
     // Cerrar la conexión después de usarla
     $conexion = null;
 }
-?>

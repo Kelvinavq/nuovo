@@ -1,8 +1,8 @@
-.notification.float {
+.notificationUser.float {
   display: none;
 }
 
-.notification button {
+.notificationUser button {
   background: none;
   border: none;
   outline: none;
@@ -10,17 +10,16 @@
   color: var(--green);
 }
 
-.notification button svg{
-    filter:drop-shadow(3px 5px 5px #000000)
+.notificationUser button svg {
+  filter: drop-shadow(3px 5px 5px #000000);
 }
 
-.notification .dropdown-content {
+.notificationUser .dropdown-content {
   position: absolute;
   right: 10px;
   width: 300px;
   max-height: 320px;
   overflow-y: auto;
-  position: absolute;
   background: var(--bg);
   box-shadow: var(--shadow);
   padding: 10px;
@@ -31,7 +30,7 @@
   gap: 15px;
 }
 
-.notification .dropdown-content p {
+.notificationUser .dropdown-content p {
   margin: 0;
   padding: 10px;
   border-radius: 15px;
@@ -41,17 +40,17 @@
   gap: 12px;
   font-size: 1;
 }
-.notification .dropdown-content div:nth-child(odd) p {
+.notificationUser .dropdown-content div:nth-child(odd) p {
   background: var(--blue);
 }
 
-.notification .dropdown-content small {
+.notificationUser .dropdown-content small {
   font-size: 0.8em;
   text-align: right;
   color: var(--gray);
 }
 
-.notification-count {
+.notificationUser .notification-count {
   background-color: red;
   color: var(--white);
   border-radius: 50%;
@@ -66,37 +65,82 @@
 }
 
 @media (max-width: 920px) {
-  .notification.float {
+  .notificationUser.float {
+    /* position: absolute ;
     display: block;
     justify-content: right;
-    position: fixed;
-    right: 25px;
-    top: 100px;
-    z-index: 999 !important;
+    right: 20px;
+    top: 22px !important;
+    z-index: 9; */
 
+    display: block;
+    position: absolute;
+    right: 20px;
+    color: var(--green);
+    cursor: pointer;
+    z-index: 99;
+    border-radius: 12px;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
-  .notification.float .dropdown-content {
-    position: fixed;
+  .notificationUser.float .dropdown-content {
+    /* position: absolute; */
+    /* width: calc(100% - 60px);
+    max-width: 320px;
+    max-height: 420px;
+    right: 20px;
+    top: 130px; */
+
+    width: 320px !important;
+    max-width: 100%;
+    color: var(--white);
+  }
+
+.notificationUser.float .notification-count {
+    top: 0px;
+    left: 0;
+  }
+
+}
+
+@media (min-width: 620px) {
+  .notificationUser.float {
+    top: 15px;
+  }
+
+  .notificationUser.float .dropdown-content {
+    position: absolute;
     width: calc(100% - 60px);
     max-width: 320px;
     max-height: 420px;
     right: 20px;
-    top: 130px;
+    top: 50px;
   }
 }
 
-@media ( min-width: 620px)  {
-    .notification.float {
-        top: 15px;
-    }
+@media (max-width: 620px) {
+  .notificationUser.float {
+    top: 15px;
+    right: 80px;
+  }
 
-    .notification.float .dropdown-content {
-        position: fixed;
-        width: calc(100% - 60px);
-        max-width: 320px;
-        max-height: 420px;
-        right: 20px;
-        top: 50px;
-      }
+  .notificationUser.float .dropdown-content {
+    position: absolute;
+    width: 100%;
+    max-width: 320px;
+    max-height: 420px;
+    right: -60px;
+    top: 50px;
+  }
+
+  @media (max-width: 375px) {
+    .notificationUser.float .dropdown-content {
+      min-width: 250px !important;
+      max-width: 100% !important;
+    }
+  }
 }

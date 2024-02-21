@@ -335,7 +335,7 @@
   border-radius: 15px;
 }
 
-.plataforma_a .lista_plataformas div:nth-child(even) {
+.plataforma_a .lista_plataformas div {
   background: var(--blue);
 }
 
@@ -389,6 +389,8 @@
 .plataforma_a .modal-content .grupo-input select,
 .plataforma_a .modal-content .grupo-input input {
   margin: 0 !important;
+  min-width: 320px !important;
+  max-width: 100%;
 }
 
 .plataforma_a .modal-content .custom-field select,

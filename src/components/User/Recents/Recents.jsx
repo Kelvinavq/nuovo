@@ -54,7 +54,8 @@ const Recents = () => {
               </div>
 
               <div className="detalle">
-                <span>{transaction.type === 'deposit' ? Translation[language].transaction1 + " - " + transaction.platform_type : transaction.type}</span>
+                <span>{transaction.type === 'deposit' ? Translation[language].transaction1 + " - " + transaction.platform_type : Translation[language].transaction2}</span>
+
                 <small>{transaction.transaction_time}</small>
               </div>
             </div>

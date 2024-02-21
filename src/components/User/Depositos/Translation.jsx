@@ -42,9 +42,9 @@ export const Translation = {
 
     // swal
 
-    swalTitle1: "No tienes plataformas registradas",
+    swalTitle1: "No tiene plataformas registradas",
     swalText1:
-      "Para poder realizar un depósito debes registrar al menos una plataforma",
+      "Para poder realizar un depósito debe registrar al menos una plataforma",
 
     swalText2: "Hubo un error al procesar la solicitud de depósito",
     swalText3: "Error inesperado al enviar la solicitud de depósito",
@@ -102,7 +102,7 @@ export const Translation = {
     swalText2: "There was an error processing the deposit request",
     swalText3: "Unexpected error when sending the deposit request",
 
-    swalEmpty: "Por favor, complete todos los campos.",
+    swalEmpty: "Please complete all fields.",
     amount:"The amount must be at least 1 USD",
   },
   pt: {

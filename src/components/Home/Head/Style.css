@@ -84,7 +84,7 @@
 }
 
 @media (max-width: 500px) {
-  .head .buttons button:nth-child(3) {
+  .head .buttons .btnRegistro {
     display: none;
   }
 }

@@ -414,7 +414,7 @@ const Retiros_a = () => {
   return (
     <div className="retiros_admin">
       <div className="title">
-        <h2>Solicitudes de Retiro</h2>
+        <h2>Retiros</h2>
       </div>
 
       {withdrawalRequests.length === 0 ? (

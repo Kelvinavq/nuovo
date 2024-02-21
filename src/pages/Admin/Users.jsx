@@ -5,17 +5,17 @@ import Sidebar_a from "../../components/Admin/Sidebar_Admin/Sidebar_a";
 import Notification_a from "../../components/Admin/Notification_Admin/Notification_a";
 import Config from "../../Config";
 
-import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import Loading from "../Loading";
 
 const Users = () => {
 
     
-  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const userRole = localStorage.getItem("user_role");
   const [showAlert, setShowAlert] = useState(false); 
-
+  const [loading, setLoading] = useState(true);
+  
   useEffect(() => {
     // Verificar si el usuario está autenticado
     const checkAuthStatus = async () => {
@@ -28,12 +28,14 @@ const Users = () => {
             credentials: "include",
           }
         );
-
+        
         const responseData = await response.json();
 
         if (response.ok) {
           setIsLoggedIn(true);
-
+          setTimeout(() => {
+            setLoading(false);
+          }, 1000);
           // Verificar el rol del usuario después de la autenticación
           if (userRole !== "admin") {
             setShowAlert(true);
@@ -44,7 +46,7 @@ const Users = () => {
               text: "Acceso no permitido para el rol actual.",
               timer: 3000,
               didClose: () => {
-                history.back()
+                window.history.back()
               },
             });
           }
@@ -68,7 +70,11 @@ const Users = () => {
 
     // Llamar a la función para verificar la sesión
     checkAuthStatus();
-  }, [history]);
+  }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   // Si el usuario no ha iniciado sesión o no tiene el rol adecuado, no renderizar el componente
   if (!isLoggedIn || showAlert) {

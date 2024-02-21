@@ -176,8 +176,8 @@ const Seguridad = () => {
               />
             </div>
             <div className="button-group">
-              <button onClick={handleUpdatePassword}>{Translation[language].button3}</button>
-              <button onClick={closePasswordModal}>{Translation[language].button4}</button>
+              <button className="btns" onClick={handleUpdatePassword}>{Translation[language].button3}</button>
+              <button className="btns" onClick={closePasswordModal}>{Translation[language].button4}</button>
             </div>
           </div>
         </div>

@@ -1,13 +1,12 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { LanguageContext } from "../../Language/LanguageContext";
-import {Translation} from "../../Language/Translation";
+import { Translation } from "../../Language/Translation";
 import Config from "../../Config";
 import inglesIcon from "../../assets/icons/ingles.png";
 import espanaIcon from "../../assets/icons/espana.png";
 import portugalIcon from "../../assets/icons/portugal.png";
 
-import "./Style.css"
+import "./Style.css";
 
 const languageFlagMap = {
   es: espanaIcon,
@@ -23,11 +22,32 @@ const LanguageSelector = () => {
     setDropdownOpen((prevState) => !prevState);
   };
 
-  const buttonRef = React.createRef();
-  const chevronRef = React.createRef();
-  const menuRef = React.createRef();
+  const buttonRef = useRef(null);
+  const chevronRef = useRef(null);
+  const menuRef = useRef(null);
 
-  React.useEffect(() => {
+  const handleDocumentClick = (event) => {
+    const { target } = event;
+
+    if (
+      !buttonRef.current.contains(target) &&
+      !chevronRef.current.contains(target) &&
+      !menuRef.current.contains(target)
+    ) {
+      // Cerrar el menú si se hace clic fuera de él
+      setDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleDocumentClick);
+
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, []);
+
+  useEffect(() => {
     const button = buttonRef.current;
     const chevron = chevronRef.current;
     const menu = menuRef.current;
@@ -57,27 +77,30 @@ const LanguageSelector = () => {
     updateLanguageOnBackend(newLanguage);
   };
 
-
   const updateLanguageOnBackend = async (newLanguage) => {
     try {
       const response = await fetch(`${Config.backendBaseUrl}updateLanguage.php`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           language: newLanguage,
         }),
         credentials: "include",
       });
-  
+
       if (response.ok) {
-        console.log('Idioma actualizado en el backend con éxito.');
+        console.log("Idioma actualizado en el backend con éxito.");
       } else {
-        console.error('Error al actualizar el idioma en el backend:', response.status, response.statusText);
+        console.error(
+          "Error al actualizar el idioma en el backend:",
+          response.status,
+          response.statusText
+        );
       }
     } catch (error) {
-      console.error('Error en la solicitud al backend:', error);
+      console.error("Error en la solicitud al backend:", error);
     }
   };
 
@@ -85,20 +108,14 @@ const LanguageSelector = () => {
     setSelectedLanguage(language);
   }, [language]);
 
-
   return (
     <>
       <div className="selector">
         <div className={`dropdown ${dropdownOpen ? "open" : ""}`} id="dropdown">
-          <button className="btnSelector" id="button" onClick={toggleDropdown}>
-            <img
-              id="chevron"
-              className="chevron"
-              src={languageFlagMap[selectedLanguage]}
-              alt=""
-            />
+          <button className="btnSelector" id="button" onClick={toggleDropdown} ref={buttonRef}>
+            <img id="chevron" className="chevron" src={languageFlagMap[selectedLanguage]} alt="" ref={chevronRef} />
           </button>
-          <div id="menu" className="menu">
+          <div id="menu" className="menu" ref={menuRef}>
             <button className="btnSelector" onClick={() => handleLanguageChange("es")}>
               <img src={espanaIcon} alt="" />
             </button>

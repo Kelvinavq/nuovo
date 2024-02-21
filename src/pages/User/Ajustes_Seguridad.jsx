@@ -6,20 +6,20 @@ import Seguridad from "../../components/User/Ajustes/Seguridad"
 import Notification from "../../components/User/Notification/Notification";
 import Config from "../../Config";
 
-import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import Loading from "../Loading";
 
 const Ajustes_Seguridad = () => {
-  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const userRole = localStorage.getItem("user_role");
   const [showAlert, setShowAlert] = useState(false); 
-  const [notifications, setNotifications] = useState([]); 
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Verificar si el usuario está autenticado
     const checkAuthStatus = async () => {
       try {
+        
         const response = await fetch(
           `${Config.backendBaseUrl}check-session.php`,
           {
@@ -28,10 +28,14 @@ const Ajustes_Seguridad = () => {
             credentials: "include",
           }
         );
+
         const responseData = await response.json();
 
         if (response.ok) {
           setIsLoggedIn(true);
+          setTimeout(() => {
+            setLoading(false);
+          }, 1000);
 
           // Verificar el rol del usuario después de la autenticación
           if (userRole !== "user") {
@@ -43,7 +47,7 @@ const Ajustes_Seguridad = () => {
               text: "Acceso no permitido para el rol actual.",
               timer: 3000,
               didClose: () => {
-                history.back()
+                window.history.back()
               },
             });
           }
@@ -67,8 +71,11 @@ const Ajustes_Seguridad = () => {
 
     // Llamar a la función para verificar la sesión
     checkAuthStatus();
-  }, [history]);
+  }, []);
 
+  if (loading) {
+    return <Loading />;
+  }
   // Si el usuario no ha iniciado sesión o no tiene el rol adecuado, no renderizar el componente
   if (!isLoggedIn || showAlert) {
     return null;
