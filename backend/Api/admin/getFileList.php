@@ -7,7 +7,7 @@ $conexion = obtenerConexion();
 
 try {
     // Obtener la lista de archivos desde la base de datos
-    $stmt = $conexion->query("SELECT id, filename, uploaded_at FROM csv_files");
+    $stmt = $conexion->query("SELECT id, filename, uploaded_at FROM csv_files ORDER BY uploaded_at DESC");
     $fileList = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Formatear la fecha en m-d-Y

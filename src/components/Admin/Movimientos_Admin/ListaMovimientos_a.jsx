@@ -85,6 +85,19 @@ const ListaMovimientos_a = () => {
     });
   };
 
+
+  const formatAmount = (amount) => {
+    const numericAmount = amount.replace(/[^\d]/g, "");
+
+    // Formatear con separador de miles y decimales
+    const formattedAmount = new Intl.NumberFormat("en-US", {
+      style: "decimal",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(parseFloat(numericAmount) / 100);
+
+    return formattedAmount;
+  };
   return (
     <div>
       <div className="title">
@@ -140,7 +153,7 @@ const ListaMovimientos_a = () => {
 
               <li className="monto">
                 <h2>Monto</h2>
-                <span>${transaction.amount}</span>
+                <span>${formatAmount(transaction.amount)}</span>
               </li>
 
               <li>

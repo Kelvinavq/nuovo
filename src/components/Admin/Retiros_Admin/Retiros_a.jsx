@@ -411,6 +411,20 @@ const Retiros_a = () => {
     }
   };
 
+  const formatAmount = (amount) => {
+    const numericAmount = amount.replace(/[^\d]/g, "");
+
+    // Formatear con separador de miles y decimales
+    const formattedAmount = new Intl.NumberFormat("en-US", {
+      style: "decimal",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(parseFloat(numericAmount) / 100);
+
+    return formattedAmount;
+  };
+
+
   return (
     <div className="retiros_admin">
       <div className="title">
@@ -456,7 +470,7 @@ const Retiros_a = () => {
 
               <li className="monto">
                 <h2>Monto</h2>
-                <span>${withdrawalRequest.amount}</span>
+                <span>${formatAmount(withdrawalRequest.amount)}</span>
               </li>
 
               <li>

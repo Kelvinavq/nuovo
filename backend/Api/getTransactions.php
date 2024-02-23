@@ -31,26 +31,28 @@ try {
 
     // Formatear la respuesta
     $formattedTransactions = array_map(function ($transaction) {
-        $formattedDate = date('m-d-Y', strtotime($transaction['transaction_date']));
+        $formattedDate = date('d-m-Y', strtotime($transaction['transaction_date']));
         $formattedTime = date('H:i:s', strtotime($transaction['transaction_time']));
 
         $user_id = $_SESSION['user_id'];
         $selectedLanguage = isset($_COOKIE['selectedLanguage']) ? $_COOKIE['selectedLanguage'] : 'es';
 
         if ($selectedLanguage == "en") {
-            $transactionType = ($transaction['recipient_user_id'] == $user_id) ? 'Transfer received' : $transaction['type'];
+            $received = ($transaction['recipient_user_id'] == $user_id) ? 'Transfer received' : "Withdraw Funds";
         } elseif ($selectedLanguage == "pt") {
-            $transactionType = ($transaction['recipient_user_id'] == $user_id) ? 'Transferência recebida' : $transaction['type'];
+            $received = ($transaction['recipient_user_id'] == $user_id) ? 'Transferência recebida' : "Retirar fundos";
         } else {
-            $transactionType = ($transaction['recipient_user_id'] == $user_id) ? 'Transferencia recibida' : $transaction['type'];
+            $received = ($transaction['recipient_user_id'] == $user_id) ? 'Transferencia recibida' : "Retirar Fondos";
         }
 
 
         return array(
-            'type' => $transactionType,
+            'type' => $transaction['type'],
             'amount' => $transaction['amount'],
             'status' => $transaction['status'],
             'platform_type' => $transaction['platform_type'],
+            'payment_method' => $transaction['payment_method'],
+            'received' => $received,
             'transaction_date' => $formattedDate,
             'transaction_time' => $formattedTime
         );

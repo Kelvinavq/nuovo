@@ -8,6 +8,7 @@ export const Translation = {
     option4: "Efectivo",
 
     text1: "Nombre de la cuenta:",
+    text2de2: "Dirección del beneficiario",
     text2: "Routing Number (ACH):",
     text3: "Routing Number (Wire):",
     text4: "Dirección del banco:",
@@ -51,6 +52,12 @@ export const Translation = {
 
     swalEmpty: "Por favor, complete todos los campos.",
     amount:"El monto debe ser de al menos 1 USD",
+
+    swalTitle2: "¿Estás seguro de esta transacción?",
+    swalText4: "Se enviará una solicitud de depósito por el monto:",
+    swalButton1: "Sí, estoy seguro",
+    swalButton2: "Cancelar",
+
   },
   en: {
     title: "Deposit",
@@ -61,6 +68,7 @@ export const Translation = {
     option4: "Cash",
 
     text1: "Account Name:",
+    text2de2: "Beneficiary address",
     text2: "Routing Number (ACH):",
     text3: "Routing Number (Wire):",
     text4: "Bank Address:",
@@ -104,6 +112,11 @@ export const Translation = {
 
     swalEmpty: "Please complete all fields.",
     amount:"The amount must be at least 1 USD",
+
+    swalTitle2: "Are you sure about this transaction?",
+    swalText4: "A deposit request will be sent for the amount:",
+    swalButton1: "Yes, I'm sure",
+    swalButton2: "Cancel",
   },
   pt: {
     title: "Depositar",
@@ -114,6 +127,7 @@ export const Translation = {
     option4: "Efetivo",
 
     text1: "Nome da conta:",
+    text2de2: "Endereço do beneficiário",
     text2: "Routing Number (ACH):",
     text3: "Routing Number (Wire):",
     text4: "Endereço do banco:",
@@ -157,6 +171,11 @@ export const Translation = {
 
     swalEmpty: "Por favor, preencha todos os campos.",
     amount:"O montante deve ser de pelo menos 1 USD",
+
+    swalTitle2: "Você está certo desta transação?",
+    swalText4: "Um pedido de depósito será enviado pelo valor:",
+    swalButton1: "Sim, eu tenho certeza",
+    swalButton2: "Cancelar",
 
   },
 };

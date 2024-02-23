@@ -9,6 +9,7 @@ import AjustesIcon from "../../../assets/icons/Ajustes.svg";
 import UserIcon from "../../../assets/icons/user-line.svg";
 import LogoutIcon from "../../../assets/icons/Logout.svg";
 import TransactionsIcon from "../../../assets/icons/transactions.svg";
+import Balances from "../../../assets/icons/balances.svg";
 import Config from "../../../Config";
 
 const Sidebar_a = () => {
@@ -81,6 +82,15 @@ const Sidebar_a = () => {
           <div className="icon">
             <Link to="/admin/usuarios">
               <img src={UserIcon} alt="" />
+            </Link>
+          </div>
+        </div>
+        <div
+          className={`item i-usuarios ${isActive("/admin/balances")}`}
+        >
+          <div className="icon">
+            <Link to="/admin/balances">
+              <img src={Balances} alt="" />
             </Link>
           </div>
         </div>

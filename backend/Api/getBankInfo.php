@@ -34,7 +34,7 @@ if ($userId != $requestedUserId) {
 }
 
 // Consultar la base de datos para obtener la información del banco
-$obtenerInformacionBanco = "SELECT ba.account_number, ba.ref, b.account_name, b.routing_number_ach, b.routing_number_wire, b.bank_address
+$obtenerInformacionBanco = "SELECT ba.account_number, ba.ref, b.account_name, b.routing_number_ach, b.routing_number_wire, b.bank_address, b.bank_address_nuovo
 FROM bank_account ba
 LEFT JOIN banks b ON ba.bank_id = b.id
 WHERE ba.user_id = :userId

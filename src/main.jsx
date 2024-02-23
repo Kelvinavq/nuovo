@@ -40,7 +40,7 @@ import Plataformas from "./pages/Admin/Plataformas";
 import Movimientos from "./pages/User/Movimientos";
 import Movimientos_admin from "./pages/Admin/Movimientos_admin"
 import Transacciones from "./pages/Admin/Transacciones";
-
+import Balances_Users from "./pages/Admin/Balances_Users"
 
 
 
@@ -151,6 +151,10 @@ const router = createBrowserRouter([
   {
     path: "/admin/transacciones",
     element: <Transacciones />,
+  },
+  {
+    path: "/admin/balances",
+    element: <Balances_Users />,
   },
 ]);
 

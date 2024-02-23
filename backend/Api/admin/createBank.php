@@ -19,17 +19,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $routingNumberACH = htmlspecialchars(strip_tags($data->routingNumberACH));
     $routingNumberWire = htmlspecialchars(strip_tags($data->routingNumberWire));
     $bankAddress = htmlspecialchars(strip_tags($data->bankAddress));
+    $bankAddressNuovo = htmlspecialchars(strip_tags($data->bankAddressNuovo));
 
     try {
         // Insertar nueva cuenta de banco en la tabla banks
-        $insertBankQuery = "INSERT INTO banks (account_name, routing_number_ach, routing_number_wire, bank_address) 
-                            VALUES (:accountName, :routingNumberACH, :routingNumberWire, :bankAddress)";
+        $insertBankQuery = "INSERT INTO banks (account_name, routing_number_ach, routing_number_wire, bank_address, bank_address_nuovo) 
+                            VALUES (:accountName, :routingNumberACH, :routingNumberWire, :bankAddress, :bankAddressNuovo)";
         $insertBankStmt = $conexion->prepare($insertBankQuery);
 
         $insertBankStmt->bindParam(':accountName', $accountName);
         $insertBankStmt->bindParam(':routingNumberACH', $routingNumberACH);
         $insertBankStmt->bindParam(':routingNumberWire', $routingNumberWire);
         $insertBankStmt->bindParam(':bankAddress', $bankAddress);
+        $insertBankStmt->bindParam(':bankAddressNuovo', $bankAddressNuovo);
 
         $insertBankStmt->execute();
 

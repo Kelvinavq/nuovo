@@ -9,6 +9,7 @@ const Bancos_a = () => {
     routingNumberACH: "",
     routingNumberWire: "",
     bankAddress: "",
+    bankAddressNuovo: "",
   });
 
   const [cuentasBanco, setCuentasBanco] = useState([]);
@@ -17,6 +18,7 @@ const Bancos_a = () => {
     account_name: "",
     routing_number_ach: "",
     routing_number_wire: "",
+    bank_address_nuovo: "",
     bank_address: "",
     registros: 0,
   });
@@ -28,8 +30,6 @@ const Bancos_a = () => {
       [name]: value,
     }));
   };
-
-  
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -73,7 +73,13 @@ const Bancos_a = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!nuevaCuenta.accountName || !nuevaCuenta.routingNumberACH || !nuevaCuenta.routingNumberWire || !nuevaCuenta.bankAddress) {
+    if (
+      !nuevaCuenta.accountName ||
+      !nuevaCuenta.routingNumberACH ||
+      !nuevaCuenta.routingNumberWire ||
+      !nuevaCuenta.bankAddress ||
+      !nuevaCuenta.bankAddressNuovo
+    ) {
       Swal.fire({
         title: "Campos Vacíos",
         text: "Por favor, completa todos los campos",
@@ -143,7 +149,10 @@ const Bancos_a = () => {
         console.error("Error al obtener los detalles de la cuenta de banco");
       }
     } catch (error) {
-      console.error("Error al obtener los detalles de la cuenta de banco:", error);
+      console.error(
+        "Error al obtener los detalles de la cuenta de banco:",
+        error
+      );
     }
 
     setCuentaSeleccionada(selectedAccount);
@@ -154,7 +163,9 @@ const Bancos_a = () => {
       <div className="content">
         <div className="title">
           <h2>Bancos</h2>
-          <button className="btns" onClick={abrirModalNuevaCuenta}>Agregar</button>
+          <button className="btns" onClick={abrirModalNuevaCuenta}>
+            Agregar
+          </button>
         </div>
         <Enlaces_a />
 
@@ -169,6 +180,18 @@ const Bancos_a = () => {
                   id="accountName"
                   name="accountName"
                   value={nuevaCuenta.accountName}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="grupo-input">
+                <label htmlFor="bankAddressNuovo">
+                  Dirección del beneficiario
+                </label>
+                <input
+                  type="text"
+                  id="bankAddressNuovo"
+                  name="bankAddressNuovo"
+                  value={nuevaCuenta.bankAddressNuovo}
                   onChange={handleInputChange}
                 />
               </div>
@@ -216,7 +239,12 @@ const Bancos_a = () => {
             <label htmlFor="account">
               Seleccionar banco para ver información
             </label>
-            <select name="account" id="account" onChange={handleSelectChange} value={cuentaSeleccionada}>
+            <select
+              name="account"
+              id="account"
+              onChange={handleSelectChange}
+              value={cuentaSeleccionada}
+            >
               <option value="">Seleccionar cuenta</option>
               {cuentasBanco.map((cuenta) => (
                 <option key={cuenta.account_name} value={cuenta.id}>
@@ -226,24 +254,44 @@ const Bancos_a = () => {
             </select>
           </div>
           {cuentaSeleccionada && (
-          <div className="account_detail">
-            <div>
-              <h2>Nombre de la cuenta: <strong>{detalleCuenta.account_name}</strong></h2>
+            <div className="account_detail">
+              <div>
+                <h2>
+                  Nombre de la cuenta:{" "}
+                  <strong>{detalleCuenta.account_name}</strong>
+                </h2>
+              </div>
+              <div>
+                <h2>
+                  Direcciòn del beneficiario:{" "}
+                  <strong>{detalleCuenta.bank_address_nuovo}</strong>
+                </h2>
+              </div>
+              <div>
+                <h2>
+                  Routing number (ACH):{" "}
+                  <strong>{detalleCuenta.routing_number_ach}</strong>
+                </h2>
+              </div>
+              <div>
+                <h2>
+                  Routing number (Wire):{" "}
+                  <strong>{detalleCuenta.routing_number_wire}</strong>
+                </h2>
+              </div>
+              <div>
+                <h2>
+                  Bank address: <strong>{detalleCuenta.bank_address}</strong>
+                </h2>
+              </div>
+              <div>
+                <h2>
+                  Usuarios registrados:{" "}
+                  <strong>{detalleCuenta.registros}</strong>
+                </h2>
+              </div>
             </div>
-            <div>
-              <h2>Routing number (ACH): <strong>{detalleCuenta.routing_number_ach}</strong></h2>
-            </div>
-            <div>
-              <h2>Routing number (Wire): <strong>{detalleCuenta.routing_number_wire}</strong></h2>
-            </div>
-            <div>
-              <h2>Bank address: <strong>{detalleCuenta.bank_address}</strong></h2>
-            </div>
-            <div>
-              <h2>Usuarios registrados: <strong>{detalleCuenta.registros}</strong></h2>
-            </div>
-          </div>
-           )}
+          )}
         </div>
       </div>
     </div>

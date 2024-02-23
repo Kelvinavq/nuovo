@@ -5,6 +5,16 @@ include '../../cors.php';
 // Obtener conexión a la base de datos
 $conexion = obtenerConexion();
 
+// Verificar si hay una sesión activa
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    http_response_code(401); // Unauthorized
+    echo json_encode(array("error" => "No hay una sesión activa."));
+    exit();
+}
+$userId = $_SESSION['user_id'];
+$userEmail = $_SESSION['user_email'];
+
 // Verificar si la solicitud es de tipo POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405); // Method Not Allowed
@@ -22,7 +32,7 @@ if (isset($_FILES['file']) && isset($_POST['columns']) && isset($_POST['fileName
         $columns = $_POST['columns'];
         $selectedColumns = json_decode($columns, true);
 
-      
+
         $csvFile = isset($_FILES['file']) ? $_FILES['file'] : null;
         $csvName = $csvFile ? uniqid('file') . '_' . $csvFile['name'] : null;
         $csvPath = $csvFile ? "../../public/assets/csv/" . $csvName : null;
@@ -55,6 +65,46 @@ if (isset($_FILES['file']) && isset($_POST['columns']) && isset($_POST['fileName
             $stmtColumn->bindParam(':columnData', $columnData, PDO::PARAM_STR);
             $stmtColumn->execute();
         }
+
+        $content = "¡Archivo CSV importado con éxito!";
+
+        // Insertar la notificación en la base de datos
+        $insertNotificationQuery = "INSERT INTO pusher_notifications (admin_id, admin_message, status_admin, type) VALUES (:admin_id, :admin_message, 'unread', 'upload_csv')";
+        $stmtInsertNotification = $conexion->prepare($insertNotificationQuery);
+        $stmtInsertNotification->bindParam(':admin_id', $userId);
+        $stmtInsertNotification->bindParam(':admin_message', $content);
+        $stmtInsertNotification->execute();
+
+
+        // Enviar notificación a Pusher
+        include("../../pusher.php");
+        include("../../emailConfig.php");
+
+        $notificationData = array('message' => $content);
+
+        $data = [
+            'message' => $content,
+            'status' => 'unread',
+            'type' => 'upload_csv',
+            'user_id' => $userId
+        ];
+
+        $pusher->trigger('notifications-channel', 'evento', $data);
+
+           // Enviar notificación por correo electrónico
+           $to = $userEmail;
+           $subject = 'Nuovo - CSV importado';
+           $message = $content;
+
+           $headers = 'From: ' . $adminEmail . "\r\n" .
+               'Reply-To: ' . $adminEmail . "\r\n" .
+               'X-Mailer: PHP/' . phpversion();
+
+           if (mail($to, $subject, $message, $headers)) {
+           } else {
+               http_response_code(500);
+               echo json_encode(array("error" => "Error al enviar correo electronico"));
+           }
 
         // Enviar una respuesta de éxito
         http_response_code(200); // OK

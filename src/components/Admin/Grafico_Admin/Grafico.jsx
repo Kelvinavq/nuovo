@@ -45,7 +45,7 @@ const Grafico = () => {
       tooltip: {
         theme: 'dark',
         x: {
-          format: "dd/MM/yy",
+          format: "MM/dd/yy",
         },
       },
       grid: {

@@ -49,7 +49,7 @@ export const Translation = {
     option10: "Banco Virtual",
     option11: "Banco Físico",
 
-    label18: "Ingrese su alias o Número de cuenta nacional (CBU)",
+    label18: "Ingrese su alias o Número de cuenta nacional (CVU)",
     label19: "Ingrese el CUIT/CUIL",
     label20: "Ingrese el nombre de la cuenta",
     label21: "Ingrese el monto a retirar",
@@ -66,6 +66,13 @@ export const Translation = {
 
     // swal
     messageEmpty: "Por favor, complete todos los campos obligatorios.",
+
+    swalTitle: "¿Estás seguro de esta transacción?",
+    swalText: "Se enviará una solicitud de retiro por el monto:",
+    swalButton1: "Sí, estoy seguro",
+    swalButton2: "Cancelar",
+    
+    swalText2: "al usuario:",
 
 
   },
@@ -120,7 +127,7 @@ export const Translation = {
     option10: "Virtual Bank",
     option11: "Physical Bank",
 
-    label18: "Enter your alias or National Account Number (CBU)",
+    label18: "Enter your alias or National Account Number (CVU)",
     label19: "Enter the CUIT/CUIL",
     label20: "Enter account name",
     label21: "Enter the amount to withdraw",
@@ -137,6 +144,15 @@ export const Translation = {
 
     // swal
     messageEmpty: "Please fill in all required fields.",
+
+
+    swalTitle: "Are you sure about this transaction?",
+    swalText: "A withdrawal request will be sent for the amount:",
+    swalButton1: "Yes, I'm sure",
+    swalButton2: "Cancel",
+
+    swalText2: "to user:",
+
   },
   pt: {
     title: "Retirar dinheiro",
@@ -188,7 +204,7 @@ export const Translation = {
     option10: "Banco Virtual",
     option11: "Banco Físico",
 
-    label18: "Digite seu alias ou número de conta nacional (CBU)",
+    label18: "Digite seu alias ou número de conta nacional (CVU)",
     label19: "Insira o CUIT/CUIL",
     label20: "Insira o nome da conta",
     label21: "Insira o valor a ser sacado",
@@ -205,5 +221,13 @@ export const Translation = {
 
     // swal
     messageEmpty: "Por favor preencha todos os campos obrigatórios.",
+
+    swalTitle: "Você está certo desta transação?",
+    swalText: "Será enviado um pedido de retirada para a quantidade:",
+    swalButton1: "Sim, eu tenho certeza",
+    swalButton2: "Cancelar",
+
+    swalText2: "ao usuário:",
+
   },
 };

@@ -262,6 +262,20 @@ const Depositar = () => {
       return;
     }
 
+    // Mostrar SweetAlert de confirmación
+    const confirmation = await Swal.fire({
+      icon: "warning",
+      title: Translation[language].swalTitle2,
+      text: `${Translation[language].swalText4} ${formatAmount(amount)} USD`,
+      showCancelButton: true,
+      confirmButtonText: Translation[language].swalButton1,
+      cancelButtonText: Translation[language].swalButton2,
+    });
+
+    if (!confirmation.isConfirmed) {
+      return; // Si el usuario cancela, salir de la función
+    }
+
     const formData = new FormData();
     formData.append("payment_method", paymentMethod);
     formData.append("user_id", userId);
@@ -347,7 +361,6 @@ const Depositar = () => {
     );
   };
 
-
   return (
     <div className="depositar">
       <Saldo />
@@ -355,7 +368,7 @@ const Depositar = () => {
       <div className="content">
         <h2>{Translation[language].title}</h2>
 
-        {verificationComplete && isUserVerified === "approved"  ? (
+        {verificationComplete && isUserVerified === "approved" ? (
           <div className="form">
             <form onSubmit={handleSubmit}>
               <div className="grupo-input">
@@ -384,6 +397,9 @@ const Depositar = () => {
                       <>
                         <p>
                           {Translation[language].text1} {bankInfo.account_name}
+                        </p>
+                        <p>
+                          {Translation[language].text2de2}: {bankInfo.bank_address_nuovo}
                         </p>
                         <p>
                           {Translation[language].text2}{" "}
@@ -622,7 +638,7 @@ const Depositar = () => {
           </div>
         ) : verificationComplete && isUserVerified !== "approved" ? (
           <p>{Translation[language].text9}</p>
-        ): (
+        ) : (
           <p></p>
         )}
       </div>

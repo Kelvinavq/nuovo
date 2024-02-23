@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef  } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Swal from "sweetalert2";
 import "./Style.css";
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import ViewCompactIcon from '@mui/icons-material/ViewCompact';
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import ViewCompactIcon from "@mui/icons-material/ViewCompact";
 import Config from "../../../Config";
 
 const ListTransactions = () => {
@@ -29,8 +29,6 @@ const ListTransactions = () => {
       console.error("Error en la solicitud fetch:", error);
     }
   };
-
- 
 
   const selectFile = () => {
     const input = document.createElement("input");
@@ -60,9 +58,7 @@ const ListTransactions = () => {
     });
   };
 
-  
-
-const readAndProcessFile = (file) => {
+  const readAndProcessFile = (file) => {
     const reader = new FileReader();
 
     reader.onload = (readerEvent) => {
@@ -74,7 +70,6 @@ const readAndProcessFile = (file) => {
 
     reader.readAsText(file);
   };
-
 
   const saveColumnsToDatabase = async (file, selectedColumns) => {
     try {
@@ -98,13 +93,16 @@ const readAndProcessFile = (file) => {
           icon: "success",
           title: "Éxitos",
           text: "Archivo subido correctamente",
-          didClose: () =>{
+          didClose: () => {
             window.location.reload();
-          }
+          },
         });
-        console.log(selectedColumnsJSON)
+        console.log(selectedColumnsJSON);
       } else {
-        console.error("Error al guardar en la base de datos:", response.statusText);
+        console.error(
+          "Error al guardar en la base de datos:",
+          response.statusText
+        );
         Swal.fire({
           icon: "error",
           title: "Error",
@@ -136,7 +134,7 @@ const readAndProcessFile = (file) => {
     }).then((result) => {
       if (result.isConfirmed) {
         const selectedColumns = getSelectedColumns(columns, rows);
-  
+
         if (selectedColumns.length > 0) {
           saveColumnsToDatabase(file, selectedColumns);
         } else {
@@ -176,12 +174,10 @@ const readAndProcessFile = (file) => {
     }, []);
   };
 
-
   const getColumnData = (rows, columnIndex) => {
     // Get data for the selected column
     return rows.slice(1).map((row) => row[columnIndex]);
   };
-
 
   const showImportedData = async (fileId) => {
     try {
@@ -191,7 +187,6 @@ const readAndProcessFile = (file) => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Data received:", data);
 
         // Obtener la lista de columnas dinámicamente
         const columns = data.columns;
@@ -199,33 +194,32 @@ const readAndProcessFile = (file) => {
         // Crear la estructura HTML de la tabla
         const tableHtml = `
         <div class="custom-table">
-        <div class="header-row">
-          ${columns
-            .map((column) => `<div class="header-cell">${column}</div>`)
-            .join("")}
-        </div>
-        <div class="body">
-          ${data.rows
-            .map(
-              (row, rowIndex) => `
-            <div class="data-row" key=${rowIndex}>
-              ${row
-                .map(
-                  (cell, cellIndex) =>
-                    `<div class="data-cell" key=${cellIndex}>${cell}</div>`
-                )
-                .join("")}
-            </div>
-          `
-            )
-            .join("")}
-        </div>
-      </div>
+          <table>
+            <thead>
+              <tr>
+                ${columns.map((column) => `<th>${column}</th>`)}
+              </tr>
+            </thead>
+
+
+            <tbody>
+            ${data.rows[0].map((_, index) => `
+            <tr>
+              ${data.rows.map((row) => `
+                <td>${row[index]}</td>
+              `).join("")}
+            </tr>
+          `).join("")}
+            </tbody>
+          </table>
         `;
 
         // Mostrar SweetAlert2 con la tabla
         Swal.fire({
           title: "Datos Importados",
+          customClass: {
+            container: "tablaContainer",
+          },
           html: tableHtml,
           confirmButtonText: "Cerrar",
         });
@@ -244,21 +238,21 @@ const readAndProcessFile = (file) => {
     // TODO: Cambiar la URL del servidor para apuntar al directorio donde se almacenan los archivos CSV
     const serverUrl = `${Config.csvArchive}`;
     const fileUrl = `${serverUrl}${fileName}`;
-  
+
     // Crear un enlace invisible
     const a = document.createElement("a");
     a.style.display = "none";
     document.body.appendChild(a);
-  
+
     // Establecer la URL del enlace al URL del archivo en el servidor
     a.href = fileUrl;
-  
+
     // Establecer el nombre del archivo para la descarga
     a.download = fileName;
-  
+
     // Simular un clic en el enlace para iniciar la descarga
     a.click();
-  
+
     // Eliminar el enlace
     document.body.removeChild(a);
   };
@@ -272,7 +266,9 @@ const readAndProcessFile = (file) => {
       <div className="title">
         <h2>Archivos CSV</h2>
 
-       <button className="btns" onClick={selectFile }>Subir CSV</button>
+        <button className="btns" onClick={selectFile}>
+          Subir CSV
+        </button>
       </div>
 
       <div className="lista_transacciones">
@@ -291,14 +287,14 @@ const readAndProcessFile = (file) => {
             <li>
               <button onClick={() => downloadCSV(file.filename)}>
                 <p>Descargar CSV</p>
-                <FileDownloadIcon/>
+                <FileDownloadIcon />
               </button>
             </li>
 
             <li>
               <button onClick={() => showImportedData(file.id)}>
                 <p>Ver importados</p>
-                <ViewCompactIcon/>
+                <ViewCompactIcon />
               </button>
             </li>
           </ul>

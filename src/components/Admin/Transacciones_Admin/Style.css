@@ -205,7 +205,7 @@
   }
 }
 
-.custom-table .header-row {
+/* .custom-table .header-row {
   display: flex;
 }
 
@@ -242,9 +242,44 @@
   min-width: 100%;
   text-align: center;
   padding: 10px 0;
-}
+} */
 
 .swal2-html-container .checkboxs {
   display: flex;
   gap: 50px;
 }
+.tablaContainer .swal2-popup {
+  width: auto;
+  height: auto;
+}
+
+/* .custom-table .header-row{
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.custom-table .body{
+  display: flex;
+  justify-content: center;
+} */	
+
+table {
+			border:1px solid #b3adad;
+			border-collapse:collapse;
+			padding:5px;
+		}
+		table th {
+			border:1px solid #b3adad;
+			padding:5px;
+			background: #f0f0f0;
+			color: #313030;
+      overflow: auto;
+		}
+		table td {
+			border:1px solid #b3adad;
+			text-align:center;
+			padding:5px;
+			background: #ffffff;
+			color: #313030;
+		}

@@ -139,6 +139,21 @@ const Balance_a = () => {
     }
   };
 
+  
+  const formatAmount = (amount) => {
+    const numericAmount = amount == null ? "0" : amount.toString().replace(/[^\d]/g, "");
+
+    // Formatear con separador de miles y decimales
+    const formattedAmount = new Intl.NumberFormat("en-US", {
+      style: "decimal",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(parseFloat(numericAmount) / 100);
+
+    return formattedAmount;
+  };
+
+
   return (
     <div className="balance_a">
       <div className="title">
@@ -153,23 +168,23 @@ const Balance_a = () => {
         <div className="content">
           <div className="item">
             <div className="text">
-              <p>Total depositados</p>
+              <p>Total depositado</p>
             </div>
 
             <div className="saldo">
               <span>
-                <strong>$</strong> {balance.total_deposit == null ? 0.00 : balance.total_deposit} <small>USD</small>
+                <strong>$</strong> {formatAmount(balance.total_deposit)} <small>USD</small>
               </span>
             </div>
           </div>
           <div className="item">
             <div className="text">
-              <p>Total retirados</p>
+              <p>Total retirado</p>
             </div>
 
             <div className="saldo">
               <span>
-                <strong>$</strong> {balance.total_withdrawal == null ? 0.00 : balance.total_withdrawal} <small>USD</small>
+                <strong>$</strong> {formatAmount(balance.total_withdrawal)} <small>USD</small>
               </span>
             </div>
           </div>

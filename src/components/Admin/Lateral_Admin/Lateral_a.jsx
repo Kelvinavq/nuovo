@@ -221,6 +221,19 @@ const Lateral_a = () => {
     }
   };
 
+  const formatAmount = (amount) => {
+    const numericAmount = amount.replace(/[^\d]/g, "");
+
+    // Formatear con separador de miles y decimales
+    const formattedAmount = new Intl.NumberFormat("en-US", {
+      style: "decimal",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(parseFloat(numericAmount) / 100);
+
+    return formattedAmount;
+  };
+
   return (
     <div className="lateral_a">
       <div className="profile">
@@ -302,7 +315,7 @@ const Lateral_a = () => {
                   <div className="right">
                     <div className="monto">
                       <span>
-                        {deposit.amount} <small>USD</small>
+                        {formatAmount(deposit.amount)} <small>USD</small>
                       </span>
                       <p className={`${deposit.status}`}>{deposit.status}</p>
                     </div>
@@ -342,7 +355,7 @@ const Lateral_a = () => {
                     <div className="right">
                       <div className="monto">
                         <span>
-                          {withdrawal.amount} <small>USD</small>
+                        {formatAmount(withdrawal.amount)} <small>USD</small>
                         </span>
                         <p className={`${withdrawal.status}`}>
                           {withdrawal.status}

@@ -1,0 +1,6 @@
+.sidebar_a .items{
+    width: 100% !important;
+    height: 100vh !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+}

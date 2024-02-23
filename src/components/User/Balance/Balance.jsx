@@ -44,8 +44,20 @@ const Balance = () => {
   };
 
   const formatBalance = (balance) => {
-    return showBalance ? balance : "*****";
+    const numericBalance = balance !== null ? balance.replace(/[^\d]/g, "") : 0;
+  
+    // Formatear con separador de miles y decimales
+    const formattedBalance = new Intl.NumberFormat("en-US", {
+      style: "decimal",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(parseFloat(numericBalance) / 100);
+  
+    return showBalance ? formattedBalance : "*****";
   };
+  
+
+
   
   return (
     <div className="balance">
