@@ -11,9 +11,8 @@ try {
         $data = json_decode(file_get_contents("php://input"));
 
         // Verificar que se han recibido los datos necesarios
-        if (isset($data->platformId) && isset($data->platformName)) {
+        if (isset($data->platformId)) {
             $platformId = $data->platformId;
-            $platformName = $data->platformName;
 
             // Verificar si la plataforma es de tipo "otra"
             if (property_exists($data, 'customFields')) {
@@ -59,20 +58,12 @@ try {
             if (isset($data->platformEmail)) {
                 $email = $data->platformEmail;
 
-                $sql = "UPDATE platforms_user SET platformName = :platformName, email = :email WHERE id = :platformId";
+                $sql = "UPDATE platforms_user SET  email = :email WHERE id = :platformId";
                 $stmt = $conexion->prepare($sql);
-                $stmt->bindParam(':platformName', $platformName, PDO::PARAM_STR);
                 $stmt->bindParam(':email', $email, PDO::PARAM_STR);
                 $stmt->bindParam(':platformId', $platformId, PDO::PARAM_INT);
                 $stmt->execute();
-            } else {
-                // Si no hay correo, solo actualiza platformName
-                $sql = "UPDATE platforms_user SET platformName = :platformName WHERE id = :platformId";
-                $stmt = $conexion->prepare($sql);
-                $stmt->bindParam(':platformName', $platformName, PDO::PARAM_STR);
-                $stmt->bindParam(':platformId', $platformId, PDO::PARAM_INT);
-                $stmt->execute();
-            }
+            } 
 
             // Devolver una respuesta exitosa
             echo json_encode(array('message' => 'Plataforma actualizada con éxito'));

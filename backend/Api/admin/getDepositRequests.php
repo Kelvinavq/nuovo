@@ -29,7 +29,7 @@ FROM
     deposit_requests dr
 LEFT JOIN
     users u ON dr.user_id = u.id
-
+WHERE payment_method != 'sumar'
 ORDER BY
     dr.updated_at DESC";
     $stmt = $conexion->prepare($query);

@@ -18,10 +18,16 @@ try {
     $user_id = $_SESSION['user_id'];
 
     // Consulta para obtener las transacciones del usuario
-    $getTransactionsQuery = "SELECT * FROM transactions
-    WHERE user_id = :user_id OR recipient_user_id = :user_id
-    ORDER BY transaction_date DESC, transaction_time DESC
-    LIMIT 6";
+    $getTransactionsQuery = "SELECT transactions.*, 
+    deposit_requests.note_amount_modified AS deposit_note_amount_modified,
+    deposit_requests.note_transaction_modified AS deposit_note_transaction_modified,
+    withdrawal_requests.note_amount_modified AS withdrawal_note_amount_modified
+FROM transactions
+LEFT JOIN deposit_requests ON transactions.deposit_request_id = deposit_requests.id
+LEFT JOIN withdrawal_requests ON transactions.withdrawal_request_id = withdrawal_requests.id
+WHERE transactions.user_id = :user_id OR transactions.recipient_user_id = :user_id
+ORDER BY transactions.transaction_date DESC, transactions.transaction_time DESC
+LIMIT 6";
     $getTransactionsStmt = $conexion->prepare($getTransactionsQuery);
     $getTransactionsStmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $getTransactionsStmt->execute();
@@ -39,10 +45,15 @@ try {
 
         if ($selectedLanguage == "en") {
             $received = ($transaction['recipient_user_id'] == $user_id) ? 'Transfer received' : "Withdraw Funds";
+            $notaTransaccion = "Modified transaction";
+
         } elseif ($selectedLanguage == "pt") {
             $received = ($transaction['recipient_user_id'] == $user_id) ? 'Transferência recebida' : "Retirar fundos";
+            $notaTransaccion = "Transação modificada";
+
         } else {
             $received = ($transaction['recipient_user_id'] == $user_id) ? 'Transferencia recibida' : "Retirar Fondos";
+            $notaTransaccion = $transaction['deposit_note_transaction_modified'];
         }
 
 
@@ -54,7 +65,12 @@ try {
             'payment_method' => $transaction['payment_method'],
             'received' => $received,
             'transaction_date' => $formattedDate,
-            'transaction_time' => $formattedTime
+            'transaction_time' => $formattedTime,
+            'final_amount' => $transaction['final_amount'],
+            'deposit_note_amount_modified' => $transaction['deposit_note_amount_modified'],
+            'withdrawal_note_amount_modified' => $transaction['withdrawal_note_amount_modified'],
+            'deposit_note_transaction_modified' => $notaTransaccion,
+
         );
     }, $transactions);
 

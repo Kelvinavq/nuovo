@@ -39,6 +39,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $id_platform_user = isset($_POST['id_platform_user']) ? filter_input(INPUT_POST, 'id_platform_user', FILTER_SANITIZE_STRING) :  null;
 
+    $platformAdminId = isset($_POST['platformAdminId']) ? filter_input(INPUT_POST, 'platformAdminId', FILTER_SANITIZE_STRING) :  null;
+
+    $comision = null;
+    $subtractedAmount = null;
+    $finalAmount = null;
+
+
     // si existe la plataforma
     if ($id_platform_user != null) {
         $query = "SELECT * FROM platforms_user WHERE id = :id_platform_user";
@@ -53,7 +60,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    if ($platformAdminId != null) {
+        $queryComision = "SELECT comision FROM platforms WHERE id = :platformId";
+        $stmtComision = $conexion->prepare($queryComision);
+        $stmtComision->bindParam(':platformId', $platformAdminId, PDO::PARAM_INT);
+        $stmtComision->execute();
+        $comisionData = $stmtComision->fetch(PDO::FETCH_ASSOC);
+
+        if ($comisionData) {
+            $comision = $comisionData['comision'];
+
+            // Calcular la cantidad restada y el monto final
+            $subtractedAmount = $amount * ($comision / 100);
+            $finalAmount = $amount - $subtractedAmount;
+        }
+    }
+
   
+
 
 
     // Obtener el archivo de comprobante de pago (si se proporciona)
@@ -76,8 +100,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $requestDate = date('Y-m-d');
         $requestTime = date('H:i:s');
 
-        $insertDepositRequest = "INSERT INTO deposit_requests (user_id, payment_method, amount, status, request_date, request_time, reference_number, platform_type, updated_at, voucher_img,id_platform_user, platformName_user, platformEmail_user, is_personalizable) 
-        VALUES (:user_id, :payment_method, :amount, 'pending', :request_date, :request_time, :reference_number, :platform_type, :updated_at, :voucher_img, :id_platform_user, :platformName_user, :platformEmail_user, :is_personalizable)";
+        $insertDepositRequest = "INSERT INTO deposit_requests (user_id, payment_method, amount, status, request_date, request_time, reference_number, platform_type, updated_at, voucher_img,id_platform_user, platformName_user, platformEmail_user, is_personalizable, comision, subtracted_amount, final_amount) 
+        VALUES (:user_id, :payment_method, :amount, 'pending', :request_date, :request_time, :reference_number, :platform_type, :updated_at, :voucher_img, :id_platform_user, :platformName_user, :platformEmail_user, :is_personalizable, :comision, :subtracted_amount, :final_amount)";
 
         $stmtDeposit = $conexion->prepare($insertDepositRequest);
         $stmtDeposit->bindParam(':user_id', $userId, PDO::PARAM_INT);
@@ -93,6 +117,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtDeposit->bindParam(':platformName_user', $plataformaUser['platformName'], PDO::PARAM_STR);
         $stmtDeposit->bindParam(':platformEmail_user', $plataformaUser['email'], PDO::PARAM_STR);
         $stmtDeposit->bindParam(':is_personalizable', $is_perzonalizable, PDO::PARAM_STR);
+        $stmtDeposit->bindParam(':comision', $comision, PDO::PARAM_STR);
+        $stmtDeposit->bindParam(':subtracted_amount', $subtractedAmount, PDO::PARAM_STR);
+        $stmtDeposit->bindParam(':final_amount', $finalAmount, PDO::PARAM_STR);
+        
 
         // Mover el archivo si se proporciona
         if ($voucherImg) {
@@ -107,8 +135,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Insertar la transacción en la tabla transactions
         $transactionType = 'deposit';
 
-        $insertTransaction = "INSERT INTO transactions (user_id, type, amount, status, transaction_date, transaction_time, payment_method, platform_type, deposit_request_id) 
-        VALUES (:user_id, :type, :amount, 'pending', :transaction_date, :transaction_time, :payment_method, :platform_type, :deposit_request_id)";
+        $insertTransaction = "INSERT INTO transactions (user_id, type, amount, status, transaction_date, transaction_time, payment_method, platform_type, deposit_request_id, comision, subtracted_amount, final_amount) 
+        VALUES (:user_id, :type, :amount, 'pending', :transaction_date, :transaction_time, :payment_method, :platform_type, :deposit_request_id, :comision, :subtracted_amount, :final_amount)";
 
         $stmtTransaction = $conexion->prepare($insertTransaction);
         $stmtTransaction->bindParam(':user_id', $userId, PDO::PARAM_INT);
@@ -119,6 +147,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtTransaction->bindParam(':payment_method', $paymentMethod, PDO::PARAM_STR);
         $stmtTransaction->bindParam(':platform_type', $platformType, PDO::PARAM_STR);
         $stmtTransaction->bindParam(':deposit_request_id', $depositRequestId, PDO::PARAM_INT);
+        $stmtTransaction->bindParam(':comision', $comision, PDO::PARAM_STR);
+        $stmtTransaction->bindParam(':subtracted_amount', $subtractedAmount, PDO::PARAM_STR);
+        $stmtTransaction->bindParam(':final_amount', $finalAmount, PDO::PARAM_STR);
 
         if ($stmtTransaction->execute()) {
             // Agregar notificación

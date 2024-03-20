@@ -13,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         # code...
         $value = htmlspecialchars(strip_tags($data->value));
     }
+    $commission = isset($data->comision) ? floatval($data->comision) : 0.0;
     $platformName = isset($data->platformName) ? htmlspecialchars(strip_tags($data->platformName)) : null;
     $customPlatformName = isset($data->customPlatformName) ? htmlspecialchars(strip_tags($data->customPlatformName)) : null;
 
@@ -20,11 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conexion->beginTransaction();
 
         // Insertar la nueva plataforma en la tabla Platforms
-        $insertPlatformQuery = "INSERT INTO platforms (platformType, platformName, email) VALUES (:platformType, :platformName, :value)";
+        $insertPlatformQuery = "INSERT INTO platforms (platformType, platformName, email, comision) VALUES (:platformType, :platformName, :value, :comision)";
         $insertStmt = $conexion->prepare($insertPlatformQuery);
         $insertStmt->bindValue(':platformType', $platformType);
         $insertStmt->bindValue(':platformName', $platformType === "otra" ? $customPlatformName : $platformName);
         $insertStmt->bindValue(':value', $platformType === "otra" ? null : $value);
+        $insertStmt->bindValue(':comision', $commission);
+
 
         if (!$insertStmt->execute()) {
             throw new PDOException("Error al insertar en la tabla 'platforms'");

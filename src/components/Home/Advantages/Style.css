@@ -51,6 +51,7 @@
 
 .advantages .cards .card {
   width: 100%;
+  max-width: 100% !important;
   position: relative;
   background: var(--bg);
   box-shadow: 0px 0px 20px 0px #0000007c;

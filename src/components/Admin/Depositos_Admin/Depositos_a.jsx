@@ -132,6 +132,10 @@ const Depositos_a = () => {
         showConfirmButton: isPending,
         showCancelButton: isPending,
         showCloseButton: true,
+        footer:
+          solicitud.status === "approved"
+            ? '<button class="swal2-confirm swal2-styled" id="editButton">Editar</button>'
+            : null,
       }).then((result) => {
         if (result.isConfirmed) {
           // Lógica para marcar como completado
@@ -179,6 +183,11 @@ const Depositos_a = () => {
                       <input type="checkbox" id="noSeEncuentraDeposito" name="reason" value="No se encuentra el depósito">
                       <label for="noSeEncuentraDeposito">No se encuentra el depósito</label>
                     </div>
+                    <div>
+                    <input type="checkbox" id="otra" name="reason" value="Otra">
+                    <label for="otra">Otra</label>
+                    <input class="swal2-input" type="text" id="otraMotivo" name="otraMotivo" placeholder="Especificar motivo" style="display:none;">
+                  </div>
                   </form>
                 `,
                 focusConfirm: false,
@@ -190,17 +199,111 @@ const Depositos_a = () => {
                   const denialReasons = Array.from(
                     document.querySelectorAll('input[name="reason"]:checked')
                   )
-                    .map((reasonCheckbox) => reasonCheckbox.value)
-                    .join(", ");
+                  .map((reasonCheckbox) => {
+                    const value = reasonCheckbox.value;
+                    return value === "Otra"
+                      ? `${value}: ${
+                          document.getElementById("otraMotivo").value
+                        }`
+                      : value;
+                  })
+                  .join(", ");
+
 
                   // Lógica para denegar la solicitud con motivos
                   denyRequest(solicitud.id, denialReasons);
                 }
               });
+
+              // Mostrar u ocultar el campo de entrada 'otraMotivo' según si 'Otra' está seleccionado
+            const otraCheckbox = document.getElementById("otra");
+            const otraMotivoInput = document.getElementById("otraMotivo");
+            otraCheckbox.addEventListener("change", () => {
+              otraMotivoInput.style.display = otraCheckbox.checked
+                ? "block"
+                : "none";
+            });
             }
           });
         }
       });
+
+      if (solicitud.status === "approved") {
+        document.getElementById("editButton").addEventListener("click", () => {
+          Swal.fire({
+            title: "Editar Transacción",
+            html: '<input id="newAmount" class="swal2-input" placeholder="Ingrese el nuevo monto">',
+            showCancelButton: true,
+            confirmButtonText: "Actualizar",
+            cancelButtonText: "Cancelar",
+            preConfirm: () => {
+              let newAmount = document.getElementById("newAmount").value;
+              // Eliminar las comas
+              newAmount = newAmount.replace(/,/g, "");
+              if (!newAmount || isNaN(newAmount)) {
+                Swal.showValidationMessage(
+                  "Por favor, ingrese un monto válido"
+                );
+              }
+              return newAmount;
+            },
+          }).then((result) => {
+            if (result.isConfirmed) {
+              const newAmount = result.value;
+              Swal.fire({
+                title: "¿Estás seguro?",
+                text: `¿Estás seguro que quieres actualizar el monto de $${solicitud.amount} por el monto $${newAmount}?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Sí, Actualizar",
+                cancelButtonText: "Cancelar",
+              }).then(async (result) => {
+                if (result.isConfirmed) {
+                  const response = await fetch(
+                    `${Config.backendBaseUrlAdmin}updateDepositAmount.php?id=${solicitud.id}&newAmount=${newAmount}`,
+                    {
+                      method: "GET",
+                      credentials: "include",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                    }
+                  );
+
+                  if (response.ok) {
+                    Swal.fire({
+                      title: "¡Completado!",
+                      text: "El monto ha sido actualizado exitosamente.",
+                      icon: "success",
+                      didClose: () => {
+                        window.location.reload();
+                      },
+                    });
+                  } else {
+                    console.error("Error al actualizar el monto");
+                    Swal.fire(
+                      "Error",
+                      "Hubo un error al actualizar el monto",
+                      "error"
+                    );
+                  }
+                }
+              });
+            }
+          });
+          document
+            .getElementById("newAmount")
+            .addEventListener("input", (event) => {
+              const numericAmount = event.target.value.replace(/[^\d]/g, "");
+              const formattedAmount = new Intl.NumberFormat("en-US", {
+                style: "decimal",
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }).format(parseFloat(numericAmount) / 100);
+              event.target.value = formattedAmount;
+            });
+        });
+      }
     } catch (error) {
       console.error("Error al manejar la solicitud de detalles:", error);
       Swal.fire({
@@ -254,6 +357,17 @@ const Depositos_a = () => {
   };
 
   const markAsCompleted = async (depositRequest) => {
+
+    const { isConfirmed } = await Swal.fire({
+      title: 'Confirmación',
+      text: `¿Estás seguro de que deseas aprobar esta solicitud por el monto de ${depositRequest.amount}?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, aprobar',
+      cancelButtonText: 'cancelar'
+    });
+  
+    if (isConfirmed) {
     if (depositRequest.payment_method === "cash") {
       if (depositRequest.address === null) {
         const { value: depositAddress, dismiss } = await Swal.fire({
@@ -274,8 +388,7 @@ const Depositos_a = () => {
           });
           return;
         }
-      
-        // Check if the user clicked on "Enviar" and the depositAddress is not empty
+
         if (depositAddress !== undefined && depositAddress.trim() !== "") {
           try {
             const response = await fetch(
@@ -288,7 +401,7 @@ const Depositos_a = () => {
                 },
               }
             );
-      
+
             if (response.ok) {
               Swal.fire({
                 title: "¡Completado!",
@@ -318,8 +431,7 @@ const Depositos_a = () => {
           // User clicked on "Cancelar"
           Swal.fire("Cancelado", "No se ha enviado la solicitud", "info");
         }
-      }
-       else {
+      } else {
         try {
           const response = await fetch(
             `${Config.backendBaseUrlAdmin}completedDepositRequest.php?id=${depositRequest.id}`,
@@ -398,6 +510,8 @@ const Depositos_a = () => {
       }
     }
 
+  }
+
     // Verificar si el usuario hizo clic en "Enviar"
   };
 
@@ -413,7 +527,6 @@ const Depositos_a = () => {
 
     return formattedAmount;
   };
-
 
   return (
     <div className="depositos_admin">

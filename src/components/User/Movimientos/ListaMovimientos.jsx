@@ -50,38 +50,83 @@ const ListaMovimientos = () => {
   const showTransactionDetails = (transaction) => {
     let withdrawalDetails =
       transaction.withdrawal.method === "transferencia_entre_usuarios"
-        ? "Transferencia"
+        ? Translation[language].transfer
         : transaction.withdrawal.method === "transferencia_nacional"
-        ? "Nacional"
+        ? Translation[language].national
         : transaction.withdrawal.method === "efectivo"
-        ? "Efectivo"
+        ? Translation[language].efectivo
         : transaction.withdrawal.method === "transferencia_externa"
         ? transaction.withdrawal.region === "usa"
-          ? "Transferencia Externa (USA)"
-          : "Transferencia Externa (EUROPA)"
+          ? `${Translation[language].externTransfer} (USA)`
+          : `${Translation[language].externTransfer} (EUROPA)`
         : transaction.withdrawal.method;
 
     let depositDetails = transaction.deposit.platform_type;
 
+    let comisionsDetails = `
+    <p><strong>${Translation[language].text2}</strong> $${transaction.amount}</p>
+    <p><strong>${Translation[language].text3}</strong> $${transaction.deposit.subtracted_amount}</p>
+    <p><strong>${Translation[language].text4}</strong> $${transaction.deposit.final_amount}</p>
+    `;
+
+    let DepositbalanceModified = `
+    <p><strong>${Translation[language].text5} </strong>${transaction.deposit.note_amount_modified}</p>
+    `;
+
+    let WithdrawbalanceModified = `
+    <p><strong>${Translation[language].text5} </strong>${transaction.withdrawal.note_amount_modified}</p>
+    `;
+
     let modalContent = `
-      <span>Detalles del movimiento</span>
-      <p><strong>Tipo:</strong> ${
-        transaction.type === "withdrawal" ? "Retiro" : "Depósito"
+      <span>${Translation[language].text6}</span>
+      <p><strong>${Translation[language].text7}</strong> ${
+        transaction.type === "sumar"
+          ? Translation[language].transaction4
+          : transaction.type === "restar"
+          ? Translation[language].transaction3
+          : transaction.type === "deposit"
+          ? Translation[language].transaction1
+          : transaction.type === "withdrawal"
+          ? Translation[language].transaction2
+          : ""
       }</p>
-      <p><strong>Fecha y Hora:</strong> ${transaction.transaction_date} ${
+
+      ${
+        transaction.type === "sumar"
+          ? DepositbalanceModified
+          : transaction.type === "restar"
+          ? WithdrawbalanceModified
+          : ""
+      }
+
+      <p><strong>${Translation[language].text8}</strong> ${transaction.transaction_date} ${
       transaction.transaction_time
     }</p>
-      <p><strong>Monto:</strong> $${transaction.amount}</p>
-      <p><strong>Estatus:</strong> ${transaction.status}</p>
-       <p><strong>Método:</strong> ${
-         transaction.type === "withdrawal" ? withdrawalDetails : depositDetails
-       }</p>
+
+    ${
+      transaction.deposit.payment_method === "platform"
+        ? comisionsDetails
+        : ` <p><strong>${Translation[language].text9}</strong> $${transaction.amount}</p>`
+    }
+
+      <p><strong>${Translation[language].text10}</strong> ${transaction.status}</p>
+
+      ${
+        transaction.type === "withdrawal"
+          ? `<p><strong>${Translation[language].text11}</strong> 
+        ${withdrawalDetails}</p>`
+          : transaction.type === "deposit"
+          ? `<p><strong>${Translation[language].text11}</strong> 
+        ${depositDetails}</p>`
+          : ""
+      }
+
     `;
 
     Swal.fire({
-      title: `Detalles del Movimiento `,
+      title: Translation[language].text6,
       html: modalContent,
-      confirmButtonText: "Cerrar",
+      confirmButtonText: Translation[language].swalBtn,
       confirmButtonColor: "#28a745",
       showCloseButton: true,
     });
@@ -116,8 +161,14 @@ const ListaMovimientos = () => {
                 <div className={`icono ${transaction.type}`}>
                   {transaction.type === "withdrawal" ? (
                     <HorizontalRuleOutlinedIcon />
-                  ) : (
+                  ) : transaction.type === "deposit" ? (
                     <AddOutlinedIcon />
+                  ) : transaction.type === "restar" ? (
+                    <HorizontalRuleOutlinedIcon />
+                  ) : transaction.type === "sumar" ? (
+                    <AddOutlinedIcon />
+                  ) : (
+                    ""
                   )}
                 </div>
               </li>
@@ -126,7 +177,13 @@ const ListaMovimientos = () => {
                 <h2>
                   {transaction.type === "withdrawal"
                     ? Translation[language].transaction2
-                    : Translation[language].transaction1}
+                    : transaction.type === "deposit"
+                    ? Translation[language].transaction1
+                    : transaction.type === "restar"
+                    ? Translation[language].transaction3
+                    : transaction.type === "sumar"
+                    ? Translation[language].transaction4
+                    : ""}
                 </h2>
 
                 {transaction.type === "withdrawal" ? (
@@ -147,7 +204,13 @@ const ListaMovimientos = () => {
                       : transaction.withdrawal.method}
                   </span>
                 ) : (
-                  <span>{transaction.deposit.platform_type}</span>
+                  <span>
+                    {transaction.type === "sumar"
+                      ? Translation[language].transaction4
+                      : transaction.type === "restar"
+                      ? Translation[language].transaction3
+                      : transaction.deposit.platform_type}
+                  </span>
                 )}
               </li>
 
@@ -158,7 +221,11 @@ const ListaMovimientos = () => {
 
               <li className="monto">
                 <h2>{Translation[language].h2Amount}</h2>
-                <span>${formatAmount(transaction.amount)}</span>
+                {transaction.method_payment === "platform" ? (
+                  <span>${formatAmount(transaction.deposit.final_amount)}</span>
+                ) : (
+                  <span>${formatAmount(transaction.amount)}</span>
+                )}
               </li>
 
               <li className={`estatus ${transaction.status.toLowerCase()}`}>

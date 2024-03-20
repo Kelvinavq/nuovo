@@ -7,6 +7,7 @@ import Config from "../../../Config";
 const Plataformas_a = () => {
   const [selectedPlatform, setSelectedPlatform] = useState("");
   const [email, setEmail] = useState("");
+  const [comision, setComision] = useState("");
   const [customFields, setCustomFields] = useState([]);
   const [customFieldName, setCustomFieldName] = useState("");
   const [customFieldValue, setCustomFieldValue] = useState("");
@@ -65,6 +66,13 @@ const Plataformas_a = () => {
             text: "Por favor, complete todos los campos requeridos.",
           });
           return;
+        }else if(comision === ""){
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Por favor, Ingrese la comisión",
+          });
+          return;
         }
 
         // Lógica para manejar la plataforma "otra" con campos personalizados
@@ -79,6 +87,7 @@ const Plataformas_a = () => {
               platformType: selectedPlatform,
               customFields: customFields,
               customPlatformName: platformName,
+              comision: comision,
             }),
           }
         );
@@ -90,6 +99,9 @@ const Plataformas_a = () => {
             icon: "success",
             title: "Éxito",
             text: data.message,
+            didClose: () =>{
+              window.location.reload();
+            }
           });
           console.log("Plataforma 'otra' creada con éxito:", data.message);
         } else {
@@ -114,6 +126,13 @@ const Plataformas_a = () => {
               text: "Por favor, complete el campo de correo electrónico.",
             });
             return;
+          }else if(comision === ""){
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: "Por favor, Ingrese la comisión",
+            });
+            return;
           }
         }
 
@@ -130,6 +149,7 @@ const Plataformas_a = () => {
                 selectedPlatform !== "otra" ? selectedPlatform : null,
               value: email,
               email: email,
+              comision: comision,
             }),
           }
         );
@@ -141,6 +161,9 @@ const Plataformas_a = () => {
             icon: "success",
             title: "Éxito",
             text: data.message,
+            didClose: () =>{
+              window.location.reload();
+            }
           });
           console.log("Plataforma creada con éxito:", data.message);
         } else {
@@ -233,7 +256,9 @@ const Plataformas_a = () => {
           ? `
           <div class="custom-field">
           <label>Nombre de la plataforma</label>
-            <input type="text" id="platformName" value="${platform.platformName}" class="swal2-input" placeholder="Nombre de la plataforma" required>
+            <input type="text" id="platformName" value="${
+              platform.platformName
+            }" class="swal2-input" placeholder="Nombre de la plataforma" required>
           </div>
           
         ${customFields
@@ -399,6 +424,24 @@ const Plataformas_a = () => {
     });
   };
 
+  const formatComision = (comision) => {
+    const numeric = comision.replace(/[^\d]/g, "");
+
+    // Formatear con separador de miles y decimales
+    const formattedComision = new Intl.NumberFormat("en-US", {
+      style: "decimal",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(parseFloat(numeric) / 100);
+
+    return formattedComision;
+  };
+
+  const handleComisionChange = (e) => {
+    const numeric = formatComision(e.target.value);
+    setComision(numeric);
+  };
+
   return (
     <div className="plataforma_a">
       <div className="content">
@@ -451,6 +494,17 @@ const Plataformas_a = () => {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+            <br />
+            <div className="grupo-input">
+              <label>Porcentaje (%) de comision para {selectedPlatform} </label>
+              <input
+                className="swal2-input"
+                type="comision"
+                placeholder={`Ejemplo: 5`}
+                value={comision}
+                onChange={handleComisionChange}
+              />
+            </div>
 
             <button className="btns" onClick={handleSavePlatform}>
               Guardar
@@ -476,6 +530,18 @@ const Plataformas_a = () => {
                 placeholder="Nombre de la plataforma"
                 value={platformName}
                 onChange={(e) => setPlatformName(e.target.value)}
+              />
+            </div>
+            <br/>
+
+            <div className="grupo-input">
+              <label>Porcentaje (%) de comision para {selectedPlatform} </label>
+              <input
+                className="swal2-input"
+                type="comision"
+                placeholder={`Ejemplo: 5`}
+                value={comision}
+                onChange={handleComisionChange}
               />
             </div>
 
@@ -516,12 +582,15 @@ const Plataformas_a = () => {
             ))}
 
             <div className="buttons">
-            {customFields.length < 10 && (
-                <button className="btns agregar" onClick={handleAddField}>Agregar campo</button>
-            )}
-            <button className="btns" onClick={handleSavePlatform}>Guardar</button>
+              {customFields.length < 10 && (
+                <button className="btns agregar" onClick={handleAddField}>
+                  Agregar campo
+                </button>
+              )}
+              <button className="btns" onClick={handleSavePlatform}>
+                Guardar
+              </button>
             </div>
-           
           </div>
         </div>
 
@@ -559,7 +628,7 @@ const Plataformas_a = () => {
                 <div className="plataforma">
                   <div className="platformName">
                     <span>{platform.platformName}</span>
-                    <p>Plataforma normal</p>
+                    <p>{platform.email}</p>
                   </div>
                   <button
                     className="btns"

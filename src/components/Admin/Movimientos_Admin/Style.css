@@ -70,10 +70,12 @@
   color: var(--green);
 }
 
-.movimientos_a ul li .icono.deposit {
+.movimientos_a ul li .icono.deposit,
+.movimientos_a ul li .icono.sumar {
   color: var(--green);
 }
-.movimientos_a ul li .icono.withdrawal {
+.movimientos_a ul li .icono.withdrawal,
+.movimientos_a ul li .icono.restar {
   color: var(--red);
 }
 

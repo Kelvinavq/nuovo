@@ -15,7 +15,7 @@ if (!isset($_SESSION['user_id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         // Consultar los últimos 3 depósitos aprobados
-        $recentDepositsQuery = "SELECT * FROM transactions WHERE type = 'deposit' ORDER BY id DESC LIMIT 3";
+        $recentDepositsQuery = "SELECT * FROM transactions WHERE type = 'deposit' OR type = 'sumar' ORDER BY id DESC LIMIT 3";
         $recentDepositsStmt = $conexion->query($recentDepositsQuery);
         $recentDeposits = $recentDepositsStmt->fetchAll(PDO::FETCH_ASSOC);
         

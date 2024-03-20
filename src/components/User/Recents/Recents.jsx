@@ -39,6 +39,11 @@ const Recents = () => {
   }, []);
 
   const formatAmount = (amount) => {
+    // Verificar si amount es undefined o nulo
+    if (amount === undefined || amount === null) {
+      return ""; // O puedes retornar otro valor predeterminado si es necesario
+    }
+
     const numericAmount = amount.replace(/[^\d]/g, "");
 
     // Formatear con separador de miles y decimales
@@ -65,15 +70,17 @@ const Recents = () => {
 
           <div className="transaccion">
             <div className="left">
-              <div
-                className={`icono ${
-                  transaction.type === "deposit" ? "depositar" : "retirar"
-                }`}
-              >
-                {transaction.type === "deposit" ? (
+              <div className={`icono ${transaction.type}`}>
+                {transaction.type === "withdrawal" ? (
+                  <HorizontalRuleOutlinedIcon />
+                ) : transaction.type === "deposit" ? (
+                  <AddOutlinedIcon />
+                ) : transaction.type === "restar" ? (
+                  <HorizontalRuleOutlinedIcon />
+                ) : transaction.type === "sumar" ? (
                   <AddOutlinedIcon />
                 ) : (
-                  <HorizontalRuleOutlinedIcon />
+                  ""
                 )}
               </div>
 
@@ -87,17 +94,36 @@ const Recents = () => {
                       transaction.payment_method ===
                         "transferencia_entre_usuarios"
                     ? transaction.received
+                    : transaction.type === "restar"
+                    ? Translation[language].transaction3
+                    : transaction.type === "sumar"
+                    ? Translation[language].transaction4
                     : Translation[language].transaction2}
                 </span>
 
                 <small>{transaction.transaction_time}</small>
+
+                {transaction.deposit_note_amount_modified != null ? (
+                  <small className="note">{transaction.deposit_note_amount_modified}</small>
+                ) : transaction.withdrawal_note_amount_modified != null ? (
+                  <small className="note">{transaction.withdrawal_note_amount_modified}</small>
+                ) : transaction.deposit_note_transaction_modified != null ? (
+                  <small className="note">{transaction.deposit_note_transaction_modified}</small>
+                ) : (
+                  ""
+                )}
+
+                {/* <small>kdewnfewoifwef</small> */}
               </div>
             </div>
             <div className="right">
               <div className="monto">
-                <span>
-                  {formatAmount(transaction.amount)} <small>USD</small>
-                </span>
+                {transaction.payment_method === "platform" ? (
+                  <span>$ {formatAmount(transaction.final_amount)} +</span>
+                ) : (
+                  <span>$ {formatAmount(transaction.amount)} +</span>
+                )}
+
                 <p
                   className={
                     transaction.status === "approved" ? "completed" : "pending"

@@ -65,7 +65,7 @@ if ($selectedLanguage == "en") {
 $to = $user['email'];
 $subject = $subjectMessage;
 $message = $emailMessage . 
-           'https://blessedcas.com/reset-password-page?token=' . $token;
+           'https://app.nuovotechusa.com/reset-password-page?token=' . $token;
 
 $headers = 'From: ' . $adminEmail . "\r\n" .
            'Reply-To: ' . $adminEmail . "\r\n" .

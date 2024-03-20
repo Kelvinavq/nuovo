@@ -1,5 +1,5 @@
 <?php 
 
-$adminEmail = "nuovotech@gmail.com";
+$adminEmail = "hi@nuovotechusa.com";
 
 ?>

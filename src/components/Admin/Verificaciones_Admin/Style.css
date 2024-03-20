@@ -47,9 +47,7 @@
     gap: 5px;
   }
   
-  .verificaciones_a ul li.estatus {
-    margin-right: 20px;
-  }
+
   
   .verificaciones_a ul li.estatus.pending span {
     color: var(--yellow);
@@ -73,6 +71,24 @@
   
   .verificaciones_a ul li .icono {
     font-size: 2em;
+  }
+
+  .verificaciones_a ul li:last-child{
+    width: 120px;
+    margin-right: 20px;
+  }
+
+  .verificaciones_a ul li button{
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: none;
+    border: none;
+    color: var(--green);
+    cursor: pointer;
+    z-index: 99;
   }
   
   .verificaciones_a ul li h2 {

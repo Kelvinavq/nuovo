@@ -24,6 +24,7 @@ const Depositar = () => {
   const [selectedPlatformInfo, setSelectedPlatformInfo] = useState(null);
   const [paymentProof, setPaymentProof] = useState(null);
   const [platformSelected, setPlatformSelected] = useState();
+  const [platformAdminId, setPlatformAdminId] = useState();
   const [platformsUser, setPlatformsUser] = useState([]);
   const UserId = localStorage.getItem("user_id");
   // verificar estatus del usuario
@@ -188,6 +189,7 @@ const Depositar = () => {
         setPlatformInfo(data);
         setSelectedPlatformInfo(data);
         setSelectedPlatform(data);
+        setPlatformAdminId(data.id);
       } else {
         console.error("Error al obtener la información de la plataforma");
       }
@@ -251,6 +253,15 @@ const Depositar = () => {
       return;
     }
 
+    if (["bank", "platform"].includes(paymentMethod) && !paymentProof) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: Translation[language].swalEmpty,
+      });
+      return;
+    }
+
     // Validar que el monto sea mayor o igual a 1 dólar
     const numericAmount = parseFloat(amount.replace(/[^\d.]/g, ""));
     if (isNaN(numericAmount) || numericAmount < 1) {
@@ -293,6 +304,7 @@ const Depositar = () => {
         selectedPlatform?.platformName || ""
       );
       formData.append("id_platform_user", platformSelected);
+      formData.append("platformAdminId", platformAdminId);
     }
 
     // Lógica para enviar la solicitud al backend según el método de pago seleccionado
@@ -397,27 +409,42 @@ const Depositar = () => {
                       <>
                         <p>
                           {Translation[language].text1} {bankInfo.account_name}
+                          <CopiarAlPortapapeles texto={bankInfo.account_name} />
                         </p>
                         <p>
-                          {Translation[language].text2de2}: {bankInfo.bank_address_nuovo}
+                          {Translation[language].text2de2}:{" "}
+                          {bankInfo.bank_address_nuovo}
+                          <CopiarAlPortapapeles texto={bankInfo.bank_address_nuovo} />
                         </p>
                         <p>
-                          {Translation[language].text2}{" "}
-                          {bankInfo.routing_number_ach}
-                        </p>
-                        <p>
-                          {Translation[language].text3}{" "}
-                          {bankInfo.routing_number_wire}
+                          {Translation[language].text2de2de2}:
+                          info@nuovotechusa.com
+                          <CopiarAlPortapapeles texto={"info@nuovotechusa.com"} />
                         </p>
                         <p>
                           {Translation[language].text4} {bankInfo.bank_address}
+                          <CopiarAlPortapapeles texto={bankInfo.bank_address} />
                         </p>
                         <p>
                           {Translation[language].text5}{" "}
                           {bankInfo.account_number}
+                          <CopiarAlPortapapeles texto={bankInfo.account_number} />
+                        </p>
+
+                        <p>
+                          {Translation[language].text2}{" "}
+                          {bankInfo.routing_number_ach}
+                          <CopiarAlPortapapeles texto={bankInfo.routing_number_ach} />
                         </p>
                         <p>
+                          {Translation[language].text3}{" "}
+                          {bankInfo.routing_number_wire}
+                          <CopiarAlPortapapeles texto={bankInfo.routing_number_wire} />
+                        </p>
+
+                        <p>
                           {Translation[language].text6} {bankInfo.ref}
+                          <CopiarAlPortapapeles texto={bankInfo.ref} />
                         </p>
                       </>
                     )}

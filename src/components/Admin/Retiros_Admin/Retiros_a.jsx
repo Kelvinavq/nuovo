@@ -196,7 +196,7 @@ const Retiros_a = () => {
                   <div>
                     <input type="checkbox" id="otra" name="reason" value="Otra">
                     <label for="otra">Otra</label>
-                    <input type="text" id="otraMotivo" name="otraMotivo" placeholder="Especificar motivo" style="display:none;">
+                    <input class="swal2-input" type="text" id="otraMotivo" name="otraMotivo" placeholder="Especificar motivo" style="display:none;">
                   </div>
                 </form>
               `,
@@ -292,77 +292,95 @@ const Retiros_a = () => {
       const withdrawalRequest = withdrawalRequests.find(
         (request) => request.id === withdrawalRequestId
       );
-      const isExternalTransfer =
-        withdrawalRequest.method === "transferencia_externa";
-      const swalTitle = "Marcar como Completado";
-      let swalContent = "";
 
-      if (isExternalTransfer) {
-        swalContent = `
+      const { isConfirmed } = await Swal.fire({
+        title: "Confirmación",
+        text: `¿Estás seguro de que deseas aprobar esta solicitud por el monto de ${withdrawalRequest.amount}?`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, aprobar",
+        cancelButtonText: "No, cancelar",
+      });
+
+      if (isConfirmed) {
+        const isExternalTransfer =
+          withdrawalRequest.method === "transferencia_externa";
+        const swalTitle = "Marcar como Completado";
+        let swalContent = "";
+
+        if (isExternalTransfer) {
+          swalContent = `
                 <p>Por favor, ingresa el número de referencia de la transacción:</p>
                 <input class="swal2-input" type="text" id="transactionReference" required>
             `;
-      } else if (withdrawalRequest.method === "transferencia_nacional") {
-        swalContent = `
+        } else if (withdrawalRequest.method === "transferencia_nacional") {
+          swalContent = `
                 <p>Por favor, ingresa el número de referencia de la transacción:</p>
                 <input class="swal2-input" type="text" id="transactionReference" required>
             `;
-      } else if (withdrawalRequest.method === "efectivo") {
-        swalContent = `
+        } else if (withdrawalRequest.method === "efectivo") {
+          swalContent = `
                 <p>Por favor, ingresa la dirección de retiro:</p>
                 <input class="swal2-input" type="text" id="withdrawalAddress" required>
             `;
-      }
+        }
 
-      const { value } = await Swal.fire({
-        title: swalTitle,
-        html: swalContent,
-        confirmButtonText: "Confirmar",
-        cancelButtonText: "Cancelar",
-        confirmButtonColor: "#28a745",
-        cancelButtonColor: "#dc3545",
-        showCancelButton: true,
-        preConfirm: async () => {
-          if (isExternalTransfer || withdrawalRequest.method === "transferencia_nacional") {
-            const transactionReference = document.getElementById("transactionReference").value;
-  
-            // Validate that the input is not empty
-            if (!transactionReference) {
-              Swal.showValidationMessage("Este campo es obligatorio.");
-              return;
-            }
-  
-            // Realizar la llamada al backend para completar la solicitud
-            await completeWithdrawalRequest(withdrawalRequestId, {
-              transactionReference,
-            });
-          } else if (withdrawalRequest.method === "efectivo") {
-            const withdrawalAddress = document.getElementById("withdrawalAddress").value;
-  
-            // Validate that the input is not empty
-            if (!withdrawalAddress) {
-              Swal.showValidationMessage("Este campo es obligatorio.");
-              return;
-            }
-  
-            // Realizar la llamada al backend para completar la solicitud
-            await completeWithdrawalRequest(withdrawalRequestId, {
-              withdrawalAddress,
-            });
-          }
-        },
-      });
+        const { value } = await Swal.fire({
+          title: swalTitle,
+          html: swalContent,
+          confirmButtonText: "Confirmar",
+          cancelButtonText: "Cancelar",
+          confirmButtonColor: "#28a745",
+          cancelButtonColor: "#dc3545",
+          showCancelButton: true,
+          preConfirm: async () => {
+            if (
+              isExternalTransfer ||
+              withdrawalRequest.method === "transferencia_nacional"
+            ) {
+              const transactionReference = document.getElementById(
+                "transactionReference"
+              ).value;
 
-      if (value) {
-        // Luego, puedes recargar la página o realizar las acciones necesarias
-        Swal.fire({
-          title: "¡Completado!",
-          text: "La solicitud ha sido marcada como completada.",
-          icon: "success",
-          didClose: () => {
-            window.location.reload();
+              // Validate that the input is not empty
+              if (!transactionReference) {
+                Swal.showValidationMessage("Este campo es obligatorio.");
+                return;
+              }
+
+              // Realizar la llamada al backend para completar la solicitud
+              await completeWithdrawalRequest(withdrawalRequestId, {
+                transactionReference,
+              });
+            } else if (withdrawalRequest.method === "efectivo") {
+              const withdrawalAddress =
+                document.getElementById("withdrawalAddress").value;
+
+              // Validate that the input is not empty
+              if (!withdrawalAddress) {
+                Swal.showValidationMessage("Este campo es obligatorio.");
+                return;
+              }
+
+              // Realizar la llamada al backend para completar la solicitud
+              await completeWithdrawalRequest(withdrawalRequestId, {
+                withdrawalAddress,
+              });
+            }
           },
         });
+
+        if (value) {
+          // Luego, puedes recargar la página o realizar las acciones necesarias
+          Swal.fire({
+            title: "¡Completado!",
+            text: "La solicitud ha sido marcada como completada.",
+            icon: "success",
+            didClose: () => {
+              window.location.reload();
+            },
+          });
+        }
       }
     } catch (error) {
       console.error(
@@ -423,7 +441,6 @@ const Retiros_a = () => {
 
     return formattedAmount;
   };
-
 
   return (
     <div className="retiros_admin">

@@ -144,6 +144,32 @@ export const Translation = {
      swalMessage18: "Plataforma actualizada con éxito",
      swalTitle5 : "Error al actualizar la plataforma",
 
+     swalTitle6: "Agregar plataforma",
+     swalTitle7: "Información",
+     swalMessage19: "No hay plataformas disponibles para agregar.",
+
+     swalTitle8: "Agregar",
+     swalPlaceholder: "Ingrese su email de",
+
+     swalTitle9: "Éxito",
+     swalMessage20: "Nueva plataforma de usuario agregada con éxito.",
+     swalMessage21: "Error el procesar la solicitud",
+
+     swalMessage22: "no puede estar vacío",
+
+     swalMessage23: "Campos personalizados guardados con éxito.",
+
+     swalTitle10: "Editar Plataforma",
+     swalButtonSave: "Guardar",
+     swalButtonCancel: "Cancelar",
+     swalButtonDelete: "Eliminar",
+
+     swalTitle11: "Plataforma eliminada con éxito", 
+
+     swalTitle12: "Error al eliminar la plataforma", 
+     swalMessage24: "Recargue la página e intente nuevamente.",
+
+
   },
   en: {
     // enlaces
@@ -287,6 +313,30 @@ export const Translation = {
     swalMessage18: "Successfully updated platform",
     swalTitle5 : "Error while updating the platform",
 
+    swalTitle6: "Add platform",
+    swalTitle7: "Information",
+    swalMessage19: "There are no platforms available to add.",
+
+    swalTitle8: "Add",
+    swalPlaceholder: "Enter your email",
+
+    swalTitle9: "Success",
+    swalMessage20: "New user platform added successfully.",
+    swalMessage21: "Error processing request",
+
+    swalMessage22: "cannot be empty",
+
+    swalMessage23: "Custom fields saved successfully.",
+
+    swalTitle10: "Edit Platform",
+    swalButtonSave: "Save",
+    swalButtonCancel: "Cancel",
+    swalButtonDelete: "Delete",
+
+    swalTitle11: "Platform successfully removed", 
+
+    swalTitle12: "Error deleting platform", 
+    swalMessage24: "Reload the page and try again.",
   },
   pt: {
     // enlaces
@@ -430,5 +480,30 @@ export const Translation = {
      swalMessage17: "Recarregue a página e tente novamente",
      swalMessage18: "Plataforma atualizada com sucesso",
      swalTitle5 : "Erro ao atualizar a plataforma",
+
+     swalTitle6: "Adicionar plataforma",
+     swalTitle7: "Informação",
+     swalMessage19: "Não há plataformas disponíveis para adicionar.",
+
+     swalTitle8: "Adicionar",
+     swalPlaceholder: "Digite seu e-mail",
+
+     swalTitle9: "Sucesso",
+     swalMessage20: "Nova plataforma de usuário adicionada com sucesso.",
+     swalMessage21: "Erro ao processar solicitação",
+
+    swalMessage22: "não pode estar vazio",
+
+    swalMessage23: "Campos personalizados salvos com sucesso.",
+
+    swalTitle10: "Editar plataforma",
+    swalButtonSave: "Manter",
+    swalButtonCancel: "Cancelar",
+    swalButtonDelete: "Eliminar",
+
+    swalTitle11: "Plataforma removida com sucesso", 
+
+    swalTitle12: "Erro ao excluir plataforma", 
+    swalMessage24: "Atualize a página e tente novamente.",
   },
 };

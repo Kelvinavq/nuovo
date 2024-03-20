@@ -29,6 +29,7 @@ FROM
     withdrawal_requests wr
 LEFT JOIN
     users u ON wr.user_id = u.id
+    WHERE method != 'restar'
 ORDER BY
     wr.created_at DESC;";
 

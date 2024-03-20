@@ -190,7 +190,7 @@ if ($stmtCheck->rowCount() > 0) {
             $notificationMessageAdmin = "El usuario " . $userName . " ha enviado una nueva solicitud de verificación.";
 
             // Insertar la notificación en la base de datos
-            $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, content, status, type, admin_message, status_admin) VALUES (:userId, :content, 'unread', 'withdrawal_request', :admin_message, 'unread')";
+            $insertNotificationQuery = "INSERT INTO pusher_notifications (user_id, content, status, type, admin_message, status_admin) VALUES (:userId, :content, 'unread', 'verification_pending', :admin_message, 'unread')";
             $stmtInsertNotification = $conexion->prepare($insertNotificationQuery);
             $stmtInsertNotification->bindParam(':userId', $userId);
             $stmtInsertNotification->bindParam(':content', $notificationMessage);
@@ -228,8 +228,8 @@ if ($stmtCheck->rowCount() > 0) {
             $subject = $subjectMessage;
             $message = $emailMessage;
 
-            $headers = 'From: nuovo@gmail.com' . "\r\n" .
-                'Reply-To: nuovo@gmail.com' . "\r\n" .
+            $headersAdmin = 'From: ' . $adminEmail . "\r\n" .
+                'Reply-To: ' . $adminEmail . "\r\n" .
                 'X-Mailer: PHP/' . phpversion();
 
             if (mail($to, $subject, $message, $headers)) {

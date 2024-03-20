@@ -44,14 +44,15 @@ const Balance = () => {
   };
 
   const formatBalance = (balance) => {
-    const numericBalance = balance !== null ? balance.replace(/[^\d]/g, "") : 0;
-  
+    // const numericBalance = balance !== null ? balance.replace(/[^\d]/g, "") : 0;
+    const numericAmount = balance == null ? "0" : balance.toString().replace(/[^\d]/g, "");
+
     // Formatear con separador de miles y decimales
     const formattedBalance = new Intl.NumberFormat("en-US", {
       style: "decimal",
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    }).format(parseFloat(numericBalance) / 100);
+    }).format(parseFloat(numericAmount) / 100);
   
     return showBalance ? formattedBalance : "*****";
   };

@@ -7,8 +7,9 @@ export const Translation = {
     option3: "Plataformas",
     option4: "Efectivo",
 
-    text1: "Nombre de la cuenta:",
+    text1: "Nombre del banco:",
     text2de2: "Dirección del beneficiario",
+    text2de2de2: "Correo electrónico",
     text2: "Routing Number (ACH):",
     text3: "Routing Number (Wire):",
     text4: "Dirección del banco:",
@@ -67,7 +68,7 @@ export const Translation = {
     option3: "Platforms",
     option4: "Cash",
 
-    text1: "Account Name:",
+    text1: "Bank Name:",
     text2de2: "Beneficiary address",
     text2: "Routing Number (ACH):",
     text3: "Routing Number (Wire):",
@@ -126,8 +127,9 @@ export const Translation = {
     option3: "Plataformas",
     option4: "Efetivo",
 
-    text1: "Nome da conta:",
+    text1: "Nome do banco:",
     text2de2: "Endereço do beneficiário",
+    text2de2de2: "E-mail",
     text2: "Routing Number (ACH):",
     text3: "Routing Number (Wire):",
     text4: "Endereço do banco:",

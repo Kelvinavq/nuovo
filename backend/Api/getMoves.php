@@ -26,6 +26,11 @@ try {
             d.request_time AS deposit_request_time,
             d.status AS deposit_status,
             d.reference_number AS deposit_reference_number,
+            d.comision AS deposit_comision,
+            d.subtracted_amount AS deposit_subtracted_amount,
+            d.final_amount AS deposit_final_amount,
+            d.payment_method AS deposit_payment_method,
+            d.note_amount_modified AS deposit_note_amount_modified,
             w.amount AS withdrawal_amount,
             w.request_date AS withdrawal_request_date,
             w.request_time AS withdrawal_request_time,
@@ -33,7 +38,8 @@ try {
             w.method AS withdrawal_method,
             w.reference_number AS withdrawal_reference_number,
             w.region AS withdrawal_region,
-            w.recipient_user_id AS withdrawal_recipient_user_id
+            w.recipient_user_id AS withdrawal_recipient_user_id,
+            w.note_amount_modified AS withdrawal_note_amount_modified
         FROM transactions t
         LEFT JOIN deposit_requests d ON t.deposit_request_id = d.id
         LEFT JOIN withdrawal_requests w ON t.withdrawal_request_id = w.id
@@ -76,6 +82,7 @@ try {
             'status' => $transaction['status'],
             'transaction_date' => $formattedDate,
             'transaction_time' => $formattedTime,
+            'method_payment' => $transaction['payment_method'],
             'deposit' => array(
                 'amount' => $transaction['deposit_amount'],
                 'request_date' => $transaction['deposit_request_date'],
@@ -83,6 +90,12 @@ try {
                 'status' => $transaction['deposit_status'],
                 'reference_number' => $transaction['deposit_reference_number'],
                 'platform_type' => $platformType,
+                'comision' => $transaction['deposit_comision'],
+                'subtracted_amount' => $transaction['deposit_subtracted_amount'],
+                'final_amount' => $transaction['deposit_final_amount'],
+                'payment_method' => $transaction['deposit_payment_method'],
+                'note_amount_modified' => $transaction['deposit_note_amount_modified'],
+
             ),
             'withdrawal' => array(
                 'amount' => $transaction['withdrawal_amount'],
@@ -92,6 +105,7 @@ try {
                 'method' => $transaction['withdrawal_method'],
                 'reference_number' => $transaction['withdrawal_reference_number'],
                 'region' => $transaction['withdrawal_region'],
+                'note_amount_modified' => $transaction['withdrawal_note_amount_modified'],
             )
         );
     }, $transactions);

@@ -160,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ) {
             $stmtDeposit->execute();
 
             // Obtener información de la solicitud de depósito
-            $selectDepositRequest = "SELECT user_id, amount FROM deposit_requests WHERE id = :id";
+            $selectDepositRequest = "SELECT user_id, amount, payment_method, final_amount FROM deposit_requests WHERE id = :id";
             $stmtSelectDeposit = $conexion->prepare($selectDepositRequest);
             $stmtSelectDeposit->bindParam(':id', $depositRequestId, PDO::PARAM_INT);
             $stmtSelectDeposit->execute();
@@ -180,8 +180,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ) {
             $currentBalance = $stmtSelectBalance->fetchColumn();
 
             $currentBalanceFloat = floatval(str_replace(',', '', $currentBalance));
-            $depositAmountFloat = floatval(str_replace(',', '', $depositInfo['amount']));
 
+            if ($depositInfo['payment_method'] === "platform") {
+                $depositAmountFloat = floatval(str_replace(',', '', $depositInfo['final_amount']));
+            }else{
+                $depositAmountFloat = floatval(str_replace(',', '', $depositInfo['amount']));
+            }
 
 
             // Calcular el nuevo balance sumando el monto de la transacción
@@ -244,8 +248,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' ) {
         $pusher->trigger('notifications-channel', 'evento', $data);
 
         // Enviar notificación por correo electrónico 
-
-
 
         $to = $userEmail;
         $subject = $subjectMessage;

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import "./Style.css";
 import Config from "../../../Config";
+import EditIcon from "@mui/icons-material/Edit";
 
 const Verificaciones_a = () => {
   const [solicitudes, setSolicitudes] = useState([]);
@@ -135,8 +136,8 @@ const Verificaciones_a = () => {
         <div className="grupo-input img">
           <p>Foto del DNI</p>
           <img src="${Config.imgDni}${
-            solicitud.dni_image
-          }" alt="Foto del DNI" />
+          solicitud.dni_image
+        }" alt="Foto del DNI" />
         </div>
 
         <div className="grupo-input img">
@@ -149,8 +150,8 @@ const Verificaciones_a = () => {
         <div className="grupo-input img">
           <p>Foto del dorso DNI</p>
           <img src="${Config.imgDorsoDni}${
-            solicitud.dni_back
-          }" alt="Foto del Selfie con DNI" />
+          solicitud.dni_back
+        }" alt="Foto del Selfie con DNI" />
         </div>
 
         ${
@@ -423,6 +424,117 @@ const Verificaciones_a = () => {
     }
   };
 
+  const editAccount = async (event, id) => {
+    event.stopPropagation();
+
+    try {
+      // Obtener el número de cuenta actual
+      const getNumberAccount = await fetch(
+        `${Config.backendBaseUrlAdmin}get_number_account.php?id=${id}`,
+        {
+          method: "GET",
+          mode: "cors",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (getNumberAccount.ok) {
+        const bankAccountData = await getNumberAccount.json();
+        const bankData = bankAccountData.bank_account;
+        const bankAccount = bankData.bank_account;
+
+        // Abrir el modal de Swal con el número de cuenta prellenado
+        const { value: updatedBankAccount } = await Swal.fire({
+          title: "Nº de cuenta asignado",
+          input: "number",
+          inputValue: bankAccount,
+          inputAttributes: {
+            autocapitalize: "off",
+          },
+          showCancelButton: true,
+          confirmButtonText: "Actualizar",
+          showLoaderOnConfirm: true,
+          preConfirm: async () => {
+            const inputValue = Swal.getPopup().querySelector("input").value;
+
+            if (!inputValue) {
+              Swal.fire({
+                title: "El número de cuenta no puede estar vacío",
+                icon: "error",
+                timer: 5000,
+                didClose: () => {
+                  window.location.reload();
+                },
+              });
+              return;
+            }
+
+            try {
+              // Validar el número de cuenta en el backend
+              const response = await fetch(
+                `${Config.backendBaseUrlAdmin}validate_bank_account.php`,
+                {
+                  method: "POST",
+                  mode: "cors",
+                  credentials: "include",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    bankAccount: inputValue,
+                    verificationId: id,
+                    user_id: bankData.user_id,
+                  }),
+                }
+              );
+
+              if (!response.ok) {
+                Swal.fire({
+                  title: "Error",
+                  text:"El número de cuenta ya se encuentra registrado",
+                  icon: "error",
+                  timer: 5000,
+                  didClose: () => {
+                    window.location.reload();
+                  },
+                });
+                return;
+              } else {
+                Swal.fire({
+                  title: "Número de cuenta actualizado exitosamente",
+                  icon: "success",
+                  timer: 3000,
+                  didClose: () => {
+                    window.location.reload();
+                  },
+                });
+              }
+
+              if (updatedBankAccount) {
+              }
+
+              return inputValue;
+            } catch (error) {
+              console.error("Error al validar el número de cuenta:", error);
+              throw new Error("Error al validar el número de cuenta.");
+            }
+          },
+          allowOutsideClick: () => !Swal.isLoading(),
+        });
+      } else {
+        console.error(
+          "Error al obtener el número de cuenta:",
+          verificationStatusData.error
+        );
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <div className="verificaciones_admin">
       <div className="title">
@@ -457,6 +569,16 @@ const Verificaciones_a = () => {
               <h2>Estatus</h2>
               <span>{solicitud.status}</span>
             </li>
+
+            {solicitud.status === "approved" ? (
+              <li>
+                <button onClick={(event) => editAccount(event, solicitud.id)}>
+                  <EditIcon />
+                </button>
+              </li>
+            ) : (
+              ""
+            )}
           </ul>
         ))}
       </div>

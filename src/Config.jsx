@@ -20,6 +20,16 @@ const Config = {
     // imgSelfieDni:"https://blessedcas.com/backend/public/assets/user_selfie/",
     // imgDorsoDni:"https://blessedcas.com/backend/public/assets/user_dni_back/",
     // report: "https://blessedcas.com/backend/public/assets/reports",
+
+    //     backendBaseUrl: "https://app.nuovotechusa.com/backend/Api/",
+    // backendBaseUrlAdmin: "https://app.nuovotechusa.com/backend/Api/admin/",
+    // imgProfile: "https://app.nuovotechusa.com/backend/public/assets/users/",
+    // imgVoucher: "https://app.nuovotechusa.com/backend/public/assets/vouchers/",
+    // csvArchive: "https://app.nuovotechusa.com/backend/public/assets/csv/",
+    // imgDni:"https://app.nuovotechusa.com/backend/public/assets/user_dni/",
+    // imgSelfieDni:"https://app.nuovotechusa.com/backend/public/assets/user_selfie/",
+    // imgDorsoDni:"https://app.nuovotechusa.com/backend/public/assets/user_dni_back/",
+    // report: "https://app.nuovotechusa.com/backend/public/assets/reports",
     
   };
   

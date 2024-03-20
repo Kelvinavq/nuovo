@@ -91,7 +91,7 @@ export const Translation = {
 
     headerTitle: "MOVE AND USE YOUR MONEY, WHEN AND WHERE YOU WANT!",
     headerText:
-      "Transfer money from your other wallets, plus send or recieve payments from any USD account from around the world",
+      "Transfer money from your other wallets, plus send or receive payments from any USD account from around the world",
     headerButton: "JOIN NOW",
 
     // ******************* header ***************************

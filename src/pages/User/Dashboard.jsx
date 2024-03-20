@@ -49,7 +49,7 @@ const Dashboard = () => {
               icon: "error",
               title: "Error",
               text: "Acceso no permitido para el rol actual.",
-              timer: 3000,
+              // timer: 3000,
               didClose: () => {
                 window.history.back()
               },

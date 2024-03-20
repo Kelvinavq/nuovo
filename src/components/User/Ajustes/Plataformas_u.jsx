@@ -11,27 +11,31 @@ import { Translation } from "./Translation";
 const Plataformas_u = () => {
   const { language } = useContext(LanguageContext);
 
-  const [selectedPlatform, setSelectedPlatform] = useState("");
-  const [email, setEmail] = useState("");
-  const [customFields, setCustomFields] = useState([]);
-  const [customFieldName, setCustomFieldName] = useState("");
-  const [customFieldValue, setCustomFieldValue] = useState("");
-  const [platformName, setPlatformName] = useState("");
-
   const [platforms, setPlatforms] = useState([]);
+  const [listPlatforms, setListPlatforms] = useState([]);
   const UserId = localStorage.getItem("user_id");
+  const [selectedPlatform, setSelectedPlatform] = useState(null);
+  const [userEmail, setUserEmail] = useState("");
 
   useEffect(() => {
     // Lógica para recuperar las plataformas existentes
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${Config.backendBaseUrl}getPlatformsSettings.php?user_id=${UserId}`
+          `${Config.backendBaseUrl}getPlatformsAdmin.php`,
+          {
+            method: "GET",
+            mode: "cors",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         );
         const data = await response.json();
 
         if (response.ok) {
-          setPlatforms(data.platforms);
+          setPlatforms(data);
         } else {
           console.error(
             "Error al obtener la lista de plataformas:",
@@ -44,175 +48,228 @@ const Plataformas_u = () => {
     };
 
     fetchData();
-  }, [UserId]);
+  }, []);
 
-  const handleAddField = () => {
-    if (customFields.length < 10) {
-      const newField = { name: customFieldName, value: customFieldValue };
-      setCustomFields([...customFields, newField]);
-    }
-  };
-
-  const handleFieldChange = (index, key, value) => {
-    const updatedFields = [...customFields];
-    updatedFields[index][key] = value;
-    setCustomFields(updatedFields);
-  };
-
-  const handleSavePlatform = async () => {
-    try {
-      if (selectedPlatform === "otra") {
-        if (
-          !platformName ||
-          customFields.some((field) => !field.name || !field.value)
-        ) {
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: Translation[language].swalMessage12,
-          });
-          return;
-        }
-
-        // Lógica para manejar la plataforma "otra" con campos personalizados
+  useEffect(() => {
+    // Lógica para recuperar las plataformas existentes
+    const fetchData = async () => {
+      try {
         const response = await fetch(
-          `${Config.backendBaseUrl}createPlatform.php`,
+          `${Config.backendBaseUrl}getPlatformsUser.php`,
           {
-            method: "POST",
+            method: "GET",
+            mode: "cors",
+            credentials: "include",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              userid: UserId,
-              platformType: selectedPlatform,
-              customFields: customFields,
-              customPlatformName: platformName,
-            }),
           }
         );
-
         const data = await response.json();
 
         if (response.ok) {
-          Swal.fire({
-            icon: "success",
-            title: "Éxito",
-            text: Translation[language].swalMessage13,
-            didClose: () => {
-              window.location.reload();
-            },
-          });
-          console.log("Plataforma 'otra' creada con éxito:", data.message);
+          setListPlatforms(data.platforms);
         } else {
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: Translation[language].swalMessage14,
-          });
-          console.error("Error al crear plataforma 'otra':", data.error);
+          console.error(
+            "Error al obtener la lista de plataformas:",
+            data.error
+          );
         }
-      } else {
-        // Lógica para manejar otras plataformas (PayPal, Skrill, Wise)
-        if (
-          selectedPlatform === "paypal" ||
-          selectedPlatform === "skrill" ||
-          selectedPlatform === "wise"
-        ) {
-          if (!email) {
+      } catch (error) {
+        console.error("Error al procesar la solicitud:", error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleAddPlatformClick = () => {
+    if (platforms && platforms.length > 0) {
+      Swal.fire({
+        title: Translation[language].swalTitle6,
+        input: "select",
+        inputOptions: platforms.reduce((options, platform) => {
+          options[platform.id] = platform.platformName;
+          return options;
+        }, {}),
+        showCancelButton: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const selectedPlatform = platforms.find(
+            (platform) => platform.id === parseInt(result.value)
+          );
+          handlePlatformSelect(selectedPlatform);
+        }
+      });
+    } else {
+      Swal.fire({
+        icon: "info",
+        title: Translation[language].swalTitle7,
+        text: Translation[language].swalMessage19,
+      });
+    }
+  };
+
+  const handlePlatformSelect = async (platform) => {
+    setSelectedPlatform(platform);
+
+    if (["paypal", "skrill", "wise"].includes(platform.platformType)) {
+      Swal.fire({
+        title: `${Translation[language].swalTitle8} ${platform.platformName}`,
+        input: "email",
+        inputPlaceholder: `${Translation[language].swalPlaceholder} ${platform.platformName}`,
+        showCancelButton: true,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          setUserEmail(result.value);
+
+          // Aquí es donde haces la solicitud fetch para guardar la plataforma del usuario
+          try {
+            const response = await fetch(
+              `${Config.backendBaseUrl}registratePlatform.php`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  userId: UserId,
+                  email: result.value,
+                  platformType: platform.platformType,
+                  platformName: platform.platformName,
+                }),
+                credentials: "include",
+              }
+            );
+
+            const data = await response.json();
+
+            if (response.ok) {
+              Swal.fire({
+                icon: "success",
+                title: Translation[language].swalTitle9,
+                text: Translation[language].swalMessage20,
+              });
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: Translation[language].swalMessage21,
+              });
+            }
+          } catch (error) {
             Swal.fire({
               icon: "error",
               title: "Error",
-              text: Translation[language].swalMessage15,
+              text: Translation[language].swalMessage21,
             });
-            return;
           }
         }
-
+      });
+    } else if (platform.platformType === "otra") {
+      try {
         const response = await fetch(
-          `${Config.backendBaseUrl}createPlatform.php`,
+          `${Config.backendBaseUrl}getCustomFieldsUser.php?platformId=${platform.id}`,
           {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              userid: UserId,
-              platformType: selectedPlatform,
-              platformName:
-                selectedPlatform !== "otra" ? selectedPlatform : null,
-              value: email,
-              email: email,
-            }),
+            method: "GET",
+            mode: "cors",
+            credentials: "include",
           }
         );
-
         const data = await response.json();
 
         if (response.ok) {
+          const customFields = data.customFields;
+
           Swal.fire({
-            icon: "success",
-            title: "Éxito",
-            text: Translation[language].swalMessage13,
-            didClose: () => {
-              window.location.reload();
+            title: `${Translation[language].swalTitle8} ${platform.platformName}`,
+            html: customFields
+              .map(
+                (field, index) => `
+                <div class="grupo-input">
+                  <label class="swal2-input-label">${field.fieldName}</label>
+                  <input id="customField-${index}" class="swal2-input">
+                <div/>
+            `
+              )
+              .join(""),
+            preConfirm: () => {
+              const userData = {};
+              for (let index = 0; index < customFields.length; index++) {
+                const value = document.getElementById(
+                  `customField-${index}`
+                ).value;
+                if (!value) {
+                  Swal.showValidationMessage(
+                    `${customFields[index].fieldName} ${Translation[language].swalMessage22}`
+                  );
+                  return;
+                }
+                userData[customFields[index].fieldName] = value;
+              }
+              return userData;
             },
+            showCancelButton: true,
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+              try {
+                const response = await fetch(
+                  `${Config.backendBaseUrl}saveCustomFieldsUser.php`,
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      userId: UserId,
+                      platformType: platform.platformType,
+                      platformName: platform.platformName,
+                      platformId: platform.id,
+                      customFields: result.value,
+                    }),
+                    credentials: "include",
+                  }
+                );
+
+                const data = await response.json();
+
+                if (response.ok) {
+                  Swal.fire({
+                    icon: "success",
+                    title: Translation[language].swalTitle9,
+                    text: Translation[language].swalMessage23,
+                    didClose: () => {
+                      window.location.reload();
+                    },
+                  });
+                } else {
+                  Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: Translation[language].swalMessage21,
+                    didClose: () => {
+                      window.location.reload();
+                    },
+                  });
+                }
+              } catch (error) {
+                Swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: Translation[language].swalMessage21,
+                });
+              }
+            }
           });
-          console.log("Plataforma creada con éxito:", data.message);
         } else {
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: Translation[language].swalMessage14,
-          });
-          console.error("Error al crear plataforma:", data.error);
+          console.error(
+            "Error al obtener los campos personalizados:",
+            data.error
+          );
         }
+      } catch (error) {
+        console.error("Error al procesar la solicitud:", error.message);
       }
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: Translation[language].swalMessage16,
-      });
-      console.error("Error al procesar la solicitud:", error.message);
-    }
-  };
-
-  const handleDeleteField = (index) => {
-    const updatedFields = [...customFields];
-    updatedFields.splice(index, 1);
-    setCustomFields(updatedFields);
-  };
-
-  const showPlatformModal = () => {
-    const platformModal = document.getElementById("platform-modal");
-    platformModal.classList.add("active");
-    // platformModal.style.display = "block";
-  };
-
-  const showEmailModal = () => {
-    const emailModal = document.getElementById("email-modal");
-    emailModal.classList.add("active");
-    // emailModal.style.display = "block";
-  };
-
-  const showCustomFieldsModal = () => {
-    const customFieldsModal = document.getElementById("custom-fields-modal");
-    customFieldsModal.classList.add("active");
-    // customFieldsModal.style.display = "block";
-  };
-
-  const closeModal = () => {
-    const modals = document.querySelectorAll(".modal");
-    // modals.forEach((modal) => (modal.style.display = "none"));
-    modals.forEach((modal) => modal.classList.remove("active"));
-  };
-
-  const handlePlatformSelect = (platform) => {
-    setSelectedPlatform(platform);
-    if (platform === "otra") {
-      showCustomFieldsModal();
-    } else {
-      showEmailModal();
     }
   };
 
@@ -223,9 +280,12 @@ const Plataformas_u = () => {
       // Consultar customFields asociados a la plataforma "otra"
       try {
         const response = await fetch(
-          `${Config.backendBaseUrl}getCustomFields.php?platformId=${platform.id}`
+          `${Config.backendBaseUrl}getCustomFieldsUser.php?platformId=${platform.id}`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
         );
-
         const data = await response.json();
 
         if (response.ok) {
@@ -241,29 +301,20 @@ const Plataformas_u = () => {
     }
 
     Swal.fire({
-      title: Translation[language].swalTitle2,
+      title: Translation[language].swalTitle10,
       html: `
       ${
         platform.platformType === "otra"
           ? `
-          <div class="custom-field">
-          <label>${Translation[language].label10}</label>
-            <input type="text" id="platformName" value="${
-              platform.platformName
-            }" class="swal2-input" placeholder=${
-              Translation[language].label10
-            } required>
-          </div>
-          
         ${customFields
           .map(
             (field, index) => `
             <div class="custom-field">
-            <label>Campo ${field.fieldName}</label>
-              <input type="text" class="swal2-input" placeholder=${Translation[language].place2} id="swal2-input-${index}" value="${field.fieldName}" required>
 
-            <label>Valor ${field.fieldName}</label>
-              <input type="text" class="swal2-input" placeholder=${Translation[language].place3}id="swal2-value-${index}" value="${field.fieldValue}" required>
+            <input type="hidden" class="swal2-input" id="swal2-input-${index}" value="${field.fieldName}" required>
+
+            <label>${field.fieldName}</label>
+              <input type="text" class="swal2-input" placeholder="Valor del campo" id="swal2-value-${index}" value="${field.fieldValue}" required>
             </div>
             
           `
@@ -271,31 +322,24 @@ const Plataformas_u = () => {
           .join("")}
       `
           : `
-          <label htmlFor="platformName">${Translation[language].label10}</label>
+          <label htmlFor="platformEmail">Email</label>
           <br>
           <br>
-          <input type="text" id="platformName" value="${platform.platformName}" class="swal2-input" placeholder=${Translation[language].label10} required>
-          <br>
-          <br>
-          <label htmlFor="platformEmail">${Translation[language].label11}</label>
-          <br>
-          <br>
-          <input type="text" id="platformEmail" value="${platform.email}" class="swal2-input" placeholder=${Translation[language].label11} required>
+          <input type="text" id="platformEmail" value="${platform.email}" class="swal2-input" placeholder="Valor" required>
       `
       }
     `,
       focusConfirm: false,
       showCancelButton: true,
       showDenyButton: true,
-      confirmButtonText: Translation[language].button11,
-      cancelButtonText: Translation[language].button12,
-      denyButtonText: Translation[language].button13,
+      confirmButtonText: Translation[language].swalButtonSave,
+      cancelButtonText: Translation[language].swalButtonCancel,
+      denyButtonText:Translation[language].swalButtonDelete,
       customClass: "swalPlataforma",
       preConfirm: () => {
         // Lógica para obtener los nuevos valores de la plataforma
         const newValues = {
           platformId: platform.id,
-          platformName: document.getElementById("platformName").value,
           platformEmail: document.getElementById("platformEmail")
             ? document.getElementById("platformEmail").value
             : null,
@@ -311,17 +355,11 @@ const Plataformas_u = () => {
               .getElementById(`swal2-value-${index}`)
               .value.trim(),
           }));
-
-          // Incluir platformName para el tipo "otra"
-          newValues.platformName = document
-            .getElementById("platformName")
-            .value.trim();
         } else {
           newValues.platformEmail = document
             .getElementById("platformEmail")
             .value.trim();
         }
-        console.log("Datos enviados al servidor:", newValues);
         return newValues;
       },
     }).then(async (result) => {
@@ -338,7 +376,7 @@ const Plataformas_u = () => {
 
           if (response.ok) {
             Swal.fire({
-              title: Translation[language].swalTitle3,
+              title: Translation[language].swalTitle11,
               icon: "success",
               timer: 2000,
             });
@@ -348,8 +386,8 @@ const Plataformas_u = () => {
             );
           } else {
             Swal.fire({
-              title: Translation[language].swalTitle4,
-              text: Translation[language].swalMessage17,
+              title: Translation[language].swalTitle12,
+              text: Translation[language].swalMessage24,
               icon: "error",
               timer: 2000,
             });
@@ -360,8 +398,8 @@ const Plataformas_u = () => {
           }
         } catch (error) {
           Swal.fire({
-            title: Translation[language].swalTitle4,
-            text: Translation[language].swalMessage17,
+            title: Translation[language].swalTitle12,
+            text: Translation[language].swalMessage24,
             icon: "error",
             timer: 2000,
           });
@@ -382,7 +420,6 @@ const Plataformas_u = () => {
             }
           );
           const responseData = await response.json();
-          console.log("Response from server:", responseData);
 
           if (response.ok) {
             Swal.fire({
@@ -426,132 +463,15 @@ const Plataformas_u = () => {
           <h2>{Translation[language].titlePlatforms}</h2>
         </div>
 
-        {/* Modal de selección de plataforma */}
-        <div id="platform-modal" className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={closeModal}>
-              &times;
-            </span>
-            <h2>{Translation[language].h2}</h2>
-
-            <div className="grupo-input">
-              <label htmlFor="">{Translation[language].label7}</label>
-              <select
-                className="swal2-input"
-                onChange={(e) => handlePlatformSelect(e.target.value)}
-              >
-                <option value="">{Translation[language].option1}</option>
-                <option value="paypal">{Translation[language].option2}</option>
-                <option value="skrill">{Translation[language].option3}</option>
-                <option value="wise">{Translation[language].option4}</option>
-                <option value="otra">{Translation[language].option5}</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Modal de correo electrónico */}
-        <div id="email-modal" className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={closeModal}>
-              &times;
-            </span>
-            <h2>{Translation[language].h22}</h2>
-
-            <div className="grupo-input">
-              <label>{Translation[language].label8}</label>
-              <input
-                className="swal2-input"
-                type="email"
-                placeholder={`${Translation[language].place1}  ${selectedPlatform}`}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-
-            <button className="btns" onClick={handleSavePlatform}>
-              {Translation[language].button6}
-            </button>
-          </div>
-        </div>
-
-        {/* Modal de campos personalizados */}
-        <div id="custom-fields-modal" className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={closeModal}>
-              &times;
-            </span>
-
-            <h2>{Translation[language].h23}</h2>
-            <p>{Translation[language].text12}</p>
-
-            <div className="grupo-input">
-              <label htmlFor="">{Translation[language].label9}</label>
-              <input
-                className="swal2-input"
-                type="text"
-                placeholder={Translation[language].label9}
-                value={platformName}
-                onChange={(e) => setPlatformName(e.target.value)}
-              />
-            </div>
-
-            {customFields.length > 0 && <h4>{Translation[language].h4}</h4>}
-
-            {/* Fin del nuevo input */}
-            {customFields.map((field, index) => (
-              <div>
-                <div key={index} className="custom-field">
-                  <input
-                    className="swal2-input"
-                    type="text"
-                    placeholder={Translation[language].input1}
-                    value={field.name}
-                    onChange={(e) =>
-                      handleFieldChange(index, "name", e.target.value)
-                    }
-                  />
-                  <input
-                    className="swal2-input"
-                    type="text"
-                    placeholder={Translation[language].input2}
-                    value={field.value}
-                    onChange={(e) =>
-                      handleFieldChange(index, "value", e.target.value)
-                    }
-                  />
-                  <button
-                    className="eliminar"
-                    onClick={() => handleDeleteField(index)}
-                  >
-                    {Translation[language].button7}
-                  </button>
-                </div>
-              </div>
-            ))}
-
-            <div className="buttons">
-              {customFields.length < 10 && (
-                <button className="btns agregar" onClick={handleAddField}>
-                  {Translation[language].button8}
-                </button>
-              )}
-              <button className="btns" onClick={handleSavePlatform}>
-                {Translation[language].button9}
-              </button>
-            </div>
-          </div>
-        </div>
-
         <Enlaces />
 
         <h3>{Translation[language].h3}</h3>
-        <button className="btns" onClick={showPlatformModal}>
+        <button className="btns" onClick={handleAddPlatformClick}>
           {Translation[language].button5}
         </button>
         <div className="lista_plataformas">
-          {platforms &&
-            platforms.map((platform) => (
+          {listPlatforms &&
+            listPlatforms.map((platform) => (
               <div key={platform.id}>
                 {platform.platformType === "otra" ? (
                   // Si el tipo de plataforma es "otra", mostrar campos personalizados
@@ -559,14 +479,6 @@ const Plataformas_u = () => {
                     <div className="platformName">
                       <span>{platform.platformName}</span>
                       <p>{Translation[language].text13}</p>
-
-                      {/* {Object.entries(platform.customFields).map(
-                    ([name, value]) => (
-                      <div key={name}>
-                     
-                      </div>
-                    )
-                  )} */}
                     </div>
 
                     <button
@@ -581,7 +493,7 @@ const Plataformas_u = () => {
                   <div className="plataforma">
                     <div className="platformName">
                       <span>{platform.platformName}</span>
-                      <p>{Translation[language].text14}</p>
+                      <p>{platform.email}</p>
                     </div>
                     <button
                       className="btns"

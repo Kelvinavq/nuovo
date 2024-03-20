@@ -61,19 +61,68 @@ const ListaMovimientos_a = () => {
 
     let depositDetails = transaction.deposit.platform_type;
 
+    let comisionsDetails = `
+    <p><strong>Monto enviado:</strong> $${transaction.amount}</p>
+    <p><strong>Comisión:</strong> $${transaction.deposit.subtracted_amount}</p>
+    <p><strong>Monto a recibir:</strong> $${transaction.deposit.final_amount}</p>
+    `;
+
+    let DepositbalanceModified = `
+    <p><strong>Motivo: </strong>${transaction.deposit.note_amount_modified}</p>
+    `;
+
+    let WithdrawbalanceModified = `
+    <p><strong>Motivo: </strong>${transaction.withdrawal.note_amount_modified}</p>
+    `;
+
     let modalContent = `
       <span>Detalles del movimiento</span>
+
       <p><strong>Tipo:</strong> ${
-        transaction.type === "withdrawal" ? "Retiro" : "Depósito"
+        transaction.type === "sumar"
+          ? "Monto agregado"
+          : transaction.type === "restar"
+          ? "Monto restado"
+          : transaction.type === "deposit"
+          ? "Depósito"
+          : transaction.type === "withdrawal"
+          ? "Retiro"
+          : ""
       }</p>
+
       <p><strong>Fecha y Hora:</strong> ${transaction.transaction_date} ${
       transaction.transaction_time
     }</p>
-      <p><strong>Monto:</strong> $${transaction.amount}</p>
+
+    ${
+      transaction.type === "sumar"
+        ? DepositbalanceModified
+        : transaction.type === "restar"
+        ? WithdrawbalanceModified
+        : ""
+    }
+
+
+ ${
+   transaction.deposit.payment_method === "platform"
+     ? comisionsDetails
+     : ` <p><strong>Monto:</strong> $${transaction.amount}</p>`
+ }
+
+    
       <p><strong>Estatus:</strong> ${transaction.status}</p>
-       <p><strong>Método:</strong> ${
-         transaction.type === "withdrawal" ? withdrawalDetails : depositDetails
-       }</p>
+
+
+   ${
+        transaction.type === "withdrawal"
+          ? `<p><strong>Método:</strong> 
+        ${withdrawalDetails}</p>`
+          : transaction.type === "deposit"
+          ? `<p><strong>Método:</strong> 
+        ${depositDetails}</p>`
+          : ""
+      }
+
     `;
 
     Swal.fire({
@@ -84,7 +133,6 @@ const ListaMovimientos_a = () => {
       showCloseButton: true,
     });
   };
-
 
   const formatAmount = (amount) => {
     const numericAmount = amount.replace(/[^\d]/g, "");
@@ -98,6 +146,7 @@ const ListaMovimientos_a = () => {
 
     return formattedAmount;
   };
+
   return (
     <div>
       <div className="title">
@@ -114,15 +163,29 @@ const ListaMovimientos_a = () => {
                 <div className={`icono ${transaction.type}`}>
                   {transaction.type === "withdrawal" ? (
                     <HorizontalRuleOutlinedIcon />
-                  ) : (
+                  ) : transaction.type === "deposit" ? (
                     <AddOutlinedIcon />
+                  ) : transaction.type === "restar" ? (
+                    <HorizontalRuleOutlinedIcon />
+                  ) : transaction.type === "sumar" ? (
+                    <AddOutlinedIcon />
+                  ) : (
+                    ""
                   )}
                 </div>
               </li>
 
               <li>
                 <h2>
-                  {transaction.type === "withdrawal" ? "Retiro" : "Depósito"}
+                  {transaction.type === "withdrawal"
+                    ? "Retiro"
+                    : transaction.type === "deposit"
+                    ? "Depósito"
+                    : transaction.type === "restar"
+                    ? "Monto restado"
+                    : transaction.type === "sumar"
+                    ? "Monto agregado"
+                    : ""}
                 </h2>
                 {transaction.type === "withdrawal" ? (
                   <span>
@@ -142,7 +205,13 @@ const ListaMovimientos_a = () => {
                       : transaction.withdrawal.method}
                   </span>
                 ) : (
-                  <span>{transaction.deposit.platform_type}</span>
+                  <span>
+                    {transaction.type === "sumar"
+                      ? "Monto agregado"
+                      : transaction.type === "restar"
+                      ? "Monto restado"
+                      : transaction.deposit.platform_type}
+                  </span>
                 )}
               </li>
 

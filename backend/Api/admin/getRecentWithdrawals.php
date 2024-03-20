@@ -15,7 +15,7 @@ if (!isset($_SESSION['user_id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         // Consultar los últimos 3 retiros aprobados
-        $recentWithdrawalsQuery = "SELECT * FROM transactions WHERE type = 'withdrawal' ORDER BY id DESC LIMIT 3";
+        $recentWithdrawalsQuery = "SELECT * FROM transactions WHERE type = 'withdrawal' OR type = 'restar' ORDER BY id DESC LIMIT 3";
         $recentWithdrawalsStmt = $conexion->query($recentWithdrawalsQuery);
         $recentWithdrawals = $recentWithdrawalsStmt->fetchAll(PDO::FETCH_ASSOC);
 

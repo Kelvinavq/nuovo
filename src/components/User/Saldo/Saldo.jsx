@@ -37,9 +37,18 @@ const Saldo = () => {
     });
   };
 
+
   const formatBalance = (balance) => {
-    return showBalance ? balance : "*****";
+    const numericAmount = balance == null ? "0" : balance.toString().replace(/[^\d]/g, "");
+    const formattedAmount = new Intl.NumberFormat("en-US", {
+      style: "decimal",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(parseFloat(numericAmount) / 100);
+
+    return showBalance ? `$${formattedAmount}` : "*****";
   };
+
 
   return (
     <div className="saldo">

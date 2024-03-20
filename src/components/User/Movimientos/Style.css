@@ -48,9 +48,6 @@
 
 }
 
-.movimientos ul li span{
-  
-}
 
 .movimientos ul li.estatus {
   margin-right: 20px;
@@ -76,10 +73,12 @@
   color: var(--green);
 }
 
-.movimientos ul li .icono.deposit{
+.movimientos ul li .icono.deposit,
+.movimientos ul li .icono.sumar{
     color: var(--green);
 }
-.movimientos ul li .icono.withdrawal{
+.movimientos ul li .icono.withdrawal,
+.movimientos ul li .icono.restar{
     color: var(--red);
 }
 

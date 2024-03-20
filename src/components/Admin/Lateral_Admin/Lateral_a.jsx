@@ -26,8 +26,6 @@ const Lateral_a = () => {
     setIsProfileOpen(!isProfileOpen);
   };
 
-
-
   const closeDropdownOutsideClick = (event, dropdownRef, setIsOpen) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsOpen(false);
@@ -38,7 +36,7 @@ const Lateral_a = () => {
     setIsNotificationsOpen(!isNotificationsOpen);
     markNotificationsAsRead();
   };
-  
+
   const getNotifications = async () => {
     try {
       const response = await fetch(
@@ -306,8 +304,11 @@ const Lateral_a = () => {
 
                     <div className="detalle">
                       <span>
-                        {" "}
-                        {deposit.type === "deposit" ? "Depósito" : ""}
+                        {deposit.type === "deposit"
+                          ? "Depósito" + " - " + deposit.platform_type
+                          : deposit.type === "sumar"
+                          ? "Monto agregado"
+                          : ""}
                       </span>
                       <small>{deposit.transaction_time}</small>
                     </div>
@@ -322,10 +323,6 @@ const Lateral_a = () => {
                   </div>
                 </div>
               ))}
-
-              {/* <div className="enlace">
-                <Link to="/admin/movimientos?tipo=deposit">Ver más</Link>
-              </div> */}
             </div>
           )}
 
@@ -347,7 +344,11 @@ const Lateral_a = () => {
 
                       <div className="detalle">
                         <span>
-                          {withdrawal.type === "withdrawal" ? "Retiro" : ""}
+                          {withdrawal.type === "withdrawal"
+                            ? "Retiro"
+                            : withdrawal.type === "restar"
+                            ? "Monto restado"
+                            : ""}
                         </span>
                         <small>{withdrawal.transaction_time}</small>
                       </div>
@@ -355,7 +356,7 @@ const Lateral_a = () => {
                     <div className="right">
                       <div className="monto">
                         <span>
-                        {formatAmount(withdrawal.amount)} <small>USD</small>
+                          {formatAmount(withdrawal.amount)} <small>USD</small>
                         </span>
                         <p className={`${withdrawal.status}`}>
                           {withdrawal.status}
@@ -364,10 +365,6 @@ const Lateral_a = () => {
                     </div>
                   </div>
                 ))}
-
-                {/* <div className="enlace">
-                  <Link to="/admin/movimientos?tipo=retiros">Ver más</Link>
-                </div> */}
               </div>
             )}
           </div>

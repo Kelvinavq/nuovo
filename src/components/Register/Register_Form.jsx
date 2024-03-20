@@ -6,11 +6,18 @@ import Config from "../../Config";
 
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 import { LanguageContext } from "../../Language/LanguageContext";
 import { TranslationRegister } from "../../Language/TranslationRegister";
 
+import imgDni from "../../assets/images/dni.png";
+import ImgSelfie from "../../assets/images/selfie.jpg";
+import Spinner from "../Spinner/Spinner";
+
+const MySwal = withReactContent(Swal);
 
 const Register_Form = () => {
   const { language } = useContext(LanguageContext);
@@ -22,8 +29,14 @@ const Register_Form = () => {
   const [address, setAddress] = useState("");
   const [password, setPassword] = useState("");
 
+  const [dniFileName, setDniFileName] = useState("");
+  const [dniBackFileName, setDniBackFileName] = useState("");
+  const [selfieFileName, setSelfieFileName] = useState("");
+
   // Estado para la validación del número de teléfono
   const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(true);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   // Manejar el cambio en el número de teléfono
   const handlePhoneChange = (value, data) => {
@@ -40,34 +53,34 @@ const Register_Form = () => {
   // Manejar el envío del formulario
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     // Validar campos antes de enviar al servidor
     if (!validateForm()) {
       return;
     }
+  
+    setIsLoading(true);
 
     try {
-      const response = await fetch(
-        `${Config.backendBaseUrl}usuarios.php`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name,
-            email,
-            phoneNumber,
-            address,
-            password,
-          }),
-          mode: "cors",
-          credentials: "include",
-        }
-      );
-
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("phoneNumber", phoneNumber);
+      formData.append("address", address);
+      formData.append("password", password);
+      formData.append("dni", document.getElementById("dni").files[0]);
+      formData.append("dniBack", document.getElementById("dniBack").files[0]);
+      formData.append("selfie", document.getElementById("selfie").files[0]);
+  
+      const response = await fetch(`${Config.backendBaseUrl}usuarios.php`, {
+        method: "POST",
+        body: formData,
+        mode: "cors",
+        credentials: "include",
+      });
+  
       const responseData = await response.json();
-
+  
       if (response.ok) {
         // Éxito en el registro
         Swal.fire({
@@ -87,7 +100,6 @@ const Register_Form = () => {
           text: responseData.message,
         });
       }
-    
     } catch (error) {
       console.error("Error de red:", error);
       Swal.fire({
@@ -97,6 +109,7 @@ const Register_Form = () => {
       });
     }
   };
+  
 
   const validateForm = () => {
     // Realizar validaciones y mostrar mensajes de error
@@ -137,6 +150,28 @@ const Register_Form = () => {
         text: TranslationRegister[language].swal5,
       });
       return false;
+    } else if (dniFileName === "") {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: TranslationRegister[language].swal9,
+      });
+      return false;
+    } else if (dniBackFileName === "") {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: TranslationRegister[language].swal10,
+      });
+      return false;
+    } else if (selfieFileName === "") {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: TranslationRegister[language].swal11,
+
+      });
+      return false;
     }
 
     return true; // El formulario es válido y puede ser enviado
@@ -151,8 +186,28 @@ const Register_Form = () => {
     setPassword("");
   };
 
+  const openModal = (modalConfig) => {
+    MySwal.fire({
+      text: modalConfig.text,
+      imageUrl: modalConfig.imageUrl,
+      imageWidth: 350,
+      imageHeight: 250,
+      imageAlt: "Img modal",
+    });
+  };
+
+  const handleFileChange = (event, setFileName) => {
+    const file = event.target.files[0];
+    if (file) {
+      setFileName(file.name);
+    } else {
+      setFileName("");
+    }
+  };
+
   return (
     <div className="register">
+         {isLoading ? <Spinner /> : null}
       <form onSubmit={handleSubmit}>
         <div>
           <div className="content">
@@ -162,7 +217,9 @@ const Register_Form = () => {
 
           <div className="inputs">
             <div className="grupo-input">
-              <label htmlFor="name">{TranslationRegister[language].label1}</label>
+              <label htmlFor="name">
+                {TranslationRegister[language].label1}
+              </label>
               <input
                 type="text"
                 placeholder={TranslationRegister[language].input1}
@@ -173,7 +230,9 @@ const Register_Form = () => {
             </div>
 
             <div className="grupo-input">
-              <label htmlFor="email">{TranslationRegister[language].label2}</label>
+              <label htmlFor="email">
+                {TranslationRegister[language].label2}
+              </label>
               <input
                 type="email"
                 placeholder={TranslationRegister[language].input2}
@@ -184,7 +243,9 @@ const Register_Form = () => {
             </div>
 
             <div className="grupo-input">
-              <label htmlFor="password">{TranslationRegister[language].label3}</label>
+              <label htmlFor="password">
+                {TranslationRegister[language].label3}
+              </label>
               <input
                 type="password"
                 placeholder={TranslationRegister[language].input3}
@@ -195,7 +256,9 @@ const Register_Form = () => {
             </div>
 
             <div className="grupo-input ">
-              <label htmlFor="phoneNumber">{TranslationRegister[language].label4}</label>
+              <label htmlFor="phoneNumber">
+                {TranslationRegister[language].label4}
+              </label>
               <PhoneInput
                 id="phoneNumber"
                 country={"ar"}
@@ -205,7 +268,9 @@ const Register_Form = () => {
             </div>
 
             <div className="grupo-input">
-              <label htmlFor="address">{TranslationRegister[language].label5}</label>
+              <label htmlFor="address">
+                {TranslationRegister[language].label5}
+              </label>
               <input
                 type="text"
                 placeholder={TranslationRegister[language].input5}
@@ -215,13 +280,99 @@ const Register_Form = () => {
               />
             </div>
 
+            {/*  */}
+
+            <div className="grupo-input">
+              <label htmlFor="">{TranslationRegister[language].label7}</label>
+
+              <div className="btnVerificacion">
+                <label
+                  htmlFor="dni"
+                  onClick={() =>
+                    openModal({
+                      text: TranslationRegister[language].swal6,
+                      imageUrl: imgDni,
+                    })
+                  }
+                >
+                  <CloudUploadIcon />
+                  {TranslationRegister[language].label8}
+                </label>
+                <input
+                  type="file"
+                  name="dni"
+                  id="dni"
+                  accept=".jpg, .jpeg, .png"
+                  onChange={(e) => handleFileChange(e, setDniFileName)}
+                />
+              </div>
+              <p>{dniFileName}</p>
+            </div>
+
+            <div className="grupo-input">
+              <label htmlFor="">{TranslationRegister[language].label9}</label>
+              <div className="btnVerificacion">
+                <label
+                  htmlFor="dniBack"
+                  onClick={() =>
+                    openModal({
+                      text: TranslationRegister[language].swal7,
+                      imageUrl: imgDni,
+                    })
+                  }
+                >
+                  <CloudUploadIcon />
+                  {TranslationRegister[language].label10}
+                </label>
+                <input
+                  type="file"
+                  name="dniBack"
+                  id="dniBack"
+                  accept=".jpg, .jpeg, .png"
+                  onChange={(e) => handleFileChange(e, setDniBackFileName)}
+                />
+              </div>
+              <p>{dniBackFileName}</p>
+            </div>
+
+            <div className="grupo-input">
+              <label htmlFor="">{TranslationRegister[language].label11}</label>
+
+              <div className="btnVerificacion">
+                <label
+                  htmlFor="selfie"
+                  onClick={() =>
+                    openModal({
+                      text: TranslationRegister[language].swal8,
+                      imageUrl: ImgSelfie,
+                    })
+                  }
+                >
+                  <CloudUploadIcon />
+                  {TranslationRegister[language].label12}
+                </label>
+                <input
+                  type="file"
+                  name="selfie"
+                  id="selfie"
+                  accept=".jpg, .jpeg, .png"
+                  onChange={(e) => handleFileChange(e, setSelfieFileName)}
+                />
+              </div>
+              <p>{selfieFileName}</p>
+            </div>
+
             <div className="submit">
-              <input type="submit" value={TranslationRegister[language].button} />
+              <input
+                type="submit"
+                value={TranslationRegister[language].button}
+              />
             </div>
 
             <div className="enlace">
               <p>
-              {TranslationRegister[language].label6} <Link to="/login">{TranslationRegister[language].link}</Link>
+                {TranslationRegister[language].label6}{" "}
+                <Link to="/login">{TranslationRegister[language].link}</Link>
               </p>
             </div>
           </div>
