@@ -18,6 +18,8 @@ import Register from "./pages/Register/Register";
 import ResetPassword from "./pages/password/ResetPassword";
 import ResetPasswordPage from "./pages/ResetPasswordPage/ResetPasswordPage"
 import Legal from "./pages/Legal/Legal";
+import Contact from "./pages/Contact/Contact";
+
 import Dashboard from "./pages/User/Dashboard";
 import Retiros from "./pages/User/Retiros";
 import Depositos from "./pages/User/Depositos";
@@ -69,6 +71,10 @@ const router = createBrowserRouter([
   {
     path: "/legal",
     element: <Legal />,
+  },
+  {
+    path: "/contacto",
+    element: <Contact />,
   },
   {
     path: "/user/dashboard",
